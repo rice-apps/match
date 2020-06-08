@@ -6,9 +6,7 @@
   justify-content: space-around;
 }
 
-.Half {
-  padding: 20px;
-  width: 45vw;
-  background-color: bisque;
+.DataPanel {
+  width: 48vw;
   height:80vh;
 }

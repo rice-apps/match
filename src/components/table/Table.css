@@ -1,0 +1,11 @@
+.table-header-row {
+    font-size: small;
+    text-align: left;
+    background-color: #343a40;
+    color:white
+}
+
+.table-body {
+    font-size: small;
+    background-color: white;
+}

@@ -4,12 +4,14 @@ import './App.css';
 
 function App() {
 
-  
+  const [rowA, setRowA] = useState();
+  const [allRowsB, setAllRowsB] = useState();
+
   return (
     <div className="App">
       <div className="Body">
-        <DataPanel/>
-        <DataPanel/>
+        <DataPanel onSelectRow={setRowA}/>
+        <DataPanel onFileUpload={setAllRowsB}/>
       </div>
     </div>
   );

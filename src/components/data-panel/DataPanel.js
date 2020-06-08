@@ -3,12 +3,12 @@ import Loader from '../../components/loader/Loader';
 import Table from '../../components/table/Table';
 
 export default function DataPanel(props) {
-    const [data, setData] = useState([]);
-    const [columns, setColumns] = useState([]);
-    const [selectedRow, setSelectedRow] = useState();
+  const [data, setData] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [selectedRow, setSelectedRow] = useState();
 
 
-  function onUpload(data) {
+  function onFileUpload(data) {
     
     // Column objects come from first array in data
     // Key is column name in lower case, where spaces replaced by underscore
@@ -28,18 +28,31 @@ export default function DataPanel(props) {
         return rowObject;
       }
     );
-
+  
+    // Set the state with new data/columns
     setData(formattedData);
     setColumns(columnObjects);
+  
+    // If file upload callback is passed down, pass upwards the data 
+    if (props.onFileUpload) {
+      props.onFileUpload(formattedData);
+    }
+
   }
 
   function onSelectRow(row) {
     setSelectedRow(row);
+
+    // If row select callback is passed down, pass upwards the row
+    if (props.onSelectRow) {
+      props.onSelectRow(row);
+    }
   }
  
     return (
-        <div className="Half">
-        <Loader onUpload={onUpload}/>
+        <div className="DataPanel">
+        <Loader onUpload={onFileUpload}/>
+        <br/>
         <Table 
           onSelectRow={onSelectRow}
           data={data}
