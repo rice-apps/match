@@ -9,3 +9,17 @@
     font-size: small;
     background-color: white;
 }
+
+.table-row-even {
+    cursor: pointer;
+}
+
+.table-row-odd {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.table-row-selected {
+    cursor: pointer;
+    background-color: rgb(219, 219, 219);
+}

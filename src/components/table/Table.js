@@ -4,15 +4,22 @@ import './Table.css'
 
 export default function ShinobiTable(props) {
 
-    const [selectedRow, setSelectedRow] = useState();
+    const [selectedRowIndex, setSelectedRowIndex] = useState();
 
     const CustomRow = ({index, row, ...rest}) => {
         return (
             <tr
-            onClick={() => props.onSelectRow(row)}
-            onMouseEnter={console.log("enter")}
-            onMouseLeave={console.log("leave")}
-            style={{backgroundColor: 'white'}}
+            onClick={() => {
+              if (selectedRowIndex === index) {
+                setSelectedRowIndex(null);
+                props.onSelectRow(null);
+              } else {
+                setSelectedRowIndex(index);
+                props.onSelectRow(row);
+              }
+            }}
+            // onMouseEnter={console.log("enter")}
+            // onMouseLeave={console.log("leave")}
             {...rest}
             />
         );
@@ -23,6 +30,7 @@ export default function ShinobiTable(props) {
     Row={CustomRow}
     data={props.data}
     columns={props.columns}
+    rowClassName={index => index === selectedRowIndex ? "table-row-selected" : (index % 2 == 0 ? "table-row-even" : "table-row-odd")}
     />
   );
 }
