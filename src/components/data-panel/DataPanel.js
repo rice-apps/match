@@ -1,12 +1,24 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Loader from '../../components/loader/Loader';
-import Table from '../../components/table/Table';
+import Table from '../table/Table';
+import { applyRules } from '../util/rules';
 
 export default function DataPanel(props) {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [selectedRow, setSelectedRow] = useState();
 
+  const [selectedRow, setSelectedRow] = useState();
+  const [sortedData, setSortedData] = useState([]);
+
+  useEffect(() => {
+    if (props.selectedLeftRow && props.rules && data) {
+        let sorted = applyRules(props.rules, data, props.selectedLeftRow)
+      setSortedData([...sorted]);
+    } else {
+      setSortedData(data);
+    }
+
+  }, [props.selectedLeftRow, props.rules, data]);
 
   function onFileUpload(data) {
     
@@ -50,15 +62,16 @@ export default function DataPanel(props) {
   }
  
     return (
-        <div className="DataPanel">
+      <div className="DataPanel">
         <Loader onUpload={onFileUpload}/>
         <br/>
         <Table 
           onSelectRow={onSelectRow}
-          data={data}
+          data={sortedData}
           columns={columns}
           />
         <p>{JSON.stringify(selectedRow)}</p>
+        {columns.map((col, i) => <p key={i}>{i} {col.key} {col.title}</p>)}
       </div>
     )
 }

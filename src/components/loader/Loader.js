@@ -1,5 +1,6 @@
 import React from 'react';
 import CSVReader from 'react-csv-reader';
+import './Loader.css';
 
 export default function CSVFileUploader(props) {
 
@@ -13,7 +14,7 @@ export default function CSVFileUploader(props) {
     }
 
     return(
-    <div>
+    <div className="Loader">
         <CSVReader
         cssClass="csv-reader-input"
         label="Upload CSV file here "
