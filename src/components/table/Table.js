@@ -17,8 +17,6 @@ export default function Table(props) {
               props.onSelectRow(row);
             }
           }}
-          // onMouseEnter={console.log("enter")}
-          // onMouseLeave={console.log("leave")}
           {...rest}
           />
       );
@@ -29,6 +27,7 @@ export default function Table(props) {
     Row={CustomRow}
     data={props.data}
     columns={props.columns}
+    style={{height: "60vh"}}
     rowClassName={index => index === selectedRowIndex ? "table-row-selected" : (index % 2 === 0 ? "table-row-even" : "table-row-odd")}
     />
   );

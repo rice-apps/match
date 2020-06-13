@@ -1,0 +1,9 @@
+.ControlPanel {
+    width: 40vh;
+    padding: 20px;
+}
+
+.Rule {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

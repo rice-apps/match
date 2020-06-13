@@ -23,3 +23,7 @@
     cursor: pointer;
     background-color: rgb(219, 219, 219);
 }
+
+.table Table {
+    height: 20vh;
+}

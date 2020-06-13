@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { applyRules } from '../util/rules';
+import { Card } from "antd";
 
 export default function DataPanel(props) {
   const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ export default function DataPanel(props) {
 
   useEffect(() => {
     if (props.selectedLeftRow && props.rules && data) {
-        let sorted = applyRules(props.rules, data, props.selectedLeftRow)
+      let sorted = applyRules(props.rules, data, props.selectedLeftRow);
       setSortedData([...sorted]);
     } else {
       setSortedData(data);
@@ -47,7 +48,7 @@ export default function DataPanel(props) {
   
     // If file upload callback is passed down, pass upwards the data 
     if (props.onFileUpload) {
-      props.onFileUpload(formattedData);
+      props.onFileUpload(columnObjects);
     }
 
   }
@@ -70,8 +71,13 @@ export default function DataPanel(props) {
           data={sortedData}
           columns={columns}
           />
-        <p>{JSON.stringify(selectedRow)}</p>
-        {columns.map((col, i) => <p key={i}>{i} {col.key} {col.title}</p>)}
+
+      {selectedRow && <Card style={{ width: 300 }}>
+          {Object.entries(selectedRow).map((attribute, i) => {
+            let [key, value] = attribute;
+            return (<p>{key} : {value}</p>)
+          })}
+        </Card>}
       </div>
     )
 }

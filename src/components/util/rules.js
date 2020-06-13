@@ -1,7 +1,8 @@
 export function applyRules(rules, data, leftRow) {
-    let filtered = applyFilters(rules, data, leftRow);
-    let filtered_and_sorted = applySorts(rules, filtered, leftRow)
-    return filtered_and_sorted
+  let enabledRules = rules.filter(rule => rule.enabled === true);
+  let filtered = applyFilters(enabledRules, data, leftRow);
+  let filtered_and_sorted = applySorts(enabledRules, filtered, leftRow)
+  return filtered_and_sorted
 }
 
 const sortByMapped = map => compareFn => (a,b) => compareFn(map(a),map(b));

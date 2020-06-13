@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import DataPanel from './components/data-panel/DataPanel';
-import Rule from './components/rule/Rule';
+import ControlPanel from './components/control-panel/ControlPanel';
 import Sidebar from "react-sidebar";
+import SplitPane, { Pane } from 'react-split-pane';
 import './App.css';
 
 var initialRules = [
   {
+    "enabled": true,
     "type": "sort",
     "by": "location",
     "operator": "equals",
@@ -15,6 +17,7 @@ var initialRules = [
     }
   },
   {
+    "enabled": true,
     "type": "sort",
     "by": "car",
     "operator": "equals",
@@ -24,6 +27,7 @@ var initialRules = [
     }
   },
   {
+    "enabled": true,
     "type": "sort",
     "by": "id",
     "operator": "equals",
@@ -33,6 +37,7 @@ var initialRules = [
     }
   },
   // {
+  //   "enabled": true,
   //   "type": "filter",
   //   "by": "university",
   //   "operator": "equals",
@@ -45,34 +50,38 @@ function App() {
   const [rules, setRules] = useState(initialRules);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [rowLeft, setRowLeft] = useState();
-  const [allRowsRight, setAllRowsRight] = useState();
 
-  const sidebarContent = (
-    <div>
-      {rules.map((rule, i) => <Rule key={i} rule={rule}/>)}
-    </div>
-  )
+  const [rightColumns, setRightColumns] = useState([]);
+  const [leftColumns, setLeftColumns] = useState([]);
+
+  var windowWidth = window.innerWidth;
+  var defaultPaneSize = Math.round(windowWidth / 2);
 
   return (
     <div className="App">
       <Sidebar
-        sidebar={sidebarContent}
+        sidebar={<ControlPanel rules={rules} setRules={setRules} rightColumns={rightColumns} leftColumns={leftColumns}/>}
         open={sidebarOpen}
         onSetOpen={() => setSidebarOpen(false)}
         styles={{ sidebar: { background: "white" } }}
       >
-      <button onClick={() => setSidebarOpen(true)}>
-        Sort/Filter
-      </button>
+        <div className="Main">
+          <button style={{position: "absolute", zIndex: 1}}onClick={() => setSidebarOpen(true)}>
+            Sort/Filter
+          </button>
 
-      <div className="Body">
-        <DataPanel 
-        onSelectRow={setRowLeft}
-        />
-        <DataPanel 
-        onFileUpload={setAllRowsRight}
-        selectedLeftRow={rowLeft}
-        rules={rules}/>
+          <div className="Body">
+            <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{overflow: 'auto'}}>
+              <DataPanel 
+              onFileUpload={setLeftColumns}
+              onSelectRow={setRowLeft}
+              />
+              <DataPanel 
+              onFileUpload={setRightColumns}
+              selectedLeftRow={rowLeft}
+              rules={rules}/>
+            </SplitPane>
+          </div>
       </div>
       </Sidebar>
     </div>
