@@ -18,22 +18,27 @@ export default function DataPanel(props) {
     } else {
       setSortedData(data);
     }
-
   }, [props.selectedLeftRow, props.rules, data]);
 
   function onFileUpload(data) {
-    
     // Column objects come from first array in data
     // Key is column name in lower case, where spaces replaced by underscore
-    const columnObjects = data[0].map(column => {return {key: column.toLowerCase().replace(/ /g,"_"), width: 100, title: column}});
-    
+    const columnObjects = data[0].map(column => {
+      let key = column.toLowerCase().replace(/ /g,"_");
+      return {
+        key: key, 
+        width: 100, 
+        dataIndex: key,
+        title: column
+      };
+    });
     // Excluding column header row, map all rows into formatted object
     var formattedData = data.slice(1).map(
-      row => {
-        var rowObject = {}
+      (row, i) => {
+        var rowObject = {key: i}
         row.map(
-          (columnValue, i) => {
-            var columnName = columnObjects[i].key;
+          (columnValue, ii) => {
+            var columnName = columnObjects[ii].key;
             rowObject[columnName] = columnValue;
             return null;
           }
@@ -41,28 +46,24 @@ export default function DataPanel(props) {
         return rowObject;
       }
     );
-  
     // Set the state with new data/columns
     setData(formattedData);
     setColumns(columnObjects);
-  
     // If file upload callback is passed down, pass upwards the data 
     if (props.onFileUpload) {
       props.onFileUpload(columnObjects);
     }
-
   }
 
   function onSelectRow(row) {
     setSelectedRow(row);
-
     // If row select callback is passed down, pass upwards the row
     if (props.onSelectRow) {
       props.onSelectRow(row);
     }
   }
- 
-    return (
+
+  return (
       <div className="DataPanel">
         <Loader onUpload={onFileUpload}/>
         <br/>
@@ -71,11 +72,10 @@ export default function DataPanel(props) {
           data={sortedData}
           columns={columns}
           />
-
       {selectedRow && <Card style={{ width: 300 }}>
           {Object.entries(selectedRow).map((attribute, i) => {
             let [key, value] = attribute;
-            return (<p>{key} : {value}</p>)
+            return (<p key={key}>{key} : {value}</p>)
           })}
         </Card>}
       </div>

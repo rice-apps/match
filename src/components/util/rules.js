@@ -21,13 +21,13 @@ const byMatch = (value) => (a,b) => {
 
 function applySorts(rules, data, leftRow) {
     let comparators = []
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < rules.length; i++) {
         let rule = rules[i];
         if (rule.type === "sort") {
             if (rule.operator === "equals") {
-                let left = rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value;
-                let newComparator = sortByMapped(e => e[rule.by])(byMatch(left));
-                comparators.push(newComparator);
+              let left = rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value;
+              let newComparator = sortByMapped(e => e[rule.by])(byMatch(left));
+              comparators.push(newComparator);
             }
         } else if (rule.type === "filter") {
         }

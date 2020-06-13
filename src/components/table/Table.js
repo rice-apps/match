@@ -22,13 +22,15 @@ export default function Table(props) {
       );
   };
 
+  console.log("Rendering table", props);
+
   return (
     <Html5Table
     Row={CustomRow}
     data={props.data}
     columns={props.columns}
     style={{height: "60vh"}}
-    rowClassName={index => index === selectedRowIndex ? "table-row-selected" : (index % 2 === 0 ? "table-row-even" : "table-row-odd")}
+    rowClassName={index => index === selectedRowIndex ? "table-row-selected" : "table-row-even"}
     />
   );
 }
