@@ -5,45 +5,7 @@ import Sidebar from "react-sidebar";
 import SplitPane, { Pane } from 'react-split-pane';
 import './App.css';
 
-var initialRules = [
-  // {
-  //   "enabled": true,
-  //   "type": "sort",
-  //   "by": "location",
-  //   "operator": "equals",
-  //   "with": {
-  //     type: "column",
-  //     value: "location",
-  //   }
-  // },
-  // {
-  //   "enabled": true,
-  //   "type": "sort",
-  //   "by": "car",
-  //   "operator": "equals",
-  //   "with": {
-  //     type: "constant",
-  //     value: "Yes",
-  //   }
-  // },
-  // {
-  //   "enabled": true,
-  //   "type": "sort",
-  //   "by": "id",
-  //   "operator": "equals",
-  //   "with": {
-  //     type: "column",
-  //     value: "id",
-  //   }
-  // },
-  // {
-  //   "enabled": true,
-  //   "type": "filter",
-  //   "by": "university",
-  //   "operator": "equals",
-  //   "with": "Rice University"
-  // }
-]
+var initialRules = [];
 
 function App() {
 
