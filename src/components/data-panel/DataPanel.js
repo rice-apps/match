@@ -36,7 +36,7 @@ export default function DataPanel(props) {
       if (props.rules) {
         return {
           // Right now fixing name column
-          // fixed: (key === "name") ? "left" : false,
+          fixed: (key === "name") ? "left" : false,
           key: key, 
           width: 100, 
           dataIndex: key,
@@ -44,7 +44,7 @@ export default function DataPanel(props) {
         };
       } else {
         return {
-          // fixed: (key === "name") ? "left" : false,
+          fixed: (key === "name") ? "left" : false,
           key: key, 
           width: 100, 
           dataIndex: key,

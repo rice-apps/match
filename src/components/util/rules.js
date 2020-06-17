@@ -1,9 +1,11 @@
 export function applyRules(rules, data, leftRow) {
-  let enabledRules = rules.filter(rule => rule.enabled === true);
 
+  
+  let enabledRules = rules.filter(rule => rule.enabled === true);
+  
   let sorts = enabledRules.filter(rule => rule.type === "sort");
   let filters = enabledRules.filter(rule => rule.type === "filter");
-
+  
   let filtered = applyFilters(filters, data, leftRow);
   let filtered_and_sorted = applySorts(sorts, filtered, leftRow)
   return filtered_and_sorted
@@ -57,6 +59,14 @@ const byLEQ = (value) => (a, b) => {
 
 const sortByFlattened = fns => (a,b) => fns.reduce((acc, fn) => acc || fn(a,b), 0);
 
+function isNumeric(num){
+  return !isNaN(num)
+}
+
+function convertIfNumeric(s) {
+  return isNumeric(s) ? parseInt(s) : s; 
+}
+
 export const availableOperators = [
   {value: "equals", display: "="}, 
   {value: "geq", display: "≥"}, 
@@ -103,15 +113,21 @@ function applyFilters(rules, data, leftRow) {
     }
 
     let left = rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value;
+
     if (rule.operator === "equals") {
       data = data.filter((a) => a[rule.by] === left);
     } else if (rule.operator === "contains") {
       data = data.filter((a) => a[rule.by].includes(left));
     } else if (rule.operator === "geq") {
-      data = data.filter((a) => a[rule.by] >= left);
+      data = data.filter((a) => { 
+        return convertIfNumeric(a[rule.by]) >= convertIfNumeric(left)
+      });
     } else if (rule.operator === "leq") {
-      data = data.filter((a) => a[rule.by] <= left);
-    }
-}
+      data = data.filter((a) => { 
+        return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
+      });
+      }
+  }
+
   return data;
 }

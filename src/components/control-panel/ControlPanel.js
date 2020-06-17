@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Tooltip, Input, Checkbox, Button } from "antd";
+import { Select, Tooltip, Input, Checkbox, Button, Card } from "antd";
 import { availableOperators } from '../util/rules';
 import './ControlPanel.css'; // or 'antd/dist/antd.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
@@ -53,7 +53,7 @@ export default function ControlPanel({setRules, rules, leftColumns, rightColumns
     }
 
     const newSort = () => {
-      let by = rightColumns.length == 0 ? "" : rightColumns[0].key;
+      let by = rightColumns.length === 0 ? "" : rightColumns[0].key;
       let newRule = {
         "type": "sort",
         "enabled": false,
@@ -68,7 +68,7 @@ export default function ControlPanel({setRules, rules, leftColumns, rightColumns
     }
 
     const newFilter = () => {
-      let by = rightColumns.length == 0 ? "" : rightColumns[0].key;
+      let by = rightColumns.length === 0 ? "" : rightColumns[0].key;
       let newRule = {
         "type": "filter",
         "enabled": false,
