@@ -3,6 +3,10 @@
   padding-left: 20px;
 }
 
+div[role=navigation] {
+  background-color: #e9ebee;
+}
+
 .Pane {
   overflow: auto;
 }

@@ -25,7 +25,7 @@ function App() {
         sidebar={<ControlPanel rules={rules} setRules={setRules} rightColumns={rightColumns} leftColumns={leftColumns}/>}
         open={sidebarOpen}
         onSetOpen={() => setSidebarOpen(false)}
-        styles={{ sidebar: { background: "white" } }}
+        styles={{ sidebar: { background: "white" }}}
       >
         <div className="Main">
           <button style={{position: "absolute", zIndex: 1}}onClick={() => setSidebarOpen(true)}>
