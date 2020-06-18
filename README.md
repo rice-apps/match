@@ -1,4 +1,4 @@
-How to develop:
+##How to develop:
 
 Install node dependencies (should be once)
 ```
@@ -10,11 +10,11 @@ Run server locally
 $ npm run start
 ```
 
-How to deploy:
+##How to deploy:
 
 GCP Cloudbuild trigger is setup to deploy every push to master branch.
 
-Roadmap:
+##Roadmap:
 
 - [x] gcp deployment 😃
 - [x] grey background to focus on data
