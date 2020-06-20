@@ -19,7 +19,8 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] gcp deployment 😃
 - [x] grey background to focus on data
 - [x] connect to match.riceapps.org
+- [ ] use redux on frontend to simplify state logic
 - [ ] connect to db
-- [ ] allow hiding columns and add to description [ex. here](https://ant.design/components/table/#components-table-demo-expand)
+- [ ] allow hiding columns and add to description [ex.](https://ant.design/components/table/#components-table-demo-expand)
 - [ ] control panel select by search
 - [ ] time data processing
