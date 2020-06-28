@@ -29,10 +29,10 @@ export default function RightDataPanel() {
     <div className="DataPanel">
 
         {/* Loader to accept csv input */}
-        <Loader 
+        {data.length === 0 && <Loader 
         onUpload={setRightData}
         allowManualSort={true}
-        />
+        />}
         <br/>
 
 

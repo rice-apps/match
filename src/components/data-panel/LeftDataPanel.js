@@ -23,10 +23,10 @@ export default function LeftDataPanel(props) {
     <div className="DataPanel">
 
         {/* Loader to accept csv input */}
-        <Loader 
+        {data.length === 0 && <Loader 
         onUpload={setLeftData}
         allowManualSort={true}
-        />
+        />}
         <br/>
 
 

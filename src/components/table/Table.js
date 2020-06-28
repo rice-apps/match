@@ -13,6 +13,10 @@ export default function MyTable(props) {
     }),
   };
 
+  if (props.columns.length === 0) {
+    return <> </>;
+  }
+
   return (
     <div>
       <Table 
