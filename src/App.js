@@ -32,9 +32,9 @@ function App() {
       <Header/>
 
       <Switch>
-        <Route path="/covidsitters" component={Matcher}/>
-        <Route path="/ccd" component={Matcher}/>
-        <Route path="/"/>
+        {/* <Route path="/covidsitters" component={Matcher}/>
+        <Route path="/ccd" component={Matcher}/> */}
+        <Route path="/" component={Matcher}/>
       </Switch>
 
       </Sidebar>
