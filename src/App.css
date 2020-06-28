@@ -1,10 +1,9 @@
 .Main {
-  padding-top: 20px;
   padding-left: 20px;
 }
 
 div[role=navigation] {
-  background-color: #e9ebee;
+  background-color: #ffffff; /* This is the backround of the matcher div */
 }
 
 .Pane {

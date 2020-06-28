@@ -1,15 +1,18 @@
 import React from 'react';
 import CSVReader from 'react-csv-reader';
+import { formatData } from '../../util/dataFormatter';
 import './Loader.css';
+
 
 export default function CSVFileUploader(props) {
 
-    function onFileLoaded(file) {
-        props.onUpload(file);
+    function onFileLoaded(data) {
+        var newDataState = formatData(data, props.allowManualSort);
+        props.onUpload(newDataState);
     }
 
     function onError(err) {
-        console.log("Error loading in CSV");
+        console.log("Error loading in CSV:");
         console.log(err);
     }
 
@@ -21,7 +24,7 @@ export default function CSVFileUploader(props) {
         onFileLoaded={onFileLoaded}
         onError={onError}
         inputId="ObiWan"
-        inputStyle={{color: 'red'}}
+        inputStyle={{color: '#1890ff'}}
       />
-      </div>)
+    </div>);
 }

@@ -1,12 +1,23 @@
-export function applyRules(rules, data, leftRow) {
 
+/* This is the main entrypoint for applying rules.
+All other functions/declarations in this file are helpers
+for this 'apply' function. */
+export function applyRules(rules, data, leftRow) {
   
+  // First copy the data b/c its read only
+  let copiedData = data.slice();
+  
+  // Filter out the disabled rules
   let enabledRules = rules.filter(rule => rule.enabled === true);
   
+  // Get a list of the 'sort' rules
   let sorts = enabledRules.filter(rule => rule.type === "sort");
+  // Get a list of the 'filter' rules
   let filters = enabledRules.filter(rule => rule.type === "filter");
   
-  let filtered = applyFilters(filters, data, leftRow);
+  // Filter the data
+  let filtered = applyFilters(filters, copiedData , leftRow);
+  // Sort the data
   let filtered_and_sorted = applySorts(sorts, filtered, leftRow)
   return filtered_and_sorted
 }
@@ -71,7 +82,7 @@ export const availableOperators = [
   {value: "equals", display: "="}, 
   {value: "geq", display: "≥"}, 
   {value: "leq", display: "≤"}, 
-  {value: "contains", display: "contains"}]
+  {value: "contains", display: "contains"}];
 
 function applySorts(rules, data, leftRow) {
     let comparators = [];

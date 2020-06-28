@@ -1,50 +1,43 @@
-import React, { useState } from 'react';
-import DataPanel from './components/data-panel/DataPanel';
-import ControlPanel from './components/control-panel/ControlPanel';
+import React from 'react';
+import Matcher from './pages/Matcher';
+import Header from './components/header/Header';
+import { Switch, Route } from "react-router-dom";
 import Sidebar from "react-sidebar";
-import SplitPane, { Pane } from 'react-split-pane';
+import ControlPanel from './components/control-panel/ControlPanel';
+
+import { useRecoilState } from 'recoil';
+import { applicationState } from './store/atoms';
+
 import './App.css';
 
-var initialRules = [];
 
 function App() {
+  const [appState, setAppState] = useRecoilState(applicationState);
 
-  const [rules, setRules] = useState(initialRules);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [rowLeft, setRowLeft] = useState();
-
-  const [rightColumns, setRightColumns] = useState([]);
-  const [leftColumns, setLeftColumns] = useState([]);
-
-  var windowWidth = window.innerWidth;
-  var defaultPaneSize = Math.round(windowWidth / 2);
+  function setSidebarOpen(open) {
+    setAppState({
+      ...appState,
+      sidebarOpen: open
+    });
+  }
 
   return (
     <div className="App">
       <Sidebar
-        sidebar={<ControlPanel rules={rules} setRules={setRules} rightColumns={rightColumns} leftColumns={leftColumns}/>}
-        open={sidebarOpen}
+        sidebar={<ControlPanel/>}
+        open={appState.sidebarOpen}
         onSetOpen={() => setSidebarOpen(false)}
         styles={{ sidebar: { background: "white" }}}
-      >
-        <div className="Main">
-          <button style={{position: "absolute", zIndex: 1}}onClick={() => setSidebarOpen(true)}>
-            Sort/Filter
-          </button>
+        >
+      <Header/>
 
-          <div className="Body">
-            <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{overflow: 'auto'}}>
-              <DataPanel 
-              onFileUpload={setLeftColumns}
-              onSelectRow={setRowLeft}
-              />
-              <DataPanel 
-              onFileUpload={setRightColumns}
-              selectedLeftRow={rowLeft}
-              rules={rules}/>
-            </SplitPane>
-          </div>
-      </div>
+      <Switch>
+        <Route path="/covidsitters" component={Matcher}/>
+        <Route path="/">
+          <p>HOME</p>
+        </Route>
+      </Switch>
+
       </Sidebar>
     </div>
   );
