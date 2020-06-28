@@ -33,9 +33,8 @@ function App() {
 
       <Switch>
         <Route path="/covidsitters" component={Matcher}/>
-        <Route path="/">
-          <p>HOME</p>
-        </Route>
+        <Route path="/ccd" component={Matcher}/>
+        <Route path="/"/>
       </Switch>
 
       </Sidebar>

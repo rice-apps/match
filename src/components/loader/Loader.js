@@ -24,7 +24,7 @@ export default function CSVFileUploader(props) {
         onFileLoaded={onFileLoaded}
         onError={onError}
         inputId="ObiWan"
-        inputStyle={{color: '#1890ff'}}
+        inputStyle={{color: 'red'}}
       />
     </div>);
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
