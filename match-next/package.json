@@ -1,0 +1,23 @@
+{
+  "name": "match-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "antd": "^4.3.5",
+    "knex": "^0.21.1",
+    "next": "9.4.4",
+    "pg": "^8.2.1",
+    "react": "16.13.1",
+    "react-csv-reader": "^3.1.0",
+    "react-dom": "16.13.1",
+    "react-sidebar": "^3.0.2",
+    "react-split-pane": "^0.1.91",
+    "recoil": "0.0.10",
+    "window-table": "^0.12.1"
+  }
+}

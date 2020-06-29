@@ -1,0 +1,29 @@
+.table-header-row {
+    font-size: small;
+    text-align: left;
+    background-color: #343a40;
+    color:white
+}
+
+.table-body {
+    font-size: small;
+    background-color: white;
+}
+
+.table-row-even {
+    cursor: pointer;
+}
+
+.table-row-odd {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+}
+
+.table-row-selected {
+    cursor: pointer;
+    background-color: rgb(219, 219, 219);
+}
+
+.table Table {
+    height: 20vh;
+}
