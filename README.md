@@ -1,5 +1,11 @@
 ## How to develop:
 
+Clone locally
+```
+$ git clone https://github.com/rice-apps/match.git
+$ cd match
+```
+
 Install node dependencies (should be once)
 ```
 $ npm install
