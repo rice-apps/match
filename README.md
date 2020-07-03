@@ -23,6 +23,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [ ] connect to db
 - [ ] allow hiding columns and add to description [ex.](https://ant.design/components/table/#components-table-demo-expand)
 - [ ] time data processing
+- [ ] Rice idp authentication
 
 ## Icebox:
 - [ ] select by search auto-complete
