@@ -22,5 +22,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] use RECOIL on frontend to simplify state logic
 - [ ] connect to db
 - [ ] allow hiding columns and add to description [ex.](https://ant.design/components/table/#components-table-demo-expand)
-- [ ] control panel select by search
 - [ ] time data processing
+
+## Icebox:
+- [ ] select by search auto-complete
