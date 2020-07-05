@@ -24,7 +24,7 @@ export default function Header() {
     return (
         <div className="Header">
                 <div>
-                    <h1><b>batch.</b></h1>
+                    <h1><b>atch.</b></h1>
                 </div>
                 <img 
                 alt=""
