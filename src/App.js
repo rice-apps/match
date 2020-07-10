@@ -1,5 +1,6 @@
 import React from 'react';
 import Matcher from './pages/Matcher';
+import Chooser from './pages/Chooser';
 import Header from './components/header/Header';
 import { Switch, Route } from "react-router-dom";
 import Sidebar from "react-sidebar";
@@ -32,8 +33,8 @@ function App() {
       <Header/>
 
       <Switch>
-        {/* <Route path="/covidsitters" component={Matcher}/>
-        <Route path="/ccd" component={Matcher}/> */}
+        {/* <Route path="/covidsitters" component={Matcher}/>*/}
+        <Route path="/ccd" component={Chooser}/>
         <Route path="/" component={Matcher}/>
       </Switch>
 
