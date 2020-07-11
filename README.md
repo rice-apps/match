@@ -32,6 +32,9 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [ ] first, hardcode this into recoil state
   - [ ] create modal, sidebar, or separate page to modify this setting
 - [ ] center and widen left card
+- [ ] sticky column handling
+  - [ ] first hardcode into recoil state
+  - [ ] modal, sidebar, or separate page to modify this setting
 - [ ] match-making functionality
   - [ ] buttons on top of right cards
   - [ ] buttons actually create matches stored in state
