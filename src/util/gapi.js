@@ -2,6 +2,8 @@
 var CLIENT_ID = process.env.REACT_APP_GAPI_CLIENT_ID;
 var API_KEY = process.env.REACT_APP_GAPI_API_KEY;
 
+console.log(CLIENT_ID, API_KEY);
+
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 
@@ -38,6 +40,7 @@ function initClient(callbackFunction) {
         updateSigninStatus(window.gapi.auth2.getAuthInstance().isSignedIn.get(), callbackFunction);
     }, function (error) {
         let errorString = JSON.stringify(error, null, 2);
+        console.log("ERROR: Did not initialize gapi client correctly!!!")
         console.log(errorString);
         throw errorString;
     });
@@ -49,8 +52,6 @@ function initClient(callbackFunction) {
  */
 function updateSigninStatus(isSignedIn, callbackFunction) {
     if (isSignedIn) {
-        // We can program this to be dynamic later, for now hard-coded
-        getData('1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I');
         let user = window.gapi.auth2.getAuthInstance().currentUser.get();
         callbackFunction(user);
     } else {
@@ -73,9 +74,10 @@ export function handleSignoutClick() {
 }
 
 /**
+ * Retrieve the actual Google sheets data from here.
  * https://docs.google.com/spreadsheets/d/1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I/edit
  */
-function getData(spreadsheetId) {
+export function getData(spreadsheetId) {
     console.log("Getting data!")
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
