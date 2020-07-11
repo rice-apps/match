@@ -23,14 +23,18 @@ export default function Matcher() {
   return (
     <div>
         <div className="Main">
-            <button style={{position: "absolute", zIndex: 1}}onClick={() => setSidebarOpen(true)}>
+            <button style={{position: "absolute", zIndex: 1}} onClick={() => setSidebarOpen(true)}>
               Sort/Filter
             </button>
 
             <div className="Body">
+              
+              {/* Split plane to allow panel resizing */}
               <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{overflow: 'auto'}}>
+                
                 <LeftDataPanel/>
                 <RightDataPanel/>
+              
               </SplitPane>
             </div>
         </div>

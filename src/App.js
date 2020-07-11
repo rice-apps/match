@@ -23,20 +23,21 @@ function App() {
 
   return (
     <div className="App">
+
+      {/* This is actually the sidebar for the sort/filter control panel. */}
       <Sidebar
         sidebar={<ControlPanel/>}
         open={appState.sidebarOpen}
         onSetOpen={() => setSidebarOpen(false)}
         styles={{ sidebar: { background: "white" }}}
         >
-      <Header/>
+        {/* Header should be on every page */}
+        <Header/>
 
-      <Switch>
-        {/* <Route path="/covidsitters" component={Matcher}/>
-        <Route path="/ccd" component={Matcher}/> */}
-        <Route path="/" component={Matcher}/>
-      </Switch>
-
+        <Switch>
+          {/* Just using / route for now, might want to include /ccd or /covidsitters later. */}
+          <Route path="/" component={Matcher}/>
+        </Switch>
       </Sidebar>
     </div>
   );
