@@ -27,10 +27,16 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] connect to match.riceapps.org
 - [x] use RECOIL on frontend to simplify state logic
 - [ ] connect to db
-- [ ] allow hiding columns and add to description [ex.](https://ant.design/components/table/#components-table-demo-expand)
+  - [ ] actually, directly read/write to Google sheet??? 
+- [ ] allow hiding columns
+  - either create modal, sidebar, or separate page for this setting
+- [ ] center and widen left card
+- [ ] match-making functionality
+  - buttons on top of right cards
+  - 
 - [ ] time data processing
-- [ ] Rice idp authentication
-- [ ] separate pages for ccd and covidsitters with appropriate auth
+- [ ] rice idp authentication (if we do Google integration, we can just use that auth instead)
+- [ ] separate pages for ccd and covidsitters with appropriate auth (again, if we use Google integration, this isn't needed)
 
 ## Icebox:
 - [ ] select by search auto-complete
