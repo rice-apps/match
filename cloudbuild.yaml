@@ -2,6 +2,11 @@ steps:
 - name: 'gcr.io/cloud-builders/npm'
   args: ['install']
 - name: 'gcr.io/cloud-builders/npm'
+  args: ["run", "create-env"]
+  env:
+    - 'REACT_APP_GAPI_CLIENT_ID=${_REACT_APP_GAPI_CLIENT_ID}'
+    - 'REACT_APP_GAPI_API_KEY=${_REACT_APP_GAPI_API_KEY}'
+- name: 'gcr.io/cloud-builders/npm'
   args: ['run', 'build']
 - name: "gcr.io/cloud-builders/gcloud"
   args: ["app", "deploy", "app.yaml"]

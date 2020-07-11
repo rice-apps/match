@@ -9,6 +9,7 @@ import { atom } from 'recoil';
 export const applicationState = atom({
     key: 'application',
     default: {
+        user: null,
         sidebarOpen: false,
     },
 })
