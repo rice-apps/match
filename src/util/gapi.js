@@ -2,8 +2,6 @@
 var CLIENT_ID = process.env.REACT_APP_GAPI_CLIENT_ID;
 var API_KEY = process.env.REACT_APP_GAPI_API_KEY;
 
-console.log(CLIENT_ID, API_KEY);
-
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 
