@@ -1,8 +1,6 @@
-
-
+const MAX_COLUMN_TITLE_LENGTH = 30;
 
 export function formatData(data, allowManualSort) {
-    console.log(data, allowManualSort);
     // Column objects come from first array in data
     // Key is column name in lower case, where spaces replaced by underscore
     const columnObjects = data[0].map(column => {
@@ -15,6 +13,8 @@ export function formatData(data, allowManualSort) {
             key = "children_"
         }
 
+        let columnTitle = column.length > MAX_COLUMN_TITLE_LENGTH ? column.slice(0, MAX_COLUMN_TITLE_LENGTH) + "..." : column
+
         // If this is the right side and there are rules, don't allow manual sort
         if (!allowManualSort) {
             return {
@@ -23,7 +23,7 @@ export function formatData(data, allowManualSort) {
             key: key, 
             width: 100, 
             dataIndex: key,
-            title: column,
+            title: columnTitle,
             };
         } else {
             return {
@@ -31,7 +31,7 @@ export function formatData(data, allowManualSort) {
             key: key, 
             width: 100, 
             dataIndex: key,
-            title: column,
+            title: columnTitle,
             sorter: (a, b) => a[key] > b[key],
             sortDirections: ['descend', 'ascend'],
             };
