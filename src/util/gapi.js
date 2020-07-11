@@ -39,10 +39,7 @@ function initClient(callbackFunction) {
         // Handle the initial sign-in state.
         updateSigninStatus(window.gapi.auth2.getAuthInstance().isSignedIn.get(), callbackFunction);
     }, function (error) {
-        let errorString = JSON.stringify(error, null, 2);
-        console.log("ERROR: Did not initialize gapi client correctly!!!")
-        console.log(errorString);
-        throw errorString;
+        alert("Error loading in CSV:" + JSON.stringify(error, null, 2));
     });
 }
 
@@ -75,22 +72,15 @@ export function handleSignoutClick() {
 
 /**
  * Retrieve the actual Google sheets data from here.
+ * ID: 1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I
  * https://docs.google.com/spreadsheets/d/1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I/edit
  */
-export function getData(spreadsheetId) {
-    console.log("Getting data!")
+export function getData(spreadsheetId, callbackFunction) {
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
         // Select entire sheet range
         range: 'A1:ZZ', 
-    }).then(function (response) {
-        var range = response.result;
-        if (range.values.length > 0) {
-            console.log(range);
-        } else {
-            console.log('No data found.');
-        }
-    }, function (response) {
-        console.log('Error: ' + response.result.error.message);
+    }).then(callbackFunction, (response) => {
+        alert('Error: ' + response.result.error.message);
     });
 }

@@ -2,6 +2,7 @@
 
 
 export function formatData(data, allowManualSort) {
+    console.log(data, allowManualSort);
     // Column objects come from first array in data
     // Key is column name in lower case, where spaces replaced by underscore
     const columnObjects = data[0].map(column => {

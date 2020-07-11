@@ -16,17 +16,28 @@ export default function CSVFileUploader(props) {
     const { user } = useRecoilValue(applicationState);
 
     function onFileLoaded(data) {
+        console.log(data);
         var newDataState = formatData(data, props.allowManualSort);
         props.onUpload(newDataState);
     }
 
-    function onError(err) {
-        console.log("Error loading in CSV:");
-        console.log(err);
+    function onError(error) {
+        alert("Error loading in CSV:" + JSON.stringify(error, null, 2));
     }
 
     function onGoogleSheetClick() {
-        getData(spreadsheetId);
+        getData(spreadsheetId, onSpreadsheetLoaded);
+    }
+
+    function onSpreadsheetLoaded(response) {
+        var range = response.result;
+        console.log(range);
+        if (range.values.length > 0) {
+            var newDataState = formatData(range.values, props.allowManualSort);
+            props.onUpload(newDataState);
+        } else {
+            console.log('No data found.');
+        }
     }
 
     function onSpreadsheetIdChange(e) {
