@@ -9,8 +9,8 @@ var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"
 // included, separated by spaces.
 var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-// // Only when google is loaded, we can trigger the client load
-// window.addEventListener("google-loaded", handleClientLoad);
+
+/**************************************** AUTHENTICATION ****************************************/
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -68,16 +68,40 @@ export function handleSignoutClick() {
     window.gapi.auth2.getAuthInstance().signOut();
 }
 
-/**
- * Retrieve the actual Google sheets data from here.
- * ID: 1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I
- * https://docs.google.com/spreadsheets/d/1B6rSsKKJBj3KJ5haz_VGbaquMSPKd-pZd6w_lcrFg0I/edit
- */
-export function getData(spreadsheetId, callbackFunction) {
+
+/**************************************** SPREAD SHEET ****************************************/
+
+ /**
+  * Reads Google spreadsheet
+  * @param {spring} spreadsheetId The spreadsheet
+  * @param {function} callbackFunction 
+  */
+export function getSpreadsheetData(spreadsheetId, callbackFunction) {
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
         // Select entire sheet range
-        range: 'A1:ZZ', 
+        range: 'A1:ZZ',
+    }).then(callbackFunction, (response) => {
+        alert('Error: ' + response.result.error.message);
+    });
+}
+
+/**
+ * Writes Google spreadsheet
+ * @param {string} spreadsheetId The spreadsheet
+ * @param {string} range The range of the spreadsheet
+ * @param {list[list[string]]} values The values to write
+ * @param {function} callbackFunction 
+ */
+export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunction) {
+    console.log(spreadsheetId, callbackFunction);
+    window.gapi.client.sheets.spreadsheets.values.update({
+        "spreadsheetId": spreadsheetId,
+        "range": range,
+        "valueInputOption": "USER_ENTERED",
+        "resource": {
+            "values": values
+        }
     }).then(callbackFunction, (response) => {
         alert('Error: ' + response.result.error.message);
     });

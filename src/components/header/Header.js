@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { handleClientLoad, handleAuthClick, handleSignoutClick } from '../../util/gapi';
+import { handleClientLoad, handleAuthClick, handleSignoutClick, modifySpreadsheetData } from '../../util/gapi';
 import RiceAppsLogo from "../../riceappslogo.png";
 import "./Header.css"
 
@@ -23,6 +23,10 @@ export default function Header() {
         window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
     }, []);
 
+    function handleTest() {
+        modifySpreadsheetData("1AUH7XvrZRWP5brh89P_oZiSoYEj0Fm_wH6i-gLw6iIY", "A1:A4", [["WE GIID"]], (response) => { console.log(response) })
+    }
+
     return (
         <div className="Header">
             <img
@@ -34,13 +38,14 @@ export default function Header() {
             <h1><b>match.</b></h1>
             <div>
                 {/* If user is null, show sign in button. If not null, show sign out button */}
-                {user ? 
-                <div className="AuthenticationSection">
-                    <h3> Hello, {user.getBasicProfile().getGivenName()}! </h3> &nbsp;
-                    <button id="signout_button" onClick={handleSignoutClick}>Sign Out</button>
-                </div> : 
-                <button id="authorize_button" onClick={handleAuthClick}>Sign In</button>}
-                
+                {user ?
+                    <div className="AuthenticationSection">
+                        <h3> Hello, {user.getBasicProfile().getGivenName()}! </h3> &nbsp;
+                        <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
+                        {/* <button onClick={handleTest}>Test Data Write</button> */}
+                    </div> :
+                    <button onClick={handleAuthClick}>Sign In</button>}
+
             </div>
         </div>
     );

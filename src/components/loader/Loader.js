@@ -4,7 +4,7 @@ import { formatData } from '../../util/dataFormatter';
 import { Input } from 'antd';
 import './Loader.css';
 
-import { getData } from '../../util/gapi';
+import { getSpreadsheetData } from '../../util/gapi';
 
 import { useRecoilValue } from 'recoil';
 import { applicationState } from '../../store/atoms';
@@ -26,12 +26,11 @@ export default function CSVFileUploader(props) {
     }
 
     function onGoogleSheetClick() {
-        getData(spreadsheetId, onSpreadsheetLoaded);
+        getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
     }
 
     function onSpreadsheetLoaded(response) {
         var range = response.result;
-        console.log(range);
         if (range.values.length > 0) {
             var newDataState = formatData(range.values, props.allowManualSort);
             props.onUpload(newDataState);
