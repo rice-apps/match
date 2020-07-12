@@ -1,4 +1,11 @@
 // Adam Zawierucha
+class Student {
+  constructor(firstName = NONE, last){
+    this.firstName = ""
+    this.lastName = ""
+    this.netId = ""
+  }
+}
 function getStudentRankings() {
   /*
   Inputs: None
