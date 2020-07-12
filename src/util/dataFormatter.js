@@ -24,6 +24,7 @@ export function formatData(data, allowManualSort) {
             width: 100, 
             dataIndex: key,
             title: columnTitle,
+            ellipsis: true,
             };
         } else {
             return {
@@ -32,6 +33,7 @@ export function formatData(data, allowManualSort) {
             width: 100, 
             dataIndex: key,
             title: columnTitle,
+            ellipsis: true,
             sorter: (a, b) => a[key] > b[key],
             sortDirections: ['descend', 'ascend'],
             };
