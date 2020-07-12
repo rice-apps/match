@@ -26,26 +26,25 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] grey background to focus on data
 - [x] connect to match.riceapps.org
 - [x] use RECOIL on frontend to simplify state logic
-- [ ] connect to db
-  - [ ] actually, directly read/write to google sheet??? 
-- [ ] allow hiding columns
-  - [ ] first, hardcode this into recoil state
-  - [ ] create modal, sidebar, or separate page to modify this setting
+- [x] google oauth
+- [x] separate pages for ccd and covidsitters with appropriate auth 
+  - (again, if we use google integration, this isn't needed)
+- [x] connect to db
+  - [x] actually, directly read/write to google sheet??? 
+- [ ] column settings
+  - (for each of these, hard code them first, and then make them configurable)
+  - (once you can prove it can be done through hard-coding, then add to recoil state,
+    and create a page/modal/sidebar to allow users to configure this)
+  - [ ] hiding
+  - [ ] variable width lengths based on the longest value in the column
+  - [ ] sticky
 - [ ] center and widen left card
-- [ ] variable column lengths based on the longest value in the column
-- [ ] sticky column handling
-  - [ ] first hardcode into recoil state
-  - [ ] modal, sidebar, or separate page to modify this setting
 - [ ] match-making functionality
   - [ ] buttons on top of right cards
   - [ ] buttons actually create matches stored in state
   - [ ] when a match is made, both sides have colored indicators
-  - [ ] when a match is made, it is written to either db or google sheet
+  - [ ] when a match is made, it is written to either db or google sheet???
 - [ ] time data processing
-- [ ] rice idp authentication 
-  - (if we do google integration, we can just use that auth instead)
-- [ ] separate pages for ccd and covidsitters with appropriate auth 
-  - (again, if we use google integration, this isn't needed)
 
 ## Icebox:
 - [ ] select by search auto-complete
