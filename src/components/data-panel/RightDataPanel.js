@@ -33,7 +33,7 @@ export default function RightDataPanel() {
         {/* Loader to accept csv input */}
         {data.length === 0 && <Loader 
         onUpload={setRightData}
-        allowManualSort={true}
+        allowManualSort={false}
         />}
         <br/>
 
