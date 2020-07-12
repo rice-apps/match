@@ -57,7 +57,7 @@ export default function CSVFileUploader(props) {
                         placeholder="Copy & paste the ID of the Google sheet"
                         onChange={onSpreadsheetIdChange}
                         defaultValue={defaultSpreadsheetId}
-                        style={{ width: "300px" }} /> &nbsp;
+                        style={{ width: "400px" }} /> &nbsp;
                     <button onClick={onGoogleSheetClick}>Upload data</button>
                 </div>
                 : <CSVReader
