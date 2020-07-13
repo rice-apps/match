@@ -28,6 +28,9 @@ class Externship {
       Outputs: None
       Appends students object to matched list
     */
+    if (studentObject.assignedExternship !== null) {
+      throw new Error(`Student <${studentObject.email}> has already been assigned an externship <${studentObject.assignedExternship.companyName}>`)
+    }
     studentObject.assignedExternship = this
     this.matched.push(studentObject);
   }
@@ -44,6 +47,12 @@ class Externship {
       }
     }
   }
+  getNumberOfApplicants(){
+    /*
+      Returns the number of applicants
+    */
+    return this.applicants.length;
+  }
 }
 
 class Student {
@@ -58,6 +67,20 @@ class Student {
     this.lastName = lastName;
     this.applications = applications;
     this.assignedExternship = null;
+  }
+  getFullName(){
+    /*
+       Returns the string of the full name of the student
+    */
+    var first = (this.firstName ? this.firsName : "<No First Name>");
+    var last = (this.lastName ? this.lastName : "<No Last Name>");
+    return string.concat(first," ",last);
+  }
+  getNumberOfApplicants(){
+    /*
+     Returns the number of applications
+    */
+    return this.applications.length;
   }
 }
 
@@ -78,6 +101,7 @@ var MockExternships = [new Externship("Facebook",3,[anna,adam,ryan,sanjanaa]),
                        new Externship("Netflix",2,[anna,sanjanaa,jill]),
                        new Externship("Google",1,[ryan,bob,johnny,adam]),
                       ];
+
 //Add all externships to student's applicatiosn (NON-CRUCIAL, for now!)
 var i;
 for (i in MockExternships) {
@@ -86,5 +110,6 @@ for (i in MockExternships) {
   for (j in externship.applicants) {
     var applicant = externship.applicants[j];
     applicant.applications.push(externship);
+    console.log(applicant)
   }
 }
