@@ -2,6 +2,10 @@
   padding-left: 20px;
 }
 
+.Content {
+  padding-top: 20px;
+}
+
 div[role=navigation] {
   background-color: #ffffff; /* This is the backround of the matcher div */
 }

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { handleClientLoad, handleAuthClick, handleSignoutClick, modifySpreadsheetData } from '../../util/gapi';
-import RiceAppsLogo from "../../riceappslogo.png";
+import { Navbar, Nav } from 'react-bootstrap';
 import "./Header.css"
 
 import { useRecoilState } from 'recoil';
 import { applicationState } from '../../store/atoms';
 
 export default function Header() {
-
     const [{ user }, setAppState] = useRecoilState(applicationState);
 
     function authenticationCallback(user) {
@@ -19,6 +18,7 @@ export default function Header() {
         })
     }
 
+    // Triggers google to initialize the client
     useEffect(() => {
         window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
     }, []);
@@ -28,26 +28,26 @@ export default function Header() {
     }
 
     return (
-        <div className="Header">
-            <img
-                alt=""
-                src={RiceAppsLogo}
-                style={{ marginTop: "-10px", marginLeft: "2vw", width: "5%", height: "5%" }}
-                onClick={() => { console.log("Clicked header") }}
-            />
-            <h1><b>match.</b></h1>
-            <div>
-                {/* If user is null, show sign in button. If not null, show sign out button */}
+        <Navbar bg="light" expand="lg">
+            <Navbar.Brand href="/"><b>Match</b> <p style={{display: "inline", color: "gray"}}>by RiceApps</p></Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                    {/* <Nav.Link href="/">Home</Nav.Link> */}
+                    <Nav.Link href="/settings">Settings</Nav.Link>
+                </Nav>
+
+                <Navbar.Text>
+                    {user ? "Signed in as: " + user.getBasicProfile().getGivenName() : ""}
+                </Navbar.Text> &nbsp;
                 {user ?
                     <div className="AuthenticationSection">
-                        <h3> Hello, {user.getBasicProfile().getGivenName()}! </h3> &nbsp;
-                        <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
-                        {/* <button onClick={handleTest}>Test Data Write</button> */}
+                         <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
+                         {/* <button onClick={handleTest}>Test Data Write</button> */}
                     </div> :
                     <button onClick={handleAuthClick}>Sign In</button>}
-
-            </div>
-        </div>
+            </Navbar.Collapse>
+        </Navbar>        
     );
 }
 
