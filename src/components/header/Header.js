@@ -10,10 +10,26 @@ export default function Header() {
     const [{ user }, setAppState] = useRecoilState(applicationState);
 
     function authenticationCallback(user) {
+        // Logged out
+        if (!user) {
+            setAppState(oldAppState => {
+                return {
+                    ...oldAppState,
+                    user: null,
+                }
+            })
+        }
+        // Logged in
         setAppState(oldAppState => {
+            let basicProfile = user.getBasicProfile();
             return {
                 ...oldAppState,
-                user: user,
+                user: {
+                    firstName: basicProfile.getGivenName(),
+                    lastName: basicProfile.getFamilyName(),
+                    email: basicProfile.getEmail(),
+                    image: basicProfile.getImageUrl(),
+                },
             }
         })
     }
@@ -38,7 +54,7 @@ export default function Header() {
                 </Nav>
 
                 <Navbar.Text>
-                    {user ? "Signed in as: " + user.getBasicProfile().getGivenName() : ""}
+                    {user ? "Signed in as: " + user.firstName : ""}
                 </Navbar.Text> &nbsp;
                 {user ?
                     <div className="AuthenticationSection">

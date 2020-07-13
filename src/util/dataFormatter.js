@@ -24,6 +24,7 @@ export function formatData(data, allowManualSort) {
             width: 100, 
             dataIndex: key,
             title: columnTitle,
+            fullTitle: column,
             ellipsis: true,
             };
         } else {
@@ -33,6 +34,7 @@ export function formatData(data, allowManualSort) {
             width: 100, 
             dataIndex: key,
             title: columnTitle,
+            fullTitle: column,
             ellipsis: true,
             sorter: (a, b) => a[key] > b[key],
             sortDirections: ['descend', 'ascend'],

@@ -1,8 +1,25 @@
 import { atom } from 'recoil';
 
+
 // This file stores all the global state needed for this app.
 // We should be very careful/diligent about what we think should be 
 // global vs local state.
+
+export function getAtomByKey(key) {
+    switch (key) {
+        case "application":
+            return applicationState;
+        case "leftData":
+            return leftDataState;
+        case "rightData":
+            return rightDataState;
+        case "rules":
+            return rulesState;
+        default:
+            return
+    }
+
+}
 
 
 // Generic app global state
@@ -12,6 +29,9 @@ export const applicationState = atom({
         user: null,
         sidebarOpen: false,
     },
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
 })
 
 
@@ -21,8 +41,13 @@ export const leftDataState = atom({
     default: {
         data: [],
         columns: [],
-        selectedRows: []
+        selectedRows: [],
+        matchColumn: null,
+        spreadsheetId: null,
     }, // default value (aka initial value)
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
 });
 
 
@@ -32,8 +57,13 @@ export const rightDataState = atom({
     default: {
         data: [],
         columns: [],
-        selectedRows: []
-    }, 
+        selectedRows: [],
+        matchColumn: null,
+        spreadsheetId: null,
+    },
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
 });
 
 
@@ -41,4 +71,8 @@ export const rightDataState = atom({
 export const rulesState = atom({
     key: 'rules',
     default: [],
-})
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
+});
+

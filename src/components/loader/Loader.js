@@ -38,6 +38,8 @@ export default function CSVFileUploader(props) {
         var range = response.result;
         if (range.values.length > 0) {
             var newDataState = formatData(range.values, props.allowManualSort);
+            newDataState.spreadsheetId = spreadsheetId;
+            newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
             props.onUpload(newDataState);
         } else {
             console.log('No data found.');

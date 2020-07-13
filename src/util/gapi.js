@@ -2,6 +2,10 @@
 var CLIENT_ID = process.env.REACT_APP_GAPI_CLIENT_ID;
 var API_KEY = process.env.REACT_APP_GAPI_API_KEY;
 
+if (!CLIENT_ID || !API_KEY) {
+    alert("Google API client id or API key not stored. There must be an issue with the build. If running locally, check for the .env file. If in production, check GCP.")
+}
+
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 

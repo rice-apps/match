@@ -2,10 +2,6 @@
   padding-left: 20px;
 }
 
-.Content {
-  padding-top: 20px;
-}
-
 div[role=navigation] {
   background-color: #ffffff; /* This is the backround of the matcher div */
 }
@@ -22,6 +18,12 @@ input[type="button"] {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.SettingsPanel {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .DataPanel {
