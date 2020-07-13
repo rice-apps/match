@@ -25,7 +25,8 @@ export{Externship,Student,MockStudents,MockExternships}
         other extnership (assignedExternship==null)
       getNumberOfApplicants(): None -> integer
         Returns the number of integers
-
+      hasSpace() None -> bool
+        Whether or not another student can be matched to this internship
   Student (class)
     Attributes:
       email: (string) -- REQUIRED
