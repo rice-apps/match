@@ -1,19 +1,52 @@
 export{Externship,Student,MockStudents,MockExternships}
 /*
   IMPORT INSTRUCTIONS:
-  To import anything from here simple put
-  "import {Externship, Student, MockStudents, MockExternships} from "./objects"
+  To import anything from here simple put:
+    import {Externship, Student, MockStudents, MockExternships} from "./objects"
   At the top of your javascript file (add/remove variables as needed)
 */
 
+/*
+  DOCUMENTATION:
+
+  Externship (class)
+    Attributes:
+      companyName (str) -- REQUIRED
+      numberOfSpots (int) -- REQUIRED
+      applicants (array of studentObjects) -- REQUIRED
+      jobId (int)
+      postingId (int)
+    Methods:
+      match(): studentObject -> None 
+        Adds student to matched array in externship object and sets
+        assignedExternship of student to the externship objects
+      getHigehstUnmatched(): None -> studentObject
+        Returns the highest applicant in applicants array who is not mathced to any
+        other extnership (assignedExternship==null)
+      getNumberOfApplicants(): None -> integer
+        Returns the number of integers
+
+  Student (class)
+    Attributes:
+      email: (string) -- REQUIRED
+      firstName: (string)
+      lastName: (string)
+      applications: (array of externshipObjects)
+    Methods:
+      getFullName(): None -> string
+        Returns a concatination of students first and last name, if possible.
+      getNumberOfApplications() None -> integers
+        Returns the number of applications student has sent (size of applications)
+
+*/
 //Define Classes
 class Externship {
   constructor(
     companyName,
     numberOfSpots,
-    applicants = [],
-    jobId = null,
-    postingId = null
+    applicants,
+    jobId = null, //OPTIONAL
+    postingId = null //OPTIONAL
   ) {
     this.companyName = companyName;
     this.jobId = jobId;
@@ -26,7 +59,8 @@ class Externship {
     /*
       Inputs: studentObject
       Outputs: None
-      Appends students object to matched list
+      Appends students object to matched list.
+      Thros an error if student already is matched.
     */
     if (studentObject.assignedExternship !== null) {
       throw new Error(`Student <${studentObject.email}> has already been assigned an externship <${studentObject.assignedExternship.companyName}>`)
@@ -37,7 +71,7 @@ class Externship {
   getHighestUnmatched() {
     /*
       Inputs: None
-      Outputs: The highest ranked studentObject who is not ranked.
+      Outputs: The highest ranked studentObject who is not ranked (globally).
     */
     var i;
     for (i in this.applicants) {
@@ -58,9 +92,9 @@ class Externship {
 class Student {
   constructor(
     email,
-    firstName=null,
-    lastName=null,
-    applications = [],
+    firstName=null, //OPTIONAL
+    lastName=null, //OPTIONAL
+    applications = [], //OPTIONAL
   ) {
     this.email = email
     this.firstName = firstName;
