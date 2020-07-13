@@ -1,4 +1,4 @@
-export{Externship,Student}
+export{Externship,Student,MockStudents,MockExternships}
 /*
   IMPORT INSTRUCTIONS:
   To import anything from here simple put
@@ -6,6 +6,7 @@ export{Externship,Student}
   At the top of your javascript file (add/remove variables as needed)
 */
 
+//Define Classes
 class Externship {
   constructor(
     companyName,
@@ -58,10 +59,32 @@ class Student {
     this.applications = applications;
     this.assignedExternship = null;
   }
-  addApplication(externshipObject){
-    /*
-      Simply appends an externship object to applications list
-    */
-    this.applications.push(externshipObject);
+}
+
+//Generate Mock Data
+//Define soe students
+var adam = new Student("adz2@rice.edu","Adam", "Zawierucha");
+var anna = new Student("anna@rice.edu", "Anna", "Bai");
+var sanjanaa = new Student("sanj@rice.edu","Sanjanaa","Shanmugam");
+var ryan = new Student("knight@rice.edu",  "Ryan", "Knighlty");
+var johnny = new Student("john@rice.edu","Johnny");
+var bob = new Student("bob@rice.edu","Bob")
+var jill = new Student("jill@rice.edu","Jill")
+var MockStudents = [adam,anna,sanjanaa,ryan,johnny,bob,jill];
+
+//Define some externships
+var MockExternships = [new Externship("Facebook",3,[anna,adam,ryan,sanjanaa]),
+                       new Externship("Apple",2,[bob,jill,adam]),
+                       new Externship("Netflix",2,[anna,sanjanaa,jill]),
+                       new Externship("Google",1,[ryan,bob,johnny,adam]),
+                      ];
+//Add all externships to student's applicatiosn (NON-CRUCIAL, for now!)
+var i;
+for (i in MockExternships) {
+  var externship = MockExternships[i];
+  var j;
+  for (j in externship.applicants) {
+    var applicant = externship.applicants[j];
+    applicant.applications.push(externship);
   }
 }
