@@ -22,7 +22,7 @@ const initializeState = ({ set }) => {
 
 ReactDOM.render(
   <RecoilRoot
-    // initializeState={initializeState} // Comment this out if you don't want to use local storage
+    initializeState={initializeState} // Comment this out if you don't want to use local storage
   >
     <Router>
       <PersistenceObserver />
