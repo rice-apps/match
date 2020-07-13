@@ -1,7 +1,6 @@
-export{Externship,Student,MockStudents,MockExternships}
 /*
   IMPORT INSTRUCTIONS:
-  To import anything from here simple put:
+  To import anything from here simply put:
     import {Externship, Student, MockStudents, MockExternships} from "./objects"
   At the top of your javascript file (add/remove variables as needed)
 */
@@ -56,12 +55,14 @@ class Externship {
     this.applicants = applicants;
     this.matched = [];
   }
+
   hasSpace(){
     /*
     Returns a bool, whether or not there are spots left.
     */
     return this.matched.length < this.numberOfSpots;
   }
+
   match(studentObject) {
     /*
       Inputs: studentObject
@@ -77,6 +78,7 @@ class Externship {
     studentObject.assignedExternship = this
     this.matched.push(studentObject);
   }
+
   getHighestUnmatched() {
     /*
       Inputs: None
@@ -90,6 +92,7 @@ class Externship {
       }
     }
   }
+
   getNumberOfApplicants(){
     /*
       Returns the number of applicants
@@ -111,14 +114,16 @@ class Student {
     this.applications = applications;
     this.assignedExternship = null;
   }
+
   getFullName(){
     /*
        Returns the string of the full name of the student
     */
     var first = (this.firstName ? this.firsName : "<No First Name>");
     var last = (this.lastName ? this.lastName : "<No Last Name>");
-    return string.concat(first," ",last);
+    return first.concat(" ",last);
   }
+
   getNumberOfApplications(){
     /*
      Returns the number of applications
@@ -156,3 +161,5 @@ for (i in MockExternships) {
     console.log(applicant)
   }
 }
+
+export{Externship,Student,MockStudents,MockExternships}
