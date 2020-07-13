@@ -17,7 +17,7 @@ export{Externship,Student,MockStudents,MockExternships}
       jobId (int)
       postingId (int)
     Methods:
-      match(): studentObject -> None 
+      match(): studentObject -> None
         Adds student to matched array in externship object and sets
         assignedExternship of student to the externship objects
       getHigehstUnmatched(): None -> studentObject
@@ -55,6 +55,12 @@ class Externship {
     this.applicants = applicants;
     this.matched = [];
   }
+  hasSpace(){
+    /*
+    Returns a bool, whether or not there are spots left.
+    */
+    return this.matched.length < this.numberOfSpots;
+  }
   match(studentObject) {
     /*
       Inputs: studentObject
@@ -63,7 +69,9 @@ class Externship {
       Thros an error if student already is matched.
     */
     if (studentObject.assignedExternship !== null) {
-      throw new Error(`Student <${studentObject.email}> has already been assigned an externship <${studentObject.assignedExternship.companyName}>`)
+      throw new Error(`Student <${studentObject.email}> has already been assigned an externship <${studentObject.assignedExternship.companyName}>`);
+    } else if (!this.hasSpace()) {
+      throw new Error(`${this} Externship is full!`);
     }
     studentObject.assignedExternship = this
     this.matched.push(studentObject);
@@ -110,7 +118,7 @@ class Student {
     var last = (this.lastName ? this.lastName : "<No Last Name>");
     return string.concat(first," ",last);
   }
-  getNumberOfApplicants(){
+  getNumberOfApplications(){
     /*
      Returns the number of applications
     */
