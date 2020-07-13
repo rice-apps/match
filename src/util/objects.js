@@ -1,3 +1,11 @@
+export{Externship,Student}
+/*
+  IMPORT INSTRUCTIONS:
+  To import anything from here simple put
+  "import {Externship, Student, MockStudents, MockExternships} from "./objects"
+  At the top of your javascript file (add/remove variables as needed)
+*/
+
 class Externship {
   constructor(
     companyName,
