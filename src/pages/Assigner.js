@@ -1,7 +1,8 @@
 import React from 'react';
 import Loader from '../components/loader/Loader';
 import {makeAssignments, getUnmatchedStudents} from '../util/ccd/assigner'
-import {createStudentList, createExternshipList} from '../util/ccd/dataFormatter'
+import {createStudentList, createExternshipList} from '../util/ccd/externshipParser'
+import {sortExternships} from '../util/ccd/sorter'
 import {exportCSV} from '../util/ccd/csvWriter'
 import { useRecoilState } from 'recoil';
 import { applicationState } from '../store/atoms';
