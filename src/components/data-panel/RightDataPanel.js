@@ -2,24 +2,24 @@ import React from 'react';
 import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { Card } from "antd";
-import { applyRules } from '../../util/rules';
+import { applyRules } from '../../util/rules';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
 export default function RightDataPanel() {
-  const [{data, columns, selectedRows}, setRightData] = useRecoilState(rightDataState);
-  const {selectedRows: selectedLeftRows} = useRecoilValue(leftDataState);
+  const [{ data, columns, selectedRows }, setRightData] = useRecoilState(rightDataState);
+  const { selectedRows: selectedLeftRows } = useRecoilValue(leftDataState);
   const rules = useRecoilValue(rulesState);
 
   function onSelectRow(rows) {
-      setRightData(data => {
-          return {
-              ...data,
-              selectedRows: rows
-          }
-      })
+    setRightData(data => {
+      return {
+        ...data,
+        selectedRows: rows
+      }
+    })
   }
 
   // Here's where the sorting/filtering happens!!
@@ -30,34 +30,37 @@ export default function RightDataPanel() {
   return (
     <div className="DataPanel">
 
-        {/* Loader to accept csv input */}
-        {data.length === 0 && <Loader 
+      {/* Loader to accept csv input */}
+      {data.length === 0 && <Loader
         onUpload={setRightData}
         allowManualSort={false}
-        />}
-        <br/>
+      />}
+      <br />
 
 
-        {/* The actual table for this panel. Note that it's "checkbox" selection type.
+      {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
-        <Table 
-          onSelectRow={onSelectRow}
-          data={sortedData}
-          columns={columns}
-          selectType={"checkbox"}
-          />
+      <Table
+        onSelectRow={onSelectRow}
+        data={sortedData}
+        columns={columns}
+        selectType={"checkbox"}
+      />
 
-            {/* This just renders in the selected rows */}
-          <div className="SelectionDisplay">
-            {selectedRows.map((row, i) => 
-              <Card key={i} style={{ width: 300 }}>
-                {Object.entries(row).map((attribute, i) => {
-                  let [key, value] = attribute;
-                  return (<p key={key}>{key} : {value}</p>)
-                })}
-              </Card>)}
-          </div>
-          
+      {/* This just renders in the selected rows */}
+      <div className="SelectionDisplay">
+        {selectedRows.map((row, i) =>
+          <div>
+            <button>Match!</button>
+            <Card key={i} style={{ width: 300 }}>
+              {Object.entries(row).map((attribute, i) => {
+                let [key, value] = attribute;
+                return (<p key={key}>{key} : {value}</p>)
+              })}
+            </Card>
+          </div>)}
+      </div>
+
     </div>
-    )
+  )
 }
