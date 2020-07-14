@@ -1,7 +1,7 @@
 import React from 'react';
 import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
-import { Card } from "antd";
+import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
 import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
 import { formatData } from '../../util/dataFormatter';
@@ -34,7 +34,7 @@ export default function RightDataPanel() {
   }
 
   // Here's where the sorting/filtering happens!!
-  // Note selectedLeftRows[0]. Should only ever have one in the list anyways 
+  // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
 
@@ -117,13 +117,14 @@ export default function RightDataPanel() {
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) =>
           <div key={i}>
-            <button onClick={() => makeMatch(row)}>Match!</button>
-            <Card style={{ width: 300 }}>
-              {Object.entries(row).map((attribute, ii) => {
-                let [key, value] = attribute;
-                return (<p key={ii}>{key} : {value}</p>)
-              })}
-            </Card>
+            <FormattedCard
+              title = "Right Card"
+              extra = {<button onClick={() => makeMatch(row)}>Match!</button>}
+              key={i}
+              style={{ width: 300}}
+              row={row}
+            >
+            </FormattedCard>
           </div>)}
       </div>
 
