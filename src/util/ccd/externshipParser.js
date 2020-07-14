@@ -11,7 +11,7 @@ var columnNames = {
     slotCount: "number_of_externs"
 };
 
-export function getStudentAndExternshipLists(fileData) {
+export function ceateStudentAndExternshipLists(fileData) {
     // TODO: Zawie implement this functionality
     // Create a list of unique student objects (with no duplicates)
     var studentMap = {};
@@ -48,18 +48,4 @@ export function getStudentAndExternshipLists(fileData) {
     console.log("STUDENTS:",studentList);
     console.log("EXTERNSHIPS:",externshipList);
     return {students:studentList,externships:externshipList};
-}
-
-export function createStudentList(fileData) {
-    // TODO: Zawie implement this functionality
-    // Create a list of unique student objects (with no duplicates)
-    var lists = getStudentAndExternshipLists(fileData);
-    return lists.students;
-}
-
-export function createExternshipList(fileData, students) {
-    // TODO: Zawie implement this functionality
-    // Note: Make sure that student objects are shared between externships (not duplicated)
-    var lists = getStudentAndExternshipLists(fileData);
-    return lists.externships;
 }

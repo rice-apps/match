@@ -1,7 +1,7 @@
 import React from 'react';
 import Loader from '../components/loader/Loader';
 import {makeAssignments, getUnmatchedStudents} from '../util/ccd/assigner'
-import {createStudentList, createExternshipList} from '../util/ccd/externshipParser'
+import {ceateStudentAndExternshipLists} from '../util/ccd/externshipParser'
 import {sortExternships} from '../util/ccd/sorter'
 import {exportCSV} from '../util/ccd/csvWriter'
 import { useRecoilState } from 'recoil';
@@ -14,8 +14,9 @@ export default function Assigner() {
 
   function handleData(fileData) {
     // Handle the data uploaded by the user
-    let students = createStudentList(fileData)
-    let externships = createExternshipList(fileData, students)
+    let lists = ceateStudentAndExternshipLists(fileData)
+    let students = lists.students
+    let externships = lists.externships
 
     externships = sortExternships(externships)
 
