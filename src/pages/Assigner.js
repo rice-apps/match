@@ -24,7 +24,7 @@ export default function Assigner() {
 
     console.log(assignments)
     console.log(unmatchedStudents)
-    exportCSV(assignments, unmatchedStudents)
+    //exportCSV(assignments, unmatchedStudents)
   }
 
   return (
