@@ -11,10 +11,11 @@ var columnNames = {
     slotCount: "number_of_externs"
 };
 
-export function createStudentList(fileData) {
+export function getStudentAndExternshipLists(fileData) {
     // TODO: Zawie implement this functionality
     // Create a list of unique student objects (with no duplicates)
     var studentMap = {};
+    var externshipMap = {};
     for (var i = 0; i < fileData.data.length; i++) {
        var row = fileData.data[i];
        //Handle student
@@ -28,15 +29,37 @@ export function createStudentList(fileData) {
             student.firstName = student.firstName ? student.firstName : first;
             student.lastName = student.lastName ? student.lastName : last;
        }
+       //Handle externship
+       var name = row[columnNames.externshipName];
+       if (name != ""){
+           var jobId = row[columnNames.jobId];
+           var postingId = row[columnNames.postingId]
+           var slotCount = row[columnNames.slotCount]
+           externshipMap[name] = externshipMap[name] ? externshipMap[name]: new Externship(name,slotCount,[],jobId,postingId)
+           var externship = externshipMap[name];
+           if (student != null){
+            externship.applicants.push(student);
+            student.applications.push(externship);
+           }
+       }
     }
     var studentList = Object.values(studentMap);
-    console.log(studentList);
-    return MockStudents
+    var externshipList = Object.values(externshipMap);
+    console.log("STUDENTS:",studentList);
+    console.log("EXTERNSHIPS:",externshipList);
+    return {students:studentList,externships:externshipList};
+}
+
+export function createStudentList(fileData) {
+    // TODO: Zawie implement this functionality
+    // Create a list of unique student objects (with no duplicates)
+    var lists = getStudentAndExternshipLists(fileData);
+    return lists.students;
 }
 
 export function createExternshipList(fileData, students) {
     // TODO: Zawie implement this functionality
     // Note: Make sure that student objects are shared between externships (not duplicated)
-    console.log(fileData)
-    return MockExternships
+    var lists = getStudentAndExternshipLists(fileData);
+    return lists.externships;
 }
