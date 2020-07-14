@@ -38,7 +38,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [ ] hiding
   - [ ] variable width lengths based on the longest value in the column
   - [ ] sticky
-- [ ] center and widen left card (Zawie)
+- [x] center and widen left card
 - [ ] Make cards more readable (Zawie)
 - [ ] match-making functionality
   - [x] buttons on top of right cards
