@@ -62,6 +62,11 @@ function updateSigninStatus(isSignedIn, callbackFunction) {
  *  Sign in the user upon button click.
  */
 export function handleAuthClick() {
+
+    if (!window.gapi || !window.gapi.auth2) {
+        alert("Sorry! Google API Client does not initialize sometimes, will address this later, but for now refresh the page!");
+    }
+
     window.gapi.auth2.getAuthInstance().signIn();
 }
 

@@ -18,20 +18,21 @@ export default function Header() {
                     user: null,
                 }
             })
+        } else {
+            // Logged in
+            setAppState(oldAppState => {
+                let basicProfile = user.getBasicProfile();
+                return {
+                    ...oldAppState,
+                    user: {
+                        firstName: basicProfile.getGivenName(),
+                        lastName: basicProfile.getFamilyName(),
+                        email: basicProfile.getEmail(),
+                        image: basicProfile.getImageUrl(),
+                    },
+                }
+            })
         }
-        // Logged in
-        setAppState(oldAppState => {
-            let basicProfile = user.getBasicProfile();
-            return {
-                ...oldAppState,
-                user: {
-                    firstName: basicProfile.getGivenName(),
-                    lastName: basicProfile.getFamilyName(),
-                    email: basicProfile.getEmail(),
-                    image: basicProfile.getImageUrl(),
-                },
-            }
-        })
     }
 
     // Triggers google to initialize the client
@@ -59,7 +60,6 @@ export default function Header() {
                 {user ?
                     <div className="AuthenticationSection">
                          <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
-                         <button onClick={handleTest}>Test Data Write</button>
                     </div> :
                     <button onClick={handleAuthClick}>Sign In</button>}
             </Navbar.Collapse>
