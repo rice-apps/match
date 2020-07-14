@@ -75,11 +75,32 @@ export function handleSignoutClick() {
 
 /**************************************** SPREAD SHEET ****************************************/
 
- /**
-  * Reads Google spreadsheet
-  * @param {spring} spreadsheetId The spreadsheet
-  * @param {function} callbackFunction 
-  */
+// e.g. 'A' => 1, 'Z' => 26, 'AA' => 27 
+function columnToLetter(column) {
+    var temp, letter = '';
+    while (column > 0) {
+        temp = (column - 1) % 26;
+        letter = String.fromCharCode(temp + 65) + letter;
+        column = (column - temp - 1) / 26;
+    }
+    return letter;
+}
+
+// e.g. 1 => 'A', 26 => 'Z', 27 => 'AA'
+function letterToColumn(letter) {
+    var column = 0, length = letter.length;
+    for (var i = 0; i < length; i++) {
+        column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
+    }
+    return column;
+}
+
+
+/**
+ * Reads Google spreadsheet
+ * @param {spring} spreadsheetId The spreadsheet
+ * @param {function} callbackFunction 
+ */
 export function getSpreadsheetData(spreadsheetId, callbackFunction) {
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
@@ -91,6 +112,21 @@ export function getSpreadsheetData(spreadsheetId, callbackFunction) {
 }
 
 /**
+ * Writes to a single (column, row) value.
+ * NOTE: INDEXES BY 1, NOT 0!!!!
+ * @param {string} spreadsheetId 
+ * @param {integer} column 
+ * @param {integer} row 
+ * @param {string} value 
+ * @param {function} callbackFunction 
+ */
+export function modifySpreadsheetDataSingleCell(spreadsheetId, column, row, value, callbackFunction) {
+    let columnLetter = columnToLetter(column);
+    let range = columnLetter + row.toString();
+    modifySpreadsheetData(spreadsheetId, range + ":" + range, [[value]], callbackFunction);
+}
+
+/**
  * Writes Google spreadsheet
  * @param {string} spreadsheetId The spreadsheet
  * @param {string} range The range of the spreadsheet
@@ -98,7 +134,6 @@ export function getSpreadsheetData(spreadsheetId, callbackFunction) {
  * @param {function} callbackFunction 
  */
 export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunction) {
-    console.log(spreadsheetId, callbackFunction);
     window.gapi.client.sheets.spreadsheets.values.update({
         "spreadsheetId": spreadsheetId,
         "range": range,
@@ -106,7 +141,7 @@ export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunc
         "resource": {
             "values": values
         }
-    }).then(callbackFunction, (response) => {
+    }).then(callbackFunction ? callbackFunction : () => console.log("Success writing to Google Sheet!"), (response) => {
         alert('Error: ' + response.result.error.message);
     });
 }

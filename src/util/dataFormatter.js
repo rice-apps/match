@@ -3,7 +3,7 @@ const MAX_COLUMN_TITLE_LENGTH = 30;
 export function formatData(data, allowManualSort) {
     // Column objects come from first array in data
     // Key is column name in lower case, where spaces replaced by underscore
-    const columnObjects = data[0].map(column => {
+    const columnObjects = data[0].map((column, columnIndex) => {
         let key = column.toLowerCase().replace(/ /g,"_");
 
         // NOTE: If the column name is "children", antd breaks.
@@ -18,10 +18,11 @@ export function formatData(data, allowManualSort) {
         // If this is the right side and there are rules, don't allow manual sort
         if (!allowManualSort) {
             return {
+            index: columnIndex,
             // Right now fixing name column
             fixed: (key === "name") ? "left" : false,
             key: key, 
-            width: 100, 
+            width: 150, 
             dataIndex: key,
             title: columnTitle,
             fullTitle: column,
@@ -29,9 +30,10 @@ export function formatData(data, allowManualSort) {
             };
         } else {
             return {
+            index: columnIndex,
             fixed: (key === "name") ? "left" : false,
             key: key, 
-            width: 100, 
+            width: 150, 
             dataIndex: key,
             title: columnTitle,
             fullTitle: column,

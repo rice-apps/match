@@ -42,7 +42,7 @@ export default function CSVFileUploader(props) {
             newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
             props.onUpload(newDataState);
         } else {
-            console.log('No data found.');
+            alert('No data found.');
         }
     }
 

@@ -18,7 +18,7 @@ export default function MyTable(props) {
   }
 
   function rowClassNameGetter(row, index) {
-    if (index % 2 == 1) {
+    if (row[props.matchColumn.key]) {
       return "matched-row"
     } else {
       return "unmatched-row"
