@@ -17,6 +17,14 @@ export default function MyTable(props) {
     return <> </>;
   }
 
+  function rowClassNameGetter(row, index) {
+    if (index % 2 == 1) {
+      return "matched-row"
+    } else {
+      return "unmatched-row"
+    }
+  }
+
   return (
     <div>
       <Table 
@@ -24,6 +32,7 @@ export default function MyTable(props) {
         type: props.selectType,
         ...rowSelection,
       }}
+      rowClassName={rowClassNameGetter}
       dataSource={props.data} 
       columns={props.columns}
       bordered 

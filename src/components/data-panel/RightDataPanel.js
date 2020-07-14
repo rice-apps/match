@@ -50,12 +50,12 @@ export default function RightDataPanel() {
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) =>
-          <div>
+          <div key={i}>
             <button>Match!</button>
-            <Card key={i} style={{ width: 300 }}>
-              {Object.entries(row).map((attribute, i) => {
+            <Card style={{ width: 300 }}>
+              {Object.entries(row).map((attribute, ii) => {
                 let [key, value] = attribute;
-                return (<p key={key}>{key} : {value}</p>)
+                return (<p key={ii}>{key} : {value}</p>)
               })}
             </Card>
           </div>)}
