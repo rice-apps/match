@@ -40,11 +40,14 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [ ] sticky
 - [ ] center and widen left card (Zawie)
 - [ ] Make cards more readable (Zawie)
-- [ ] match-making functionality
-  - [ ] buttons on top of right cards
-  - [ ] buttons actually create matches stored in state
-  - [ ] when a match is made, both sides have colored indicators
-  - [ ] when a match is made, it is written to either db or google sheet???
+- [~] match-making functionality
+  - [x] buttons on top of right cards
+  - [x] buttons actually create matches stored in state LEFT
+  - [ ] buttons actually create matches stored in state RIGHT
+  - [x] when a match is made, both sides have colored indicators
+  - [x] when a match is made, it is written to google sheet LEFT
+  - [ ] when a match is made, it is written to google sheet RIGHT
+  - [ ] unmatch-ability
 - [ ] time data processing
 
 ## Icebox:
