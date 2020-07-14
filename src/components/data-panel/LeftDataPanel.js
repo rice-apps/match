@@ -8,7 +8,7 @@ import { leftDataState } from '../../store/atoms';
 
 
 export default function LeftDataPanel(props) {
-  const [{data, columns, selectedRows}, setLeftData] = useRecoilState(leftDataState);
+  const [{data, columns, selectedRows, matchColumn}, setLeftData] = useRecoilState(leftDataState);
 
   function onSelectRow(rows) {
       setLeftData(data => {
@@ -37,6 +37,7 @@ export default function LeftDataPanel(props) {
           data={data}
           columns={columns}
           selectType={"radio"}
+          matchColumn={matchColumn}
           />
 
             {/* This just renders in the selected rows */}

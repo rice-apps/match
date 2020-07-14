@@ -119,7 +119,7 @@ class Student {
     /*
        Returns the string of the full name of the student
     */
-    var first = (this.firstName ? this.firsName : "<No First Name>");
+    var first = (this.firstName ? this.firstName : "<No First Name>");
     var last = (this.lastName ? this.lastName : "<No Last Name>");
     return first.concat(" ",last);
   }

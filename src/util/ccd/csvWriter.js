@@ -32,7 +32,5 @@ export function exportCSV(assignments, unmatchedStudents) {
     }
 
     write(rows).pipe(process.stdout);
-        
-
 }
 

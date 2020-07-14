@@ -1,44 +1,69 @@
-import React from "react";
+import React, { useEffect } from 'react';
+import { handleClientLoad, handleAuthClick, handleSignoutClick, modifySpreadsheetDataSingleCell } from '../../util/gapi';
+import { Navbar, Nav } from 'react-bootstrap';
 import "./Header.css"
 
-import RiceAppsLogo from "../../riceappslogo.png";
-
-const styles = {
-    feedback: { 
-        float: "right", 
-        marginTop: "-50px", 
-        marginRight: "2vw" 
-    }, 
-    logo: { 
-        float: "left", 
-        marginTop: "-70px", 
-        marginLeft: "2vw", 
-        width: "5%", 
-        height: "5%" 
-    }
-}
+import { useRecoilState } from 'recoil';
+import { applicationState } from '../../store/atoms';
 
 export default function Header() {
-    let feedbackURL = "https://forms.gle/6uyRuTxKgP3n53vB6";
+    const [{ user }, setAppState] = useRecoilState(applicationState);
+
+    function authenticationCallback(user) {
+        // Logged out
+        if (!user) {
+            setAppState(oldAppState => {
+                return {
+                    ...oldAppState,
+                    user: null,
+                }
+            })
+        } else {
+            // Logged in
+            setAppState(oldAppState => {
+                let basicProfile = user.getBasicProfile();
+                return {
+                    ...oldAppState,
+                    user: {
+                        firstName: basicProfile.getGivenName(),
+                        lastName: basicProfile.getFamilyName(),
+                        email: basicProfile.getEmail(),
+                        image: basicProfile.getImageUrl(),
+                    },
+                }
+            })
+        }
+    }
+
+    // Triggers google to initialize the client
+    useEffect(() => {
+        window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
+    }, []);
+
+    function handleTest() {
+        modifySpreadsheetDataSingleCell("1AUH7XvrZRWP5brh89P_oZiSoYEj0Fm_wH6i-gLw6iIY", 2, 3, "23", (response) => { console.log(response) })
+    }
 
     return (
-        <div className="Header">
-                <div>
-                    <h1><b>atch.</b></h1>
-                </div>
-                <img 
-                alt=""
-                src={RiceAppsLogo}
-                style={styles.logo}
-                onClick={() => {console.log("Clicked header")}} 
-                />
-                {/* <button 
-                variant="outlined" 
-                style={styles.feedback}
-                onClick={() => window.open(feedbackURL, "_blank")}>
-                Feedback?
-                </button> */}
-        </div>
+        <Navbar bg="light" expand="lg">
+            <Navbar.Brand href="/"><b>Match</b> <p style={{display: "inline", color: "gray"}}>by RiceApps</p></Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="mr-auto">
+                    <Nav.Link href="/settings">Settings</Nav.Link>
+                    <Nav.Link href="/about">About</Nav.Link>
+                </Nav>
+
+                <Navbar.Text>
+                    {user ? "Signed in as: " + user.firstName : ""}
+                </Navbar.Text> &nbsp;
+                {user ?
+                    <div className="AuthenticationSection">
+                         <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
+                    </div> :
+                    <button onClick={handleAuthClick}>Sign In</button>}
+            </Navbar.Collapse>
+        </Navbar>        
     );
 }
 

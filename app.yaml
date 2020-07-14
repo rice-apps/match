@@ -1,5 +1,17 @@
 runtime: nodejs12
 handlers:
+    - url: /settings
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+
+    - url: /about
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+
     - url: /
       static_files: build/index.html
       upload: build/index.html

@@ -27,3 +27,11 @@
 .table Table {
     height: 20vh;
 }
+
+.matched-row {
+    background-color: #DCEDC2;
+}
+
+.unmatched-row {
+    background-color: white;
+}

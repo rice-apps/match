@@ -20,6 +20,12 @@ input[type="button"] {
   justify-content: space-around;
 }
 
+.SettingsPanel {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .DataPanel {
   padding-left: 10px;
   padding-right: 10px;

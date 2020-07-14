@@ -1,6 +1,13 @@
 .Header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     text-align: center;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
+.AuthenticationSection {
+    display: flex;
+    flex-direction: row;
+}
