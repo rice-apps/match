@@ -23,6 +23,8 @@ export default function CSVFileUploader(props) {
     function onFileLoaded(data) {
         console.log(data);
         var newDataState = formatData(data, props.allowManualSort);
+        newDataState.selectedRows = [];
+        console.log(newDataState);
         props.onUpload(newDataState);
     }
 
@@ -38,8 +40,10 @@ export default function CSVFileUploader(props) {
         var range = response.result;
         if (range.values.length > 0) {
             var newDataState = formatData(range.values, props.allowManualSort);
+            newDataState.selectedRows = [];
             newDataState.spreadsheetId = spreadsheetId;
             newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
+            newDataState.nameColumn = newDataState.columns[2];
             props.onUpload(newDataState);
         } else {
             alert('No data found.');

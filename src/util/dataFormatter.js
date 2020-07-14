@@ -59,5 +59,5 @@ export function formatData(data, allowManualSort) {
     });
 
     
-    return {data: formattedData, columns: columnObjects, selectedRows: []};
+    return {data: formattedData, columns: columnObjects};
 }

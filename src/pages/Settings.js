@@ -32,23 +32,55 @@ export default function Settings() {
     })
   }
 
+  function changeLeftNameColumn(value) {
+    let column = leftData.columns[value];
+    setLeftData(oldLeftDataState => {
+      return {
+        ...oldLeftDataState,
+        nameColumn: column
+      }
+    })
+  }
+
+  function changeRightNameColumn(value) {
+    let column = rightData.columns[value];
+    setRightData(oldRightDataState => {
+      return {
+        ...oldRightDataState,
+        nameColumn: column
+      }
+    })
+  }
+
   return (
     <div>
       <div className="Main">
         <div className="SettingsPanel">
 
           <div style={{ width: "30%", paddingTop: 20 }}>
-            Left "match" column: &nbsp;
-            <Select value={leftData.matchColumn ? leftData.matchColumn.title : null} style={{ width: 250 }} onChange={changeLeftMatchColumn}>
-              {leftData.columns.map((column, i) => {
-                return (
-                  <Option key={i}>{column.title}</Option>
-                )
-              })}
-            </Select>
+          <div>
+                Left "match" column: &nbsp;
+                <Select value={leftData.matchColumn ? leftData.matchColumn.title : null} style={{ width: 250 }} onChange={changeLeftMatchColumn}>
+                  {leftData.columns.map((column, i) => {
+                    return (
+                      <Option key={i}>{column.title}</Option>
+                    )
+                  })}
+                </Select>
+            </div>
 
-            <br />
-            <br />
+            <div>
+                Left "name" column: &nbsp;
+                <Select value={leftData.nameColumn ? leftData.nameColumn.title : null} style={{ width: 250 }} onChange={changeLeftNameColumn}>
+                  {leftData.columns.map((column, i) => {
+                    return (
+                      <Option key={i}>{column.title}</Option>
+                    )
+                  })}
+                </Select>
+            </div>
+
+            <br/>
 
             <Collapse accordion>
               <Panel header="All left columns" key="1">
@@ -63,17 +95,29 @@ export default function Settings() {
           </div>
 
           <div style={{ width: "30%", paddingTop: 20 }}>
-            Right "match" column: &nbsp;
-            <Select value={rightData.matchColumn ? rightData.matchColumn.title : null} style={{ width: 250 }} onChange={changeRightMatchColumn}>
-              {rightData.columns.map((column, i) => {
-                return (
-                  <Option key={i}>{column.title}</Option>
-                )
-              })}
-            </Select>
+          <div>
+                Right "match" column: &nbsp;
+                <Select value={rightData.matchColumn ? rightData.matchColumn.title : null} style={{ width: 250 }} onChange={changeRightMatchColumn}>
+                  {rightData.columns.map((column, i) => {
+                    return (
+                      <Option key={i}>{column.title}</Option>
+                    )
+                  })}
+                </Select>
+            </div>
 
-            <br />
-            <br />
+            <div>
+                Right "name" column: &nbsp;
+                <Select value={rightData.nameColumn ? rightData.nameColumn.title : null} style={{ width: 250 }} onChange={changeRightNameColumn}>
+                  {rightData.columns.map((column, i) => {
+                    return (
+                      <Option key={i}>{column.title}</Option>
+                    )
+                  })}
+                </Select>
+            </div>
+
+            <br/>
 
             <Collapse accordion>
               <Panel header="All right columns" key="1">

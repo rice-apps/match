@@ -11,8 +11,17 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
 export default function RightDataPanel() {
-  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn, spreadsheetId: rightSpreadsheetId }, setRightData] = useRecoilState(rightDataState);
-  const [{ selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, spreadsheetId: leftSpreadsheetId }, setLeftData] = useRecoilState(leftDataState);
+  const [
+    { data, columns, selectedRows,
+      matchColumn: rightMatchColumn,
+      spreadsheetId: rightSpreadsheetId,
+      nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
+  const [
+    { selectedRows: selectedLeftRows,
+      matchColumn: leftMatchColumn,
+      spreadsheetId: leftSpreadsheetId,
+      nameColumn: leftNameColumn }, setLeftData] = useRecoilState(leftDataState);
+
   const rules = useRecoilValue(rulesState);
 
   function onSelectRow(rows) {
@@ -29,21 +38,24 @@ export default function RightDataPanel() {
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
 
+  // This basically refreshes the data in memory, see where this is used.
   function onSpreadsheetLoaded(response) {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
       setLeftData(oldLeftData => {
-        return {
+        let newState = {
           ...oldLeftData,
           ...newDataState,
         }
+        return newState;
       })
     } else {
       alert('No data found.');
     }
   }
 
+  // This is the big boy function that actually makes matches
   function makeMatch(row) {
 
     // Read current match
@@ -55,13 +67,23 @@ export default function RightDataPanel() {
     // These indeces must index by 1, not 0 as specified by the Google Sheets API
     let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
     let leftColumnIndex = leftMatchColumn.index + 1;
+    let leftName = selectedLeftRows[0][leftNameColumn.key];
 
     let rightRowIndex = parseInt(row.key) + 2;
-    leftValue.push(rightRowIndex);
+    let rightName = row[rightNameColumn.key];
 
+    // If the right index does not already exist in the left cell, add it
+    if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
+      leftValue.push([rightRowIndex, rightName]);
+    } else {
+      // Otherwise, we can just return, they were already matched
+      return;
+    }
+
+    // Stringify it before writing to Google Sheets
     let leftValueString = JSON.stringify(leftValue);
-    // let rightV
 
+    // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {
       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
         // This refreshes the data in this app once the spreadsheet is written to
