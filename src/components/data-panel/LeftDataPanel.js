@@ -42,15 +42,15 @@ export default function LeftDataPanel(props) {
 
             {/* This just renders in the selected rows */}
           <div className="SelectionDisplay">
-            {selectedRows.map((row, i) => 
-              <Card key={i} style={{ width: 300 }}>
+            {selectedRows.map((row, i) =>
+              <Card key={i} style={{ width: "100%"}}>
                 {Object.entries(row).map((attribute, i) => {
                   let [key, value] = attribute;
                   return (<p key={key}>{key} : {value}</p>)
                 })}
               </Card>)}
           </div>
-          
+
     </div>
     )
 }
