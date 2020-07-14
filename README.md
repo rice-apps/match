@@ -27,10 +27,10 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] connect to match.riceapps.org
 - [x] use RECOIL on frontend to simplify state logic
 - [x] google oauth
-- [x] separate pages for ccd and covidsitters with appropriate auth 
+- [x] separate pages for ccd and covidsitters with appropriate auth
   - (again, if we use google integration, this isn't needed)
 - [x] connect to db
-  - [x] actually, directly read/write to google sheet??? 
+  - [x] actually, directly read/write to google sheet???
 - [ ] column settings
   - (for each of these, hard code them first, and then make them configurable)
   - (once you can prove it can be done through hard-coding, then add to recoil state,
@@ -39,7 +39,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [ ] variable width lengths based on the longest value in the column
   - [ ] sticky
 - [x] center and widen left card
-- [ ] Make cards more readable (Zawie)
+- [x] make cards more readable
 - [ ] match-making functionality
   - [x] buttons on top of right cards
   - [x] buttons actually create matches stored in state LEFT
