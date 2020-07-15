@@ -10,9 +10,10 @@ export function exportCSV(assignments, unmatchedStudents) {
         //                  externship2, student3
         //                  unmatched, student4
 
-    const { write } = require('@fast-csv/format');
+    const rows = [["Externshp", "Student"]];
 
-    const rows = [];
+    console.log(assignments)
+    console.log(unmatchedStudents)
 
     //create [externshipName, studentName] rows 
     var i;
@@ -21,16 +22,16 @@ export function exportCSV(assignments, unmatchedStudents) {
         var s;
         for (s = 0; s < externship.matched.length; s++) {
             var student = externship.matched[s];
-            rows.push([externship.companyName, student]);
+            rows.push([externship.companyName, student.getFullName()]);
         }
     }
 
     //add [unmatched, studentName] rows
     var u;
     for (u = 0; u < unmatchedStudents.length; u++) {
-        rows.push(["unmatched", unmatchedStudents[u].getFullName()])
+        rows.push(["Unmatched", unmatchedStudents[u].getFullName()])
     }
 
-    write(rows).pipe(process.stdout);
+    return rows;
 }
 
