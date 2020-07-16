@@ -1,14 +1,13 @@
 import React from 'react';
 import { FormattedCard } from '../components/formatted-card/FormattedCard';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { applicationState, leftDataState, rightDataState } from '../store/atoms';
-import { Card } from 'antd';
 
 import ColumnSettingsPanel from '../components/settings/ColumnSettingsPanel';
 
 export default function Settings() {
-  const [{ user }, setAppState] = useRecoilState(applicationState);
+  const { user } = useRecoilValue(applicationState);
   const [leftData, setLeftData] = useRecoilState(leftDataState);
   const [rightData, setRightData] = useRecoilState(rightDataState);
 
@@ -16,7 +15,7 @@ export default function Settings() {
     <div>
       <div className="Main">
         <div className="SettingsPanel">
-          <div style={{ width: 400, paddingTop: 20}}>
+          <div style={{ width: 400, paddingTop: 20 }}>
             {user && <FormattedCard title="User information" row={user} />}
           </div>
           <ColumnSettingsPanel data={leftData} setData={setLeftData} title={"All left column settings"} />

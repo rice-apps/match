@@ -13,8 +13,7 @@ import { rightDataState, leftDataState, applicationState } from '../store/atoms'
 export default function Matcher() {
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
-    { data, columns, selectedRows,
-      matchColumn: rightMatchColumn,
+    { matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
       nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
   const [
@@ -87,7 +86,7 @@ export default function Matcher() {
     let leftColumnIndex = leftMatchColumn.index + 1;
     let rightRowIndex = parseInt(row.key) + 2;
     let rightColumnIndex = rightMatchColumn.index + 1;
-    
+
     // Get the names for both left and right
     let leftName = selectedLeftRows[0][leftNameColumn.key];
     let rightName = row[rightNameColumn.key];

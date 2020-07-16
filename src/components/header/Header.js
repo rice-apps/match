@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { handleClientLoad, handleAuthClick, handleSignoutClick, modifySpreadsheetDataSingleCell } from '../../util/gapi';
+import { handleClientLoad, handleAuthClick, handleSignoutClick } from '../../util/gapi';
 import { Navbar, Nav } from 'react-bootstrap';
 import "./Header.css"
 
