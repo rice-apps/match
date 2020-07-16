@@ -49,6 +49,10 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [x] when a match is made, it is written to google sheet RIGHT
   - [ ] unmatch-ability for both LEFT and RIGHT
 - [ ] time data processing
+- [ ] some complicated ass css for antd table 
+  - [ ] color for hover over row
+  - [ ] color for fixed column
+  - [ ] color for selected row
 
 ## Icebox:
 - [ ] select by search auto-complete
