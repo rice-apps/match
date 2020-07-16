@@ -49,13 +49,15 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [x] when a match is made, it is written to google sheet RIGHT
   - [ ] unmatch-ability for both LEFT and RIGHT
 - [ ] time data processing
+  - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
 - [ ] some complicated ass css for antd table 
   - [ ] color for hover over row
   - [ ] color for fixed column
   - [ ] color for selected row
 - [ ] when selecting a hcw, bring the students matched to him/her to the top
+  - [ ] this could also just be some more complicated sort logic ("contains" operation")
 - [ ] when selected a hcw, highlight the students matched to him/her in a different color
-- [ ] pod view page
+- [x] pod view page
 
 ## Icebox:
 - [ ] select by search auto-complete
