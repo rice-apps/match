@@ -40,8 +40,9 @@ export default function Header() {
         window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
     }, []);
 
-    function handleTest() {
-        modifySpreadsheetDataSingleCell("1AUH7XvrZRWP5brh89P_oZiSoYEj0Fm_wH6i-gLw6iIY", 2, 3, "23", (response) => { console.log(response) })
+    function handleClearClick() {
+        localStorage.clear();
+        window.location.reload(false);
     }
 
     return (
@@ -57,6 +58,7 @@ export default function Header() {
                 <Navbar.Text>
                     {user ? "Signed in as: " + user.firstName : ""}
                 </Navbar.Text> &nbsp;
+                <button onClick={handleClearClick}>Refresh</button> &nbsp;
                 {user ?
                     <div className="AuthenticationSection">
                          <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
