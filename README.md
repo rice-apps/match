@@ -61,6 +61,8 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] pod view page
 
 ## Icebox:
+- [ ] data validation on loading
+- [ ] default data loading
 - [ ] clean up syncing logic???
 - [ ] clean up app.yaml handlers by using regex
 - [ ] 404 screen
