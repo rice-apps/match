@@ -51,6 +51,7 @@ export default function Header() {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
+                    <Nav.Link href="/pods">Pods</Nav.Link>
                     <Nav.Link href="/settings">Settings</Nav.Link>
                     <Nav.Link href="/about">About</Nav.Link>
                 </Nav>

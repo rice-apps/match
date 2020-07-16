@@ -2,6 +2,7 @@ import React from 'react';
 import Matcher from './pages/Matcher';
 import Settings from './pages/Settings';
 import About from './pages/About';
+import Pods from './pages/Pods';
 import Header from './components/header/Header';
 import { Switch, Route } from "react-router-dom";
 import Sidebar from "react-sidebar";
@@ -39,6 +40,7 @@ function App() {
         <Header />
         <div className="Content">
           <Switch>
+            <Route path="/pods" component={Pods} />
             <Route path="/about" component={About} />
             <Route path="/settings" component={Settings} />
             <Route path="/" component={Matcher} />

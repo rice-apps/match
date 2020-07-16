@@ -31,12 +31,20 @@ export default function RightDataPanel(props) {
   
   // Takes in the left and right rows and determines if they're matched together
   function isMatched(rightRow, leftRow) {
-    let rightMatches = rightRow[rightMatchColumn.key]
+    let rightMatches = rightRow[rightMatchColumn.key];
+    
+    // If right matches is null, just return false.
+    // NOTE: IF YOU JSON.PARSE ON A NULL VALUE, IT WILL CRASH THE APP!
+    // AVOID THIS AT ALL COSTS
+    if (!rightMatches) {
+      return false;
+    }
+
     // Right should only have one match, so just check first one
     let rightMatch = JSON.parse(rightMatches)[0];
 
     // Remember, the cell values are list of [index, name]
-    if (rightMatch[0] == parseInt(leftRow.key) + 2) {
+    if (rightMatch[0] === parseInt(leftRow.key) + 2) {
       return true;
     } else {
       return false;
