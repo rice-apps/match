@@ -8,7 +8,7 @@ import { leftDataState } from '../../store/atoms';
 
 
 export default function LeftDataPanel(props) {
-  const [{data, columns, selectedRows, matchColumn}, setLeftData] = useRecoilState(leftDataState);
+  const [{data, columns, selectedRows, matchColumn, nameColumn}, setLeftData] = useRecoilState(leftDataState);
 
   function onSelectRow(rows) {
       setLeftData(data => {
@@ -43,13 +43,15 @@ export default function LeftDataPanel(props) {
             {/* This just renders in the selected rows */}
             <div className="SelectionDisplay">
               {selectedRows.map((row, i) =>
-                <FormattedCard
-                  title = "Left Card"
+                { 
+                  let name = row[nameColumn.key];
+                  return (<FormattedCard
+                  title = {name}
                   key={i}
                   style={{ width: "100%"}}
                   row={row}
                 >
-                </FormattedCard>)}
+                </FormattedCard>)})}
             </div>
 
     </div>

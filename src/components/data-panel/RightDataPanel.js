@@ -9,7 +9,7 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
 export default function RightDataPanel(props) {
-  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn }, setRightData] = useRecoilState(rightDataState);
+  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn, nameColumn }, setRightData] = useRecoilState(rightDataState);
   const { selectedRows: selectedLeftRows } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
@@ -54,9 +54,10 @@ export default function RightDataPanel(props) {
         {selectedRows.map((row, i) =>
           {
             let matched = row[rightMatchColumn.key];
+            let name = row[nameColumn.key];
             return(<div key={i}>
             <FormattedCard
-              title="Right Card"
+              title={name}
               extra={<button onClick={() => props.makeMatchOrUnmatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
               key={i}
               style={{ width: 300 }}
