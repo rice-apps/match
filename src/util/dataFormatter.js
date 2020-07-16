@@ -19,8 +19,7 @@ export function formatData(data, allowManualSort) {
         if (!allowManualSort) {
             return {
             index: columnIndex,
-            // Right now fixing name column
-            fixed: (key === "name") ? "left" : false,
+            fixed: false,
             key: key, 
             width: 150, 
             dataIndex: key,
@@ -31,7 +30,7 @@ export function formatData(data, allowManualSort) {
         } else {
             return {
             index: columnIndex,
-            fixed: (key === "name") ? "left" : false,
+            fixed: false,
             key: key, 
             width: 150, 
             dataIndex: key,
