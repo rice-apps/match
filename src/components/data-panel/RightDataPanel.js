@@ -3,24 +3,14 @@ import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
-import { formatData } from '../../util/dataFormatter';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
-export default function RightDataPanel() {
-  const [
-    { data, columns, selectedRows,
-      matchColumn: rightMatchColumn,
-      spreadsheetId: rightSpreadsheetId,
-      nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
-  const [
-    { selectedRows: selectedLeftRows,
-      matchColumn: leftMatchColumn,
-      spreadsheetId: leftSpreadsheetId,
-      nameColumn: leftNameColumn }, setLeftData] = useRecoilState(leftDataState);
+export default function RightDataPanel(props) {
+  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn }, setRightData] = useRecoilState(rightDataState);
+  const { selectedRows: selectedLeftRows } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
 
@@ -37,60 +27,6 @@ export default function RightDataPanel() {
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
-
-  // This basically refreshes the data in memory, see where this is used.
-  function onSpreadsheetLoaded(response) {
-    var range = response.result;
-    if (range.values.length > 0) {
-      var newDataState = formatData(range.values, true);
-      setLeftData(oldLeftData => {
-        let newState = {
-          ...oldLeftData,
-          ...newDataState,
-        }
-        return newState;
-      })
-    } else {
-      alert('No data found.');
-    }
-  }
-
-  // This is the big boy function that actually makes matches
-  function makeMatch(row) {
-
-    // Read current match
-    let leftValue = [];
-    if (selectedLeftRows[0][leftMatchColumn.key]) {
-      leftValue = JSON.parse(selectedLeftRows[0][leftMatchColumn.key]);
-    }
-
-    // These indeces must index by 1, not 0 as specified by the Google Sheets API
-    let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
-    let leftColumnIndex = leftMatchColumn.index + 1;
-    let leftName = selectedLeftRows[0][leftNameColumn.key];
-
-    let rightRowIndex = parseInt(row.key) + 2;
-    let rightName = row[rightNameColumn.key];
-
-    // If the right index does not already exist in the left cell, add it
-    if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
-      leftValue.push([rightRowIndex, rightName]);
-    } else {
-      // Otherwise, we can just return, they were already matched
-      return;
-    }
-
-    // Stringify it before writing to Google Sheets
-    let leftValueString = JSON.stringify(leftValue);
-
-    // If the left data is from Google Sheets, write to it
-    if (leftSpreadsheetId) {
-      modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
-        // This refreshes the data in this app once the spreadsheet is written to
-        getSpreadsheetData(leftSpreadsheetId, onSpreadsheetLoaded);
-      });
-    }
-  }
 
   return (
     <div className="DataPanel">
@@ -118,10 +54,10 @@ export default function RightDataPanel() {
         {selectedRows.map((row, i) =>
           <div key={i}>
             <FormattedCard
-              title = "Right Card"
-              extra = {<button onClick={() => makeMatch(row)}>Match!</button>}
+              title="Right Card"
+              extra={<button onClick={() => props.makeMatch(row)}>Match!</button>}
               key={i}
-              style={{ width: 300}}
+              style={{ width: 300 }}
               row={row}
             >
             </FormattedCard>
