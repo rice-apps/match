@@ -55,7 +55,7 @@ export default function RightDataPanel(props) {
           <div key={i}>
             <FormattedCard
               title="Right Card"
-              extra={<button onClick={() => props.makeMatch(row)}>Match!</button>}
+              extra={<button onClick={() => props.makeMatchOrUnmatch(row)}>Match!</button>}
               key={i}
               style={{ width: 300 }}
               row={row}

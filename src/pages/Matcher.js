@@ -34,7 +34,7 @@ export default function Matcher() {
   }
 
   // This basically refreshes the data in memory, see where this is used.
-  function onSpreadsheetLoaded(response) {
+  function onLeftSpreadsheetLoaded(response) {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
@@ -50,40 +50,81 @@ export default function Matcher() {
     }
   }
 
+  // This basically refreshes the data in memory, see where this is used.
+  function onRightSpreadsheetLoaded(response) {
+    var range = response.result;
+    if (range.values.length > 0) {
+      var newDataState = formatData(range.values, true);
+      setRightData(oldRightData => {
+        let newState = {
+          ...oldRightData,
+          ...newDataState,
+        }
+        return newState;
+      })
+    } else {
+      alert('No data found.');
+    }
+  }
+
 
   // This is the big boy function that actually makes matches
-  function makeMatch(row) {
+  function makeMatchOrUnmatch(row) {
 
-    // Read current match
+    // Read and parse current match for both left and right
     let leftValue = [];
     if (selectedLeftRows[0][leftMatchColumn.key]) {
       leftValue = JSON.parse(selectedLeftRows[0][leftMatchColumn.key]);
     }
+    let rightValue = []
+    if (row[rightMatchColumn.key]) {
+      rightValue = JSON.parse(row[rightMatchColumn.key]);
+    }
 
+    // Get the indeces for both left and right
     // These indeces must index by 1, not 0 as specified by the Google Sheets API
     let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
     let leftColumnIndex = leftMatchColumn.index + 1;
-    let leftName = selectedLeftRows[0][leftNameColumn.key];
-
     let rightRowIndex = parseInt(row.key) + 2;
+    let rightColumnIndex = rightMatchColumn.index + 1;
+    
+    // Get the names for both left and right
+    let leftName = selectedLeftRows[0][leftNameColumn.key];
     let rightName = row[rightNameColumn.key];
 
     // If the right index does not already exist in the left cell, add it
     if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
       leftValue.push([rightRowIndex, rightName]);
     } else {
-      // Otherwise, we can just return, they were already matched
+      // Otherwise, we should remove it, THIS IS UNMATCH
       return;
     }
 
-    // Stringify it before writing to Google Sheets
+    // If the left index does not already exist in the right cell, add it
+    if (!rightValue.map(list => list[0]).includes(leftRowIndex)) {
+      rightValue.push([leftRowIndex, leftName]);
+    } else {
+      // Otherwise, we should remove it, THIS IS UNMATCH
+      return;
+    }
+
+    // Stringify both left and right before writing to Google Sheets
     let leftValueString = JSON.stringify(leftValue);
+    let rightValueString = JSON.stringify(rightValue);
 
     // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {
       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
         // This refreshes the data in this app once the spreadsheet is written to
-        getSpreadsheetData(leftSpreadsheetId, onSpreadsheetLoaded);
+        getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
+      });
+    }
+
+    // If the right data is from Google Sheets, write to it
+    if (rightSpreadsheetId) {
+      modifySpreadsheetDataSingleCell(rightSpreadsheetId, rightColumnIndex, rightRowIndex, rightValueString, () => {
+        // This refreshes the data in this app once the spreadsheet is written to
+        getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
       });
     }
   }
@@ -103,7 +144,7 @@ export default function Matcher() {
 
             <LeftDataPanel />
             <RightDataPanel
-              makeMatch={makeMatch} />
+              makeMatchOrUnmatch={makeMatchOrUnmatch} />
 
           </SplitPane>
         </div>
