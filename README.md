@@ -55,6 +55,9 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [ ] color for selected row
 - [ ] when selecting a hcw, bring the students matched to him/her to the top
 - [ ] when selected a hcw, highlight the students matched to him/her in a different color
+- [ ] pod view page
 
 ## Icebox:
 - [ ] select by search auto-complete
+- [ ] automated match making decisions
+- [ ] email template generation
