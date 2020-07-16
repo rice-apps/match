@@ -20,7 +20,7 @@ $ npm run start
 
 GCP Cloudbuild trigger is setup to deploy every push to master branch.
 
-## Roadmap:
+## Roadmap (AUGUST MVP):
 
 - [x] gcp deployment 😃
 - [x] grey background to focus on data
