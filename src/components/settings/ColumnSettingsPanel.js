@@ -20,7 +20,7 @@ export default function ColumnSettingsPanel({data, setData, title}) {
     function setColumnFixed(column, setDataStateFunction, direction) {
         let newColumn = {
             ...column,
-            fixed: direction
+            fixed: (column.fixed === direction) ? "" : direction
         };
         setDataStateFunction(
             oldDataState => {
