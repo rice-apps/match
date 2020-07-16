@@ -48,6 +48,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [x] when a match is made, it is written to google sheet LEFT
   - [x] when a match is made, it is written to google sheet RIGHT
   - [ ] unmatch-ability for both LEFT and RIGHT
+  - [ ] loading screen while match being made
 - [ ] time data processing
   - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
 - [ ] some complicated ass css for antd table 
@@ -60,6 +61,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] pod view page
 
 ## Icebox:
+- [ ] clean up syncing logic???
 - [ ] clean up app.yaml handlers by using regex
 - [ ] 404 screen
 - [ ] look into sub-domain (i.e. ccd.match.riceapps.org)
