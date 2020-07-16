@@ -77,7 +77,10 @@ export default function Matcher() {
     }
     let rightValue = []
     if (row[rightMatchColumn.key]) {
-      rightValue = JSON.parse(row[rightMatchColumn.key]);
+      // rightValue = JSON.parse(row[rightMatchColumn.key]);
+
+      // THIS IS UNMATCH!! because right side cannot be matched twice!!
+      return;
     }
 
     // Get the indeces for both left and right
@@ -95,7 +98,7 @@ export default function Matcher() {
     if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
       leftValue.push([rightRowIndex, rightName]);
     } else {
-      // Otherwise, we should remove it, THIS IS UNMATCH
+      // Otherwise, we should remove it, THIS IS UNMATCH!!
       return;
     }
 
@@ -103,7 +106,7 @@ export default function Matcher() {
     if (!rightValue.map(list => list[0]).includes(leftRowIndex)) {
       rightValue.push([leftRowIndex, leftName]);
     } else {
-      // Otherwise, we should remove it, THIS IS UNMATCH
+      // Otherwise, we should remove it, THIS IS UNMATCH!!
       return;
     }
 

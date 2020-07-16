@@ -10,7 +10,7 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 export default function RightDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn: rightMatchColumn, nameColumn }, setRightData] = useRecoilState(rightDataState);
-  const { selectedRows: selectedLeftRows } = useRecoilValue(leftDataState);
+  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
 
@@ -27,6 +27,21 @@ export default function RightDataPanel(props) {
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
+
+  
+  // Takes in the left and right rows and determines if they're matched together
+  function isMatched(rightRow, leftRow) {
+    let rightMatches = rightRow[rightMatchColumn.key]
+    // Right should only have one match, so just check first one
+    let rightMatch = JSON.parse(rightMatches)[0];
+
+    // Remember, the cell values are list of [index, name]
+    if (rightMatch[0] == parseInt(leftRow.key) + 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   return (
     <div className="DataPanel">
@@ -53,7 +68,7 @@ export default function RightDataPanel(props) {
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) =>
           {
-            let matched = row[rightMatchColumn.key];
+            let matched = isMatched(row, selectedLeftRows[0]);
             let name = row[nameColumn.key];
             return(<div key={i}>
             <FormattedCard
