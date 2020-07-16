@@ -61,6 +61,8 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] pod view page
 
 ## Icebox:
+- [ ] apply for validation with google
+- [ ] about page details, with demo video
 - [ ] data validation on loading
 - [ ] default data loading
 - [ ] clean up syncing logic???
