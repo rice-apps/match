@@ -60,6 +60,9 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [x] pod view page
 
 ## Icebox:
+- [ ] clean up app.yaml handlers by using regex
+- [ ] 404 screen
+- [ ] look into sub-domain (i.e. ccd.match.riceapps.org)
 - [ ] select by search auto-complete
 - [ ] automated match making decisions
 - [ ] email template generation
