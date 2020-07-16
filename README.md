@@ -37,7 +37,7 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
     and create a page/modal/sidebar to allow users to configure this)
   - [ ] hiding
   - [ ] variable width lengths based on the longest value in the column
-  - [ ] sticky
+  - [x] sticky
 - [x] center and widen left card
 - [x] make cards more readable
 - [ ] match-making functionality
@@ -49,6 +49,12 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [x] when a match is made, it is written to google sheet RIGHT
   - [ ] unmatch-ability for both LEFT and RIGHT
 - [ ] time data processing
+- [ ] some complicated ass css for antd table 
+  - [ ] color for hover over row
+  - [ ] color for fixed column
+  - [ ] color for selected row
+- [ ] when selecting a hcw, bring the students matched to him/her to the top
+- [ ] when selected a hcw, highlight the students matched to him/her in a different color
 
 ## Icebox:
 - [ ] select by search auto-complete
