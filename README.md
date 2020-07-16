@@ -43,11 +43,11 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [ ] match-making functionality
   - [x] buttons on top of right cards
   - [x] buttons actually create matches stored in state LEFT
-  - [ ] buttons actually create matches stored in state RIGHT
+  - [x] buttons actually create matches stored in state RIGHT
   - [x] when a match is made, both sides have colored indicators
   - [x] when a match is made, it is written to google sheet LEFT
-  - [ ] when a match is made, it is written to google sheet RIGHT
-  - [ ] unmatch-ability
+  - [x] when a match is made, it is written to google sheet RIGHT
+  - [ ] unmatch-ability for both LEFT and RIGHT
 - [ ] time data processing
 
 ## Icebox:
