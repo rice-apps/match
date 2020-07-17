@@ -20,7 +20,7 @@ $ npm run start
 
 GCP Cloudbuild trigger is setup to deploy every push to master branch.
 
-## Roadmap:
+## Roadmap (AUGUST MVP):
 
 - [x] gcp deployment 😃
 - [x] grey background to focus on data
@@ -48,16 +48,28 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
   - [x] when a match is made, it is written to google sheet LEFT
   - [x] when a match is made, it is written to google sheet RIGHT
   - [ ] unmatch-ability for both LEFT and RIGHT
+  - [ ] loading screen while match being made
 - [ ] time data processing
+  - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
 - [ ] some complicated ass css for antd table 
   - [ ] color for hover over row
   - [ ] color for fixed column
   - [ ] color for selected row
 - [ ] when selecting a hcw, bring the students matched to him/her to the top
+  - [ ] this could also just be some more complicated sort logic ("contains" operation")
 - [ ] when selected a hcw, highlight the students matched to him/her in a different color
-- [ ] pod view page
+- [x] pod view page
 
 ## Icebox:
+- [ ] apply for validation with google
+- [ ] about page details, with demo video
+- [ ] data validation on loading
+- [ ] default data loading
+- [ ] clean up syncing logic???
+- [ ] clean up app.yaml handlers by using regex
+- [ ] 404 screen
+- [ ] look into sub-domain (i.e. ccd.match.riceapps.org)
 - [ ] select by search auto-complete
 - [ ] automated match making decisions
 - [ ] email template generation
+- [ ] data backups with timestamps (can look into using GCP storage)
