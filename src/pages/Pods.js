@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRecoilValue } from 'recoil';
 import { leftDataState, rightDataState } from '../store/atoms';
-import { Card } from "antd";
+import { Card, Row, Col } from "antd";
 
 
 // SAMPLE PODS DATA STRUCTURE:
@@ -40,7 +40,7 @@ export default function Pods() {
     let pods = leftMatched.map((leftRow, i) => {
         // Retrieve and parse matches on left
         let matches = JSON.parse(leftRow[leftMatchColumn.key]);
-        
+
         // Map out to actual student data (right data rows)
         let students = matches.map(match => {
             let rightIndex = match[0];
@@ -64,29 +64,42 @@ export default function Pods() {
         }
     });
 
+    // Group into list of lists of pods to fit formatting of grid below
+    let groupedPods = [];
+    let groupSize = 4;
+    for (let i = 0; i < pods.length; i++) {
+        if (i % groupSize === 0) {
+            groupedPods.push([])
+        }
+        groupedPods[groupedPods.length - 1].push(pods[i]);
+    }
+
+
     return (
         <div>
             <div className="Main">
-                {
-                    pods.map((pod, i) => {
-                        let { left: hcw, right: students } = pod;
-                        return (
-                            <Card title={"Pod #" + pod.key} style={{ width: 400, padding: 0 }} size="small" >
-                                <p><b>Healthcare Worker:</b> {hcw.name} {hcw.email}</p>
-                                <p><b>Volunteers:</b></p>
-                                <ul>
-
-                                {
-                                    students.map((student, i) => {
-                                        return <li>{student.name} {student.email}</li>
-                                    })
-                                }
-                                </ul>
-                            </Card>
-                        );
-                    })
-                }
-
+                {groupedPods.map(groupOfPods => {
+                    return (<Row gutter={[16, 16]}>
+                        {groupOfPods.map((pod, i) => {
+                            let { left: hcw, right: students } = pod;
+                            return (
+                                <Col span={6}>
+                                    <Card key={i} title={"Pod #" + pod.key} size="small" >
+                                        <p><b>Healthcare Worker:</b> {hcw.name} {hcw.email}</p>
+                                        <p><b>Volunteers:</b></p>
+                                        <ul>
+                                            {
+                                                students.map((student, i) => {
+                                                    return <li key={i}>{student.name} {student.email}</li>
+                                                })
+                                            }
+                                        </ul>
+                                    </Card>
+                                </Col>
+                            )
+                        })}
+                    </Row>)
+                })}
             </div>
         </div>
     );
