@@ -130,6 +130,18 @@ class Student {
     */
     return this.applications.length;
   }
+  
+  getNumberOfSpots() {
+    /* 
+      Returns the number of spots available 
+    */
+    return this.numberOfSpots.length; 
+  }
+
+  getPriority() {
+    // right now configured to hotness
+    return this.getNumberOfApplicants() - this.getNumberOfSpots()
+  }
 }
 
 //Generate Mock Data
