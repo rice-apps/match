@@ -18,13 +18,12 @@ export function sortExternships(externships) {
     }
 
     // sort externships by ascending hotness value
-    function sort_priority(priority_list) {
+    
 
-        // converts mapping to array i.e [Externship: priority]
-        priority_array = Object.entries(priority_list);
-        sorted_externships = priority_array.sort((a,b) => a[1]-b[1]);
-    }
-
+    // converts mapping to array i.e [Externship: priority]
+    priority_array = Object.entries(priority_list);
+    sorted_externships = priority_array.sort((a,b) => a[1]-b[1]);
+    
     // returns the keys, Externship objects, in ascending order of hotness
     sorted_externships = Object.keys(sorted_externships)
     return sorted_externships;
