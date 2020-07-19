@@ -114,6 +114,21 @@ class Externship {
     */
     return this.getNumberOfApplicants() - this.getNumberOfSpots()
   }
+
+  getStudentRank(studentObject, startAtOne = true) {
+    /*
+      Returns the students rank
+    */
+    var index = this.applicants.indexOf(studentObject);
+    if (index === -1) {
+      return -1;
+    }
+    if (startAtOne) {
+      return index + 1;
+    } else {
+      return index;
+    }
+  }
 }
 
 class Student {
@@ -178,3 +193,9 @@ for (i in MockExternships) {
 }
 
 export{Externship,Student,MockStudents,MockExternships}
+
+var i;
+for (i in MockExternships) {
+  var externship = MockExternships[i];
+  console.log(externship.getStudentRank(adam))
+}
