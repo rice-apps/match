@@ -1,3 +1,4 @@
+export{Externship,Student,MockStudents,MockExternships}
 /*
   IMPORT INSTRUCTIONS:
   To import anything from here simply put:
@@ -190,12 +191,4 @@ for (i in MockExternships) {
     applicant.applications.push(externship);
     console.log(applicant)
   }
-}
-
-export{Externship,Student,MockStudents,MockExternships}
-
-var i;
-for (i in MockExternships) {
-  var externship = MockExternships[i];
-  console.log(externship.getStudentRank(adam))
 }
