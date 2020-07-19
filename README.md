@@ -74,4 +74,4 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 - [ ] email template generation
 - [ ] data backups with timestamps (can look into using GCP storage) 
 - [ ] add tutorial page
-  -[ ] add demo video
+  - [ ] add demo video
