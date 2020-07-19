@@ -1,6 +1,6 @@
 import {Externship, Student} from "./objects"
 
-/* 
+/*
 columnNames:
     A dictionaring mapping key variables to column names
     This is useful for when/if the CCD changes the column headers.
@@ -11,7 +11,7 @@ var columnNames = {
     email: "applicant_email",
     first: "applicant_first",
     last: "applicant_last",
-    externshipName: "externships",
+    //externshipName: "externships", handled in code
     jobId: "job_id",
     postingId: "posting_id",
     ranking: "ranking",
@@ -47,7 +47,7 @@ export function ceateStudentAndExternshipLists(fileData) {
             student.lastName = student.lastName ? student.lastName : last;
        }
        //Handle externship
-       var name = row[columnNames.externshipName];
+       var name = row['externship'] ? row['externship'] : row['externships'];
        if (name != ""){
            //Get information about the externship
            var jobId = row[columnNames.jobId];
