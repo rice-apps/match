@@ -99,6 +99,21 @@ class Externship {
     */
     return this.applicants.length;
   }
+
+  getNumberOfSpots() {
+    /*
+      Returns the number of spots available
+    */
+    return this.numberOfSpots.length;
+  }
+
+  getPriority() {
+    /*
+      Returns an integer
+      Lower interger, the higher priority it will be filled
+    */
+    return this.getNumberOfApplicants() - this.getNumberOfSpots()
+  }
 }
 
 class Student {
@@ -129,18 +144,6 @@ class Student {
      Returns the number of applications
     */
     return this.applications.length;
-  }
-  
-  getNumberOfSpots() {
-    /* 
-      Returns the number of spots available 
-    */
-    return this.numberOfSpots.length; 
-  }
-
-  getPriority() {
-    // right now configured to hotness
-    return this.getNumberOfApplicants() - this.getNumberOfSpots()
   }
 }
 
