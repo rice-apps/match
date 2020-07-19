@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Loader from '../components/loader/Loader';
-import {makeAssignments, getUnmatchedStudents} from '../util/ccd/assigner'
+import {makeAssignments, getUnmatchedStudents, getAverageMatchedRank} from '../util/ccd/assigner'
 import {ceateStudentAndExternshipLists} from '../util/ccd/externshipParser'
 import {sortExternships} from '../util/ccd/sorter'
 import {exportCSV} from '../util/ccd/csvWriter'
@@ -27,6 +27,7 @@ export default function Assigner() {
 
     console.log(assignments)
     console.log(unmatchedStudents)
+    console.log("Average Matched Rank:", getAverageMatchedRank(students, externships))
 
     setCsvData(
       exportCSV(assignments, unmatchedStudents)
