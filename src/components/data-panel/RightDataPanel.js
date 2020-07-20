@@ -1,26 +1,16 @@
 import React from 'react';
 import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
-import { Card } from "antd";
+import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
-import { formatData } from '../../util/dataFormatter';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
-export default function RightDataPanel() {
-  const [
-    { data, columns, selectedRows,
-      matchColumn: rightMatchColumn,
-      spreadsheetId: rightSpreadsheetId,
-      nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
-  const [
-    { selectedRows: selectedLeftRows,
-      matchColumn: leftMatchColumn,
-      spreadsheetId: leftSpreadsheetId,
-      nameColumn: leftNameColumn }, setLeftData] = useRecoilState(leftDataState);
+export default function RightDataPanel(props) {
+  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn, nameColumn }, setRightData] = useRecoilState(rightDataState);
+  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
 
@@ -34,61 +24,30 @@ export default function RightDataPanel() {
   }
 
   // Here's where the sorting/filtering happens!!
-  // Note selectedLeftRows[0]. Should only ever have one in the list anyways 
+  // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
 
-  // This basically refreshes the data in memory, see where this is used.
-  function onSpreadsheetLoaded(response) {
-    var range = response.result;
-    if (range.values.length > 0) {
-      var newDataState = formatData(range.values, true);
-      setLeftData(oldLeftData => {
-        let newState = {
-          ...oldLeftData,
-          ...newDataState,
-        }
-        return newState;
-      })
+  
+  // Takes in the left and right rows and determines if they're matched together
+  function isMatched(rightRow, leftRow) {
+    let rightMatches = rightRow[rightMatchColumn.key];
+    
+    // If right matches is null, just return false.
+    // NOTE: IF YOU JSON.PARSE ON A NULL VALUE, IT WILL CRASH THE APP!
+    // AVOID THIS AT ALL COSTS
+    if (!rightMatches) {
+      return false;
+    }
+
+    // Right should only have one match, so just check first one
+    let rightMatch = JSON.parse(rightMatches)[0];
+
+    // Remember, the cell values are list of [index, name]
+    if (rightMatch[0] === parseInt(leftRow.key) + 2) {
+      return true;
     } else {
-      alert('No data found.');
-    }
-  }
-
-  // This is the big boy function that actually makes matches
-  function makeMatch(row) {
-
-    // Read current match
-    let leftValue = [];
-    if (selectedLeftRows[0][leftMatchColumn.key]) {
-      leftValue = JSON.parse(selectedLeftRows[0][leftMatchColumn.key]);
-    }
-
-    // These indeces must index by 1, not 0 as specified by the Google Sheets API
-    let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
-    let leftColumnIndex = leftMatchColumn.index + 1;
-    let leftName = selectedLeftRows[0][leftNameColumn.key];
-
-    let rightRowIndex = parseInt(row.key) + 2;
-    let rightName = row[rightNameColumn.key];
-
-    // If the right index does not already exist in the left cell, add it
-    if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
-      leftValue.push([rightRowIndex, rightName]);
-    } else {
-      // Otherwise, we can just return, they were already matched
-      return;
-    }
-
-    // Stringify it before writing to Google Sheets
-    let leftValueString = JSON.stringify(leftValue);
-
-    // If the left data is from Google Sheets, write to it
-    if (leftSpreadsheetId) {
-      modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
-        // This refreshes the data in this app once the spreadsheet is written to
-        getSpreadsheetData(leftSpreadsheetId, onSpreadsheetLoaded);
-      });
+      return false;
     }
   }
 
@@ -116,15 +75,19 @@ export default function RightDataPanel() {
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) =>
-          <div key={i}>
-            <button onClick={() => makeMatch(row)}>Match!</button>
-            <Card style={{ width: 300 }}>
-              {Object.entries(row).map((attribute, ii) => {
-                let [key, value] = attribute;
-                return (<p key={ii}>{key} : {value}</p>)
-              })}
-            </Card>
-          </div>)}
+          {
+            let matched = isMatched(row, selectedLeftRows[0]);
+            let name = row[nameColumn.key];
+            return(<div key={i}>
+            <FormattedCard
+              title={name}
+              extra={<button onClick={() => props.makeMatchOrUnmatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
+              key={i}
+              style={{ width: 300 }}
+              row={row}
+            >
+            </FormattedCard>
+          </div>)})}
       </div>
 
     </div>

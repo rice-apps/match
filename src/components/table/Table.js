@@ -13,12 +13,14 @@ export default function MyTable(props) {
     }),
   };
 
+  // If no columns, no table
   if (props.columns.length === 0) {
     return <> </>;
   }
 
   function rowClassNameGetter(row, index) {
-    if (row[props.matchColumn.key]) {
+    // Right now just if it is not empty string or not empty list, consider it matached
+    if (row[props.matchColumn.key] && row[props.matchColumn.key] !== "[]") {
       return "matched-row"
     } else {
       return "unmatched-row"

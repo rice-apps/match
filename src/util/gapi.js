@@ -91,14 +91,14 @@ function columnToLetter(column) {
     return letter;
 }
 
-// e.g. 1 => 'A', 26 => 'Z', 27 => 'AA'
-function letterToColumn(letter) {
-    var column = 0, length = letter.length;
-    for (var i = 0; i < length; i++) {
-        column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
-    }
-    return column;
-}
+// // e.g. 1 => 'A', 26 => 'Z', 27 => 'AA'
+// function letterToColumn(letter) {
+//     var column = 0, length = letter.length;
+//     for (var i = 0; i < length; i++) {
+//         column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
+//     }
+//     return column;
+// }
 
 
 /**

@@ -1,14 +1,14 @@
 import React from 'react';
 import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
-import { Card } from "antd";
+import { FormattedCard } from "../formatted-card/FormattedCard.js";
 
 import { useRecoilState } from 'recoil';
 import { leftDataState } from '../../store/atoms';
 
 
 export default function LeftDataPanel(props) {
-  const [{data, columns, selectedRows, matchColumn}, setLeftData] = useRecoilState(leftDataState);
+  const [{data, columns, selectedRows, matchColumn, nameColumn}, setLeftData] = useRecoilState(leftDataState);
 
   function onSelectRow(rows) {
       setLeftData(data => {
@@ -23,7 +23,7 @@ export default function LeftDataPanel(props) {
     <div className="DataPanel">
 
         {/* Loader to accept csv input */}
-        {data.length === 0 && <Loader 
+        {data.length === 0 && <Loader
         onUpload={setLeftData}
         allowManualSort={true}
         />}
@@ -32,7 +32,7 @@ export default function LeftDataPanel(props) {
 
         {/* The actual table for this panel. Note that it's "radio" selection type.
         This means you can select only one row from this table. */}
-        <Table 
+        <Table
           onSelectRow={onSelectRow}
           data={data}
           columns={columns}
@@ -41,16 +41,19 @@ export default function LeftDataPanel(props) {
           />
 
             {/* This just renders in the selected rows */}
-          <div className="SelectionDisplay">
-            {selectedRows.map((row, i) => 
-              <Card key={i} style={{ width: 300 }}>
-                {Object.entries(row).map((attribute, i) => {
-                  let [key, value] = attribute;
-                  return (<p key={key}>{key} : {value}</p>)
-                })}
-              </Card>)}
-          </div>
-          
+            <div className="SelectionDisplay">
+              {selectedRows.map((row, i) =>
+                { 
+                  let name = row[nameColumn.key];
+                  return (<FormattedCard
+                  title = {name}
+                  key={i}
+                  style={{ width: "100%"}}
+                  row={row}
+                >
+                </FormattedCard>)})}
+            </div>
+
     </div>
     )
 }

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Select, Tooltip, Input, Checkbox, Button } from "antd";
 import { availableOperators } from '../../util/rules';
-import './ControlPanel.css';
-import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
+
+import './ControlPanel.css';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 const { Option } = Select;
 
