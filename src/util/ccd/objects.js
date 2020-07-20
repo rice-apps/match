@@ -105,7 +105,7 @@ class Externship {
     /*
       Returns the number of spots available
     */
-    return this.numberOfSpots.length;
+    return this.numberOfSpots;
   }
 
   getPriority() {
