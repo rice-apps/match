@@ -85,13 +85,10 @@ class Externship {
       Inputs: None
       Outputs: The highest ranked studentObject who is not ranked (globally).
     */
-    var i;
-    for (i in this.applicants) {
-      var applicant = this.applicants[i];
-      if (applicant.assignedExternship === null) {
-        return applicant;
-      }
-    }
+    //Create list of unmatched students
+    var unmatchedStudents = this.applicants.filter(student => student.assignedExternship === null)
+    //Return first element, if it exists
+    return unmatchedStudents.length > 0 ? unmatchedStudents[0] : null
   }
 
   getNumberOfApplicants(){
