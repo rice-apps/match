@@ -121,14 +121,7 @@ class Externship {
       Returns the students rank
     */
     var index = this.applicants.indexOf(studentObject);
-    if (index === -1) {
-      return -1;
-    }
-    if (startAtOne) {
-      return index + 1;
-    } else {
-      return index;
-    }
+    return (index === -1 ? -1 : (startAtOne ? index + 1 : index))
   }
 }
 
