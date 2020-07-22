@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
@@ -9,18 +9,24 @@ import { formatData } from '../util/dataFormatter';
 import { useRecoilState } from 'recoil';
 import { rightDataState, leftDataState, applicationState } from '../store/atoms';
 
+import LoadingOverlay from 'react-loading-overlay';
+
 
 export default function Matcher() {
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
     { matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
-      nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
+      nameColumn: rightNameColumn,
+      refreshing: rightRefreshing,
+    }, setRightData] = useRecoilState(rightDataState);
   const [
     { selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
       spreadsheetId: leftSpreadsheetId,
-      nameColumn: leftNameColumn }, setLeftData] = useRecoilState(leftDataState);
+      nameColumn: leftNameColumn,
+      refreshing: leftRefreshing,
+    }, setLeftData] = useRecoilState(leftDataState);
 
   var windowWidth = window.innerWidth;
   var defaultPaneSize = Math.round(windowWidth / 2);
@@ -37,10 +43,14 @@ export default function Matcher() {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
+      console.log(newDataState)
       setLeftData(oldLeftData => {
         let newState = {
           ...oldLeftData,
-          ...newDataState,
+          // Only updating the state and refreshing
+          // NOTE: If you override the old columns, then you get rid of previous settings
+          data: newDataState.data,
+          refreshing: false,
         }
         return newState;
       })
@@ -54,11 +64,16 @@ export default function Matcher() {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
+      console.log(newDataState);
       setRightData(oldRightData => {
         let newState = {
           ...oldRightData,
-          ...newDataState,
+          // Only updating the state and refreshing
+          // NOTE: If you override the old columns, then you get rid of previous settings
+          data: newDataState.data,
+          refreshing: false,
         }
+        console.log(newState);
         return newState;
       })
     } else {
@@ -117,6 +132,14 @@ export default function Matcher() {
     // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {
       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
+        console.log("Done writing to left!")
+        // Set refreshing to be true
+        setLeftData(leftDataState => {
+          return {
+            ...leftDataState,
+            refreshing: true,
+          }
+        })
         // This refreshes the data in this app once the spreadsheet is written to
         getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
       });
@@ -125,30 +148,44 @@ export default function Matcher() {
     // If the right data is from Google Sheets, write to it
     if (rightSpreadsheetId) {
       modifySpreadsheetDataSingleCell(rightSpreadsheetId, rightColumnIndex, rightRowIndex, rightValueString, () => {
+        console.log("Done writing to right!")
+        // Set refreshing to be true
+        setRightData(rightDataState => {
+          return {
+            ...rightDataState,
+            refreshing: true,
+          }
+        })
         // This refreshes the data in this app once the spreadsheet is written to
         getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
       });
     }
   }
 
-
   return (
     <div>
       <div className="Main">
+
         <button style={{ position: "absolute", zIndex: 1, marginTop: 10 }} onClick={() => setSidebarOpen(true)}>
           Sort/Filter
-            </button>
+        </button>
 
         <div className="Body">
-
-          {/* Split plane to allow panel resizing */}
-          <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-
-            <LeftDataPanel />
-            <RightDataPanel
-              makeMatchOrUnmatch={makeMatchOrUnmatch} />
-
-          </SplitPane>
+          {/* This is the loading screen */}
+          <LoadingOverlay
+            active={rightRefreshing || leftRefreshing}
+            spinner
+            text='Syncing...'
+          >
+            <div style={{ height: "100vh", width: "100vw" }}>
+              {/* Split plane to allow panel resizing */}
+              <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
+                <LeftDataPanel />
+                <RightDataPanel
+                  makeMatchOrUnmatch={makeMatchOrUnmatch} />
+              </SplitPane>
+            </div>
+          </LoadingOverlay>
         </div>
       </div>
     </div>

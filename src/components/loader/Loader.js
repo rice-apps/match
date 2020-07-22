@@ -44,7 +44,12 @@ export default function CSVFileUploader(props) {
             newDataState.spreadsheetId = spreadsheetId;
             newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
             newDataState.nameColumn = newDataState.columns[2];
-            props.onUpload(newDataState);
+            props.onUpload(oldDataState => {
+                return {
+                    ...oldDataState,
+                    ...newDataState,
+                }
+            });
         } else {
             alert('No data found.');
         }

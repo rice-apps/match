@@ -45,6 +45,7 @@ export const leftDataState = atom({
         matchColumn: null,
         nameColumn: null,
         spreadsheetId: null,
+        refreshing: false,
     }, // default value (aka initial value)
     persistence_UNSTABLE: {
         type: "persist"
@@ -62,6 +63,7 @@ export const rightDataState = atom({
         matchColumn: null,
         nameColumn: null,
         spreadsheetId: null,
+        refreshing: false,
     },
     persistence_UNSTABLE: {
         type: "persist"
