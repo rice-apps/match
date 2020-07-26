@@ -23,14 +23,17 @@ GCP Cloudbuild trigger is setup to deploy every push to master branch.
 ## How to use:
 ### CCD
 Go to `/ccd`
-Upload a .CSV file with at least the following columns (case doesn't matter)(can be changed):
+Upload a .CSV file with at least the following columns (case doesn't matter):
 - externships/externships
 - applicant email
 - applicant first
 - applicant last
 - ranking
+- number of externs
 - job id (OPTIONAL)
 - posting id (OPTIONAL)
+(This can be changed)
+Each row represents an applicantion, if an externship has no applicants, include a row with just the externships with no value for student name, email, etc.
 
 Click 'Download Results'
 
