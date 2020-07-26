@@ -32,6 +32,7 @@ Upload a .CSV file with at least the following columns (case doesn't matter):
 - number of externs
 - job id (OPTIONAL)
 - posting id (OPTIONAL)
+
 (This can be changed)
 Each row represents an applicantion, if an externship has no applicants, include a row with just the externships with no value for student name, email, etc.
 
