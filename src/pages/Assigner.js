@@ -21,9 +21,7 @@ export default function Assigner() {
     let externships = lists.externships
 
     // Uncomment when sorter is fixed
-    // externships = sortExternships(externships)
-
-    console.log("Externships", externships)
+    externships = sortExternships(externships)
 
     let assignments = makeAssignments(externships)
     let unmatchedStudents = getUnmatchedStudents(students)
@@ -35,20 +33,20 @@ export default function Assigner() {
     setCsvData(
       exportCSV(assignments, unmatchedStudents)
     );
-    
+
   }
 
   return (
     <div>
         <div className="Main">
             <div className="Body">
-            <Loader 
+            <Loader
               onUpload={handleData}
               allowManualSort={true}
               />
-            
+
             {/* CSV Downloader */}
-            <CSVLink data= {csvData} filename={"ListOfMatches.csv"} >Download CSV</CSVLink>  
+            <CSVLink data= {csvData} filename={"ListOfMatches.csv"} >Download CSV</CSVLink>
             </div>
         </div>
       </div>
