@@ -33,7 +33,8 @@ Upload a .CSV file with at least the following columns (case doesn't matter):
 - job id (OPTIONAL)
 - posting id (OPTIONAL)
 
-(This can be changed)
+The column name requirements can be changed in the dictioanry in `stc/utils/ccd/externshipParser.js`
+
 Each row represents an applicantion, if an externship has no applicants, include a row with just the externships with no value for student name, email, etc.
 
 Click 'Download Results'
