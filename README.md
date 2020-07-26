@@ -21,7 +21,7 @@ $ npm run start
 GCP Cloudbuild trigger is setup to deploy every push to master branch.
 
 ## How to use:
-# CCD
+### CCD
 Go to `/ccd`
 Upload a .CSV file with at least the following columns (case doesn't matter)(can be changed):
 - externships/externships
