@@ -59,14 +59,14 @@ Click 'Download Results'
   - [x] sticky
 - [x] center and widen left card
 - [x] make cards more readable
-- [ ] match-making functionality
+- [x] match-making functionality
   - [x] buttons on top of right cards
   - [x] buttons actually create matches stored in state LEFT
   - [x] buttons actually create matches stored in state RIGHT
   - [x] when a match is made, both sides have colored indicators
   - [x] when a match is made, it is written to google sheet LEFT
   - [x] when a match is made, it is written to google sheet RIGHT
-  - [ ] unmatch-ability for both LEFT and RIGHT
+  - [x] unmatch-ability for both LEFT and RIGHT
   - [x] loading screen while match being made
 - [ ] time data processing
   - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
