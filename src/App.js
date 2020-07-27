@@ -1,5 +1,6 @@
 import React from 'react';
 import Matcher from './pages/Matcher';
+import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
 import About from './pages/About';
 import Pods from './pages/Pods';
@@ -42,6 +43,7 @@ function App() {
             <Route path="/pods" component={Pods} />
             <Route path="/about" component={About} />
             <Route path="/settings" component={Settings} />
+            <Route path="/ccd" component={Assigner}/>
             <Route path="/" component={Matcher} />
           </Switch>
         </div>
