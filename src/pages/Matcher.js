@@ -50,6 +50,11 @@ export default function Matcher() {
           // Only updating the state and refreshing
           // NOTE: If you override the old columns, then you get rid of previous settings
           data: newDataState.data,
+          // Update selected selected rows with new data
+          selectedRows: oldLeftData.selectedRows.map(row =>
+            // Get the updated row from the new state
+            newDataState.data[row.key]
+          ),
           refreshing: false,
         }
         return newState;
@@ -71,6 +76,11 @@ export default function Matcher() {
           // Only updating the state and refreshing
           // NOTE: If you override the old columns, then you get rid of previous settings
           data: newDataState.data,
+          // Update selected selected rows with new data
+          selectedRows: oldRightData.selectedRows.map(row =>
+            // Get the updated row from the new state
+            newDataState.data[row.key]
+          ),
           refreshing: false,
         }
         console.log(newState);
@@ -84,7 +94,6 @@ export default function Matcher() {
 
   // This is the big boy function that actually makes matches
   function makeMatchOrUnmatch(row) {
-
     // Read and parse current match for both left and right
     let leftValue = [];
     if (selectedLeftRows[0][leftMatchColumn.key]) {
@@ -92,14 +101,12 @@ export default function Matcher() {
     }
     let rightValue = []
     if (row[rightMatchColumn.key]) {
-      // rightValue = JSON.parse(row[rightMatchColumn.key]);
-
       // THIS IS UNMATCH!! because right side cannot be matched twice!!
-      return;
+      rightValue = JSON.parse(row[rightMatchColumn.key]);
     }
 
-    // Get the indeces for both left and right
-    // These indeces must index by 1, not 0 as specified by the Google Sheets API
+    // Get the indices for both left and right
+    // These indices must index by 1, not 0 as specified by the Google Sheets API
     let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
     let leftColumnIndex = leftMatchColumn.index + 1;
     let rightRowIndex = parseInt(row.key) + 2;
@@ -109,25 +116,32 @@ export default function Matcher() {
     let leftName = selectedLeftRows[0][leftNameColumn.key];
     let rightName = row[rightNameColumn.key];
 
+    // Check for the the index of the right value in the left cell
+    let indexOfRightInLeft = leftValue.map(list => list[0]).indexOf(rightRowIndex)
     // If the right index does not already exist in the left cell, add it
-    if (!leftValue.map(list => list[0]).includes(rightRowIndex)) {
+    if (indexOfRightInLeft == -1) {
       leftValue.push([rightRowIndex, rightName]);
     } else {
       // Otherwise, we should remove it, THIS IS UNMATCH!!
-      return;
+      leftValue.splice(indexOfRightInLeft, 1)
     }
-
+    
+    // Check for the the index of the right value in the left cell
+    let indexOfLeftInRight = rightValue.map(list => list[0]).indexOf(leftRowIndex)
     // If the left index does not already exist in the right cell, add it
-    if (!rightValue.map(list => list[0]).includes(leftRowIndex)) {
+    if (indexOfLeftInRight == -1) {
       rightValue.push([leftRowIndex, leftName]);
     } else {
       // Otherwise, we should remove it, THIS IS UNMATCH!!
-      return;
+      rightValue.splice(indexOfLeftInRight, 1)
     }
-
     // Stringify both left and right before writing to Google Sheets
     let leftValueString = JSON.stringify(leftValue);
     let rightValueString = JSON.stringify(rightValue);
+
+    // Save an empty list [] as a blank cell
+    if (leftValueString == "[]") leftValueString = "";
+    if (rightValueString == "[]") rightValueString = "";
 
     // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {
