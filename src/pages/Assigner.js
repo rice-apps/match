@@ -20,8 +20,8 @@ export default function Assigner() {
     let students = lists.students
     let externships = lists.externships
 
-    // Uncomment when sorter is fixed
-    externships = sortExternships(externships)
+    //Sort externships based on priority
+    externships.sort((a,b) => a.getPriority()-b.getPriority())
 
     let assignments = makeAssignments(externships)
     let unmatchedStudents = getUnmatchedStudents(students)
