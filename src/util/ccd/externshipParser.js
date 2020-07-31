@@ -88,9 +88,7 @@ export function getStudentsAndExternships(fileData) {
         if (!externshipMap[externshipKey] && externship) externshipMap[externshipKey] = externship;
 
         //Add applicants to externship & externship to applicant
-        if (student && externship) {
-            linkStudentToExternship(student, externship);
-        }
+        if (student && externship) linkStudentToExternship(student, externship);
     }
 
     //Extract values from map
