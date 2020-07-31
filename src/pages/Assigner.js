@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Loader from '../components/loader/Loader';
 import {makeAssignments, getUnmatchedStudents, getAverageMatchedRank, getMatchedStudents} from '../util/ccd/assigner'
-import {ceateStudentAndExternshipLists} from '../util/ccd/externshipParser'
+import {getStudentsAndExternships} from '../util/ccd/externshipParser'
 import {exportCSV} from '../util/ccd/csvWriter'
 import { useRecoilState } from 'recoil';
 import { applicationState } from '../store/atoms';
@@ -12,9 +12,9 @@ export default function Assigner() {
 
   function handleData(fileData) {
     // Handle the data uploaded by the user
-    let lists = ceateStudentAndExternshipLists(fileData)
-    let students = lists.students
-    let externships = lists.externships
+    let data = getStudentsAndExternships(fileData)
+    let students = data.students
+    let externships = data.externships
 
     //Sort externships based on priority
     externships.sort((a,b) => a.getPriority()-b.getPriority())
