@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Loader from '../components/loader/Loader';
-import {makeAssignments, getUnmatchedStudents, getAverageMatchedRank, getMatchedStudents} from '../util/ccd/assigner'
+import {makeAssignments, getUnmatchedStudents, getAverageMatchedRank, getMatchedStudents} from '../util/ccd/assignerLogic'
 import {getStudentsAndExternships} from '../util/ccd/externshipParser'
 import {exportCSV} from '../util/ccd/csvWriter'
 import { useRecoilState } from 'recoil';
