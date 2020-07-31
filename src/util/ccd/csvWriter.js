@@ -1,7 +1,4 @@
-
 export function exportCSV(assignments, unmatchedStudents) {
-    // TODO: Anna implement functionality
-
     //Exports list of Externship objects with matched students and list of unmatched students into a CSV file
     //Input: assignments - list of Externship objects, unmatchedStudents - list of Student objects
     //Output: CSV file
@@ -11,9 +8,6 @@ export function exportCSV(assignments, unmatchedStudents) {
         //                  unmatched, student4
 
     const rows = [["Externshp", "Student"]];
-
-    console.log(assignments)
-    console.log(unmatchedStudents)
 
     //create [externshipName, studentName] rows 
     var i;
@@ -29,7 +23,7 @@ export function exportCSV(assignments, unmatchedStudents) {
     //add [unmatched, studentName] rows
     var u;
     for (u = 0; u < unmatchedStudents.length; u++) {
-        rows.push(["Unmatched", unmatchedStudents[u].getFullName()])
+        rows.push(["Unmatched", unmatchedStudents[u].getFullName()]);
     }
 
     return rows;
