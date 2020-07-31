@@ -17,7 +17,7 @@ var columnNames = {
     slotCount: "number_of_externs"
 };
 
-function extractStudent(row){
+function extractStudent(row) {
     /*  Inputs: a CSV row (array)
         Outputs: a student object (if represented in row) or null
     */
@@ -39,7 +39,7 @@ function extractExternship(row) {
     */
     var name = row['externship'] || row['externships'];
     var externship = null;
-    if (name !== ""){
+    if (name !== "") {
         //Get information about the externship
         var jobId = row[columnNames.jobId];
         var postingId = row[columnNames.postingId]
@@ -50,7 +50,7 @@ function extractExternship(row) {
     return externship;
 }
 
-function linkStudentToExternship(studentObject,externshipObject){
+function linkStudentToExternship(studentObject,externshipObject) {
     /*  Inputs: studentObject, externshipObject
         Adds student to externship's applicants and externship to student's applications
     */
@@ -58,7 +58,7 @@ function linkStudentToExternship(studentObject,externshipObject){
    studentObject.applications.push(externshipObject);
 }
 
-function mapIfNovel(map,key,value){
+function mapIfNovel(map,key,value) {
     /*  Inputs: map,key,value
         Maps value to key in map if nothing is mapped to key and value is not null
     */
@@ -95,7 +95,7 @@ export function getStudentsAndExternships(fileData) {
         mapIfNovel(externshipMap,externshipKey,externship);
 
         //Add applicants to externship & externship to applicant
-        if (student && externship){
+        if (student && externship) {
             linkStudentToExternship(student, externship);
         }
     }
