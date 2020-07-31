@@ -1,6 +1,4 @@
 export function exportCSV(assignments, unmatchedStudents) {
-    // TODO: Anna implement functionality
-
     //Exports list of Externship objects with matched students and list of unmatched students into a CSV file
     //Input: assignments - list of Externship objects, unmatchedStudents - list of Student objects
     //Output: CSV file

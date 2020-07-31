@@ -24,7 +24,7 @@ export default function Assigner() {
     // Statistic Calls
       // console.log("Matched Student Count:", getMatchedStudents(students).length);
       // console.log("Unmatched Student Count:", unmatchedStudents.length);
-      // console.log("Average Matched Rank:", getAverageMatchedRank(students, externships));
+      // console.log("Average Matched Rank:", getAverageMatchedRank(students));
 
     setCsvData(
       exportCSV(assignments, unmatchedStudents)
