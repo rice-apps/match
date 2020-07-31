@@ -53,7 +53,9 @@ export default function Header() {
                 <Nav className="mr-auto">
                     <Nav.Link href="/pods">Pods</Nav.Link>
                     <Nav.Link href="/settings">Settings</Nav.Link>
+                    <Nav.Link> | </Nav.Link>
                     <Nav.Link href="/about">About</Nav.Link>
+                    <Nav.Link href="/CCD">CCD</Nav.Link>
                 </Nav>
 
                 <Navbar.Text>
