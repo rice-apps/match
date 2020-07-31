@@ -25,7 +25,7 @@ export function exportCSV(assignments, unmatchedStudents) {
     //add [unmatched, studentName] rows
     var u;
     for (u = 0; u < unmatchedStudents.length; u++) {
-        rows.push(["Unmatched", unmatchedStudents[u].getFullName()])
+        rows.push(["Unmatched", unmatchedStudents[u].getFullName()]);
     }
 
     return rows;

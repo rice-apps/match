@@ -1,4 +1,4 @@
-export{Externship,Student,MockStudents,MockExternships}
+export{Externship,Student,MockStudents,MockExternships};
 /*
   IMPORT INSTRUCTIONS:
   To import anything from here simply put:
@@ -76,7 +76,7 @@ class Externship {
     } else if (!this.hasSpace()) {
       throw new Error(`${this} Externship is full!`);
     }
-    studentObject.assignedExternship = this
+    studentObject.assignedExternship = this;
     this.matched.push(studentObject);
   }
 
@@ -86,9 +86,9 @@ class Externship {
       Outputs: The highest ranked studentObject who is not ranked (globally).
     */
     //Create list of unmatched students
-    var unmatchedStudents = this.applicants.filter(student => student.assignedExternship === null)
+    var unmatchedStudents = this.applicants.filter(student => student.assignedExternship === null);
     //Return first element, if it exists
-    return unmatchedStudents.length > 0 ? unmatchedStudents[0] : null
+    return unmatchedStudents.length > 0 ? unmatchedStudents[0] : null;
   }
 
   getNumberOfApplicants(){
@@ -110,7 +110,7 @@ class Externship {
       Returns an integer
       Lower interger, the higher priority it will be filled
     */
-    return this.getNumberOfApplicants() - this.getNumberOfSpots()
+    return this.getNumberOfApplicants() - this.getNumberOfSpots();
   }
 
   getStudentRank(studentObject, startAtOne = true) {
@@ -118,7 +118,7 @@ class Externship {
       Returns the students rank
     */
     var index = this.applicants.indexOf(studentObject);
-    return (index === -1 ? -1 : (startAtOne ? index + 1 : index))
+    return (index === -1 ? -1 : (startAtOne ? index + 1 : index));
   }
 }
 
@@ -179,6 +179,6 @@ for (i in MockExternships) {
   for (j in externship.applicants) {
     var applicant = externship.applicants[j];
     applicant.applications.push(externship);
-    console.log(applicant)
+    console.log(applicant);
   }
 }

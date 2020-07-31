@@ -42,10 +42,10 @@ function extractExternship(row) {
     if (name !== "") {
         //Get information about the externship
         var jobId = row[columnNames.jobId];
-        var postingId = row[columnNames.postingId]
-        var slotCount = row[columnNames.slotCount]
+        var postingId = row[columnNames.postingId];
+        var slotCount = row[columnNames.slotCount];
         //Create externship object
-        externship = new Externship(name,slotCount,[],jobId,postingId)
+        externship = new Externship(name,slotCount,[],jobId,postingId);
     }
     return externship;
 }

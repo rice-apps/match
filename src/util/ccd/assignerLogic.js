@@ -7,23 +7,23 @@ export function makeAssignments(externships) {
       if (externships[i].hasSpace()) {
         let studentMatch = externships[i].getHighestUnmatched()
         if (studentMatch != null) {
-          externships[i].match(studentMatch)
+          externships[i].match(studentMatch);
           matchWasMade = true;
         }
       }
     }
   }
-  return externships
+  return externships;
 }
 
 export function getUnmatchedStudents(students) {
-    // Find unmatched students
-    return students.filter(student => student.assignedExternship == null)
+  // Find unmatched students
+  return students.filter(student => student.assignedExternship == null);
 }
 
 export function getMatchedStudents(students) {
   // Find matched students
-  return students.filter(student => student.assignedExternship != null)
+  return students.filter(student => student.assignedExternship != null);
 }
 
 export function getAverageMatchedRank(students, externships) {
@@ -33,7 +33,7 @@ export function getAverageMatchedRank(students, externships) {
   for (i in matchedStudents) {
     var student = matchedStudents[i];
     var rank = student.assignedExternship.getStudentRank(student);
-    rankTotal += rank
+    rankTotal += rank;
   }
-  return rankTotal / matchedStudents.length
+  return rankTotal / matchedStudents.length;
 }

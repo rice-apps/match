@@ -3,35 +3,32 @@ import Loader from '../components/loader/Loader';
 import {makeAssignments, getUnmatchedStudents, getAverageMatchedRank, getMatchedStudents} from '../util/ccd/assignerLogic'
 import {getStudentsAndExternships} from '../util/ccd/externshipParser'
 import {exportCSV} from '../util/ccd/csvWriter'
-import { useRecoilState } from 'recoil';
-import { applicationState } from '../store/atoms';
-import {CSVLink, CSVDownload} from 'react-csv';
+import {CSVLink} from 'react-csv';
 
 export default function Assigner() {
   const [csvData, setCsvData] = useState([]);
 
   function handleData(fileData) {
     // Handle the data uploaded by the user
-    let data = getStudentsAndExternships(fileData)
-    let students = data.students
-    let externships = data.externships
+    let data = getStudentsAndExternships(fileData);
+    let students = data.students;
+    let externships = data.externships;
 
     //Sort externships based on priority
-    externships.sort((a,b) => a.getPriority()-b.getPriority())
+    externships.sort((a,b) => a.getPriority()-b.getPriority());
 
     //Match students
-    let assignments = makeAssignments(externships)
-    let unmatchedStudents = getUnmatchedStudents(students)
+    let assignments = makeAssignments(externships);
+    let unmatchedStudents = getUnmatchedStudents(students);
 
     // Statistic Calls
-    // console.log("Matched Student Count:", getMatchedStudents(students).length)
-    // console.log("Unmatched Student Count:", unmatchedStudents.length)
-    // console.log("Average Matched Rank:", getAverageMatchedRank(students, externships))
+      // console.log("Matched Student Count:", getMatchedStudents(students).length);
+      // console.log("Unmatched Student Count:", unmatchedStudents.length);
+      // console.log("Average Matched Rank:", getAverageMatchedRank(students, externships));
 
     setCsvData(
       exportCSV(assignments, unmatchedStudents)
     );
-
   }
 
   return (
