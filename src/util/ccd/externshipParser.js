@@ -58,15 +58,6 @@ function linkStudentToExternship(studentObject,externshipObject) {
    studentObject.applications.push(externshipObject);
 }
 
-function mapIfNovel(map,key,value) {
-    /*  Inputs: map,key,value
-        Maps value to key in map if nothing is mapped to key and value is not null
-    */
-    if (!map[key] && value) {
-        map[key] = value;
-    }
-}
-
 export function getStudentsAndExternships(fileData) {
     /*  Inputs: fileData - a JS object containing CSV data
         Outputs: {
@@ -87,12 +78,14 @@ export function getStudentsAndExternships(fileData) {
         //Handle student
         var studentKey = row[columnNames.email];
         var student = studentMap[studentKey] || extractStudent(row);
-        mapIfNovel(studentMap,studentKey,student);
+        //Map if novel
+        if (!studentMap[studentKey] && student) studentMap[studentKey] = student;
 
         //Handle externship
         var externshipKey = row['externship'] || row['externships'];
         var externship = externshipMap[externshipKey] || extractExternship(row);
-        mapIfNovel(externshipMap,externshipKey,externship);
+        //Map if novel
+        if (!externshipMap[externshipKey] && externship) externshipMap[externshipKey] = externship;
 
         //Add applicants to externship & externship to applicant
         if (student && externship) {
