@@ -24,9 +24,16 @@ export{Externship,Student,MockStudents,MockExternships};
         Returns the highest applicant in applicants array who is not mathced to any
         other extnership (assignedExternship==null)
       getNumberOfApplicants(): None -> integer
-        Returns the number of integers
+        Returns the number of applicants
+      getNumberOfSpots(): None -> integer
+        Returns the number of spots
       hasSpace() None -> bool
         Whether or not another student can be matched to this internship
+      getPriotiy() None -> integer
+        Returns the externship's priority
+      getStudentRank() studentObject, OPTIONAL: startAtOne (bool) -> integer
+        Returns the studentObjects rank in the internship (it's index in applicants)
+        If startAtOne is set to true (defualt), the highest ranked student will return 1, otherwise 0
   Student (class)
     Attributes:
       email: (string) -- REQUIRED
