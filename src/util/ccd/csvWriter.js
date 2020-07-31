@@ -1,4 +1,3 @@
-
 export function exportCSV(assignments, unmatchedStudents) {
     // TODO: Anna implement functionality
 
@@ -11,9 +10,6 @@ export function exportCSV(assignments, unmatchedStudents) {
         //                  unmatched, student4
 
     const rows = [["Externshp", "Student"]];
-
-    console.log(assignments)
-    console.log(unmatchedStudents)
 
     //create [externshipName, studentName] rows 
     var i;
