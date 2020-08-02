@@ -55,14 +55,13 @@ export default function RightDataPanel(props) {
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
 
-    const selectedLeftRow = selectedLeftRows[0];
     // If the right row matches the selected left row, it is "selected-matched-row"
     // Be careful to make sure selectedLeftRow AND selectedLeftRow[leftMatchColumn.key] are non-NULL
     // Otherwise, this will explode
-    if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key]) {
-      if (selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
-        return "selected-matched-row"
-      }
+    const selectedLeftRow = selectedLeftRows[0];
+    if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
+      selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
+      return "selected-matched-row-right"
     }
 
     // Right now just if it is not empty string or not empty list, consider it matached
@@ -70,15 +69,14 @@ export default function RightDataPanel(props) {
       return "matched-row"
     }
 
-    
-    if (selectedRightRows) {
-      if (selectedRightRows.includes(row)) {
-        console.log("Got row!", row);
-        return "selected-row"
-      }
+    // Check if selected
+    if (selectedRightRows && selectedRightRows.includes(row)) {
+      return "selected-row"
     }
 
+    // Otherwise, just leave unmatched
     return "unmatched-row"
+
   }
 
   return (
