@@ -84,20 +84,15 @@ Click 'Download Results'
 - [ ] make sheets data load immediately after signin (shouldn't have to press "upload data" every time)
 
 ## Icebox:
+- [ ] automated match making decisions
 - [ ] fix auth issue with gapi instantiation
 - [ ] when page refresh, selected row shows below table, but does not reflect in table
 - [ ] apply for validation with google
-- [ ] about page details, with demo video
-- [ ] data validation on loading
-- [ ] default data loading
-- [ ] clean up syncing logic???
+- [ ] data validation on loading!!
 - [ ] clean up app.yaml handlers by using regex
-- [ ] 404 screen
 - [ ] look into sub-domain (i.e. ccd.match.riceapps.org)
 - [ ] select by search auto-complete
-- [ ] automated match making decisions
 - [ ] email template generation
 - [ ] data backups with timestamps (can look into using GCP storage) 
-- [ ] add tutorial page
-  - [ ] add demo video
 - [ ] privacy policy
+- [ ] mobile optimizations
