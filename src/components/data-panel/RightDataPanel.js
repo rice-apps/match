@@ -45,7 +45,7 @@ export default function RightDataPanel(props) {
     let rightMatch = JSON.parse(rightMatches)[0];
 
     // Remember, the cell values are list of [index, name]
-    if (rightMatch[0] === parseInt(leftRow.key) + 2) {
+    if (leftRow && rightMatch[0] === parseInt(leftRow.key) + 2) {
       return true;
     } else {
       return false;
