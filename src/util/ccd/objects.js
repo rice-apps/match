@@ -186,6 +186,5 @@ for (i in MockExternships) {
   for (j in externship.applicants) {
     var applicant = externship.applicants[j];
     applicant.applications.push(externship);
-    console.log(applicant);
   }
 }

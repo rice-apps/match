@@ -42,8 +42,12 @@ export default function CSVFileUploader(props) {
             var newDataState = formatData(range.values, props.allowManualSort);
             newDataState.selectedRows = [];
             newDataState.spreadsheetId = spreadsheetId;
+            // For now, assuming name Column is last
+            // MIGHT HAVE TO CHANGE THIS LATER!
             newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
-            newDataState.nameColumn = newDataState.columns[2];
+            // For now, assuming name Column is 4th
+            // MIGHT HAVE TO CHANGE THIS LATER!
+            newDataState.nameColumn = newDataState.columns[3];
             props.onUpload(oldDataState => {
                 return {
                     ...oldDataState,

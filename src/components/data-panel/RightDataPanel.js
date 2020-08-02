@@ -9,7 +9,8 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
 export default function RightDataPanel(props) {
-  const [{ data, columns, selectedRows, matchColumn: rightMatchColumn, nameColumn }, setRightData] = useRecoilState(rightDataState);
+  const [{ data, columns, selectedRows: selectedRightRows,
+    matchColumn: rightMatchColumn, nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
   const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
@@ -28,11 +29,11 @@ export default function RightDataPanel(props) {
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0]);
 
-  
+
   // Takes in the left and right rows and determines if they're matched together
   function isMatched(rightRow, leftRow) {
     let rightMatches = rightRow[rightMatchColumn.key];
-    
+
     // If right matches is null, just return false.
     // NOTE: IF YOU JSON.PARSE ON A NULL VALUE, IT WILL CRASH THE APP!
     // AVOID THIS AT ALL COSTS
@@ -51,6 +52,35 @@ export default function RightDataPanel(props) {
     }
   }
 
+  // This determines the CSS class of all rows in this right table
+  function rightRowClassNameGetter(row, index) {
+
+    const selectedLeftRow = selectedLeftRows[0];
+    // If the right row matches the selected left row, it is "selected-matched-row"
+    // Be careful to make sure selectedLeftRow AND selectedLeftRow[leftMatchColumn.key] are non-NULL
+    // Otherwise, this will explode
+    if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key]) {
+      if (selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
+        return "selected-matched-row"
+      }
+    }
+
+    // Right now just if it is not empty string or not empty list, consider it matached
+    if (row[rightMatchColumn.key] && row[rightMatchColumn.key] !== "[]") {
+      return "matched-row"
+    }
+
+    
+    if (selectedRightRows) {
+      if (selectedRightRows.includes(row)) {
+        console.log("Got row!", row);
+        return "selected-row"
+      }
+    }
+
+    return "unmatched-row"
+  }
+
   return (
     <div className="DataPanel">
 
@@ -65,6 +95,7 @@ export default function RightDataPanel(props) {
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
       <Table
+        rowClassNameGetter={rightRowClassNameGetter}
         onSelectRow={onSelectRow}
         data={sortedData}
         columns={columns}
@@ -74,11 +105,10 @@ export default function RightDataPanel(props) {
 
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
-        {selectedRows.map((row, i) =>
-          {
-            let matched = isMatched(row, selectedLeftRows[0]);
-            let name = row[nameColumn.key];
-            return(<div key={i}>
+        {selectedRightRows.map((row, i) => {
+          let matched = isMatched(row, selectedLeftRows[0]);
+          let name = row[rightNameColumn.key];
+          return (<div key={i}>
             <FormattedCard
               title={name}
               extra={<button onClick={() => props.makeMatchOrUnmatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
@@ -87,7 +117,8 @@ export default function RightDataPanel(props) {
               row={row}
             >
             </FormattedCard>
-          </div>)})}
+          </div>)
+        })}
       </div>
 
     </div>

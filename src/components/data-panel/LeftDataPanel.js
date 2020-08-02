@@ -19,6 +19,16 @@ export default function LeftDataPanel(props) {
       })
   }
 
+  // This determines the CSS class of all rows in this left table
+  function leftRowClassNameGetter(row, index) {
+    // Right now just if it is not empty string or not empty list, consider it matached
+    if (row[matchColumn.key] && row[matchColumn.key] !== "[]") {
+      return "matched-row"
+    } else {
+      return "unmatched-row"
+    }
+  }
+
   return (
     <div className="DataPanel">
 
@@ -33,6 +43,7 @@ export default function LeftDataPanel(props) {
         {/* The actual table for this panel. Note that it's "radio" selection type.
         This means you can select only one row from this table. */}
         <Table
+          rowClassNameGetter={leftRowClassNameGetter}
           onSelectRow={onSelectRow}
           data={data}
           columns={columns}

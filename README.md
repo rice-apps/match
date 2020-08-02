@@ -68,18 +68,23 @@ Click 'Download Results'
   - [x] when a match is made, it is written to google sheet RIGHT
   - [x] unmatch-ability for both LEFT and RIGHT
   - [x] loading screen while match being made
+  - [ ] handle edge case: should you be able to switch matches???
 - [ ] time data processing
   - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
-- [ ] some complicated ass css for antd table 
-  - [ ] color for hover over row
-  - [ ] color for fixed column
-  - [ ] color for selected row
+- [x] some complicated ass css for antd table 
+  - [x] color for hover over row
+  - [x] color for fixed column
+  - [x] color for selected row
+  - [x] color for matched student with currently selected hcw
 - [ ] when selecting a hcw, bring the students matched to him/her to the top
   - [ ] this could also just be some more complicated sort logic ("contains" operation")
-- [ ] when selected a hcw, highlight the students matched to him/her in a different color
 - [x] pod view page
+- [ ] add tutorial page
+  - [ ] add demo video
 
 ## Icebox:
+- [ ] fix auth issue with gapi instantiation
+- [ ] when page refresh, selected row shows below table, but does not reflect in table
 - [ ] apply for validation with google
 - [ ] about page details, with demo video
 - [ ] data validation on loading

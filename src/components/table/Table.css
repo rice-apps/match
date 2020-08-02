@@ -28,10 +28,37 @@
     height: 20vh;
 }
 
-.matched-row {
-    background-color: #DCEDC2;
-}
+
+/* .selected-row {
+    background-color: #eea9a9 !important;
+} */
+
+/* ==================================== ROW CSS COLORING  ==================================== */
 
 .unmatched-row {
-    background-color: white;
+    background-color: white !important;
+}
+
+/* THIS DETERMINES ROW COLOR NORMALLY */
+.matched-row > td {
+    background-color: #d2eea9 !important;
+}
+
+/* THIS DETERMINES ROW COLOR ON HOVER */
+tr.matched-row:hover > td  {
+    background-color: #bbeb73 !important;
+}
+
+/* Repeat the above two rules for each case: */
+
+.selected-matched-row > td {
+    background-color: #f9ffa4 !important;
+}
+
+tr.selected-matched-row:hover > td {
+    background-color: #f4ff5b !important;
+}
+
+tr.matched-row:hover td > td {
+    background-color: #bbeb73 !important;
 }

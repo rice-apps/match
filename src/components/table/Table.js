@@ -3,28 +3,26 @@ import { Table } from 'antd';
 import './Table.css'
 
 export default function MyTable(props) {
+
+  // This handles actions that should occur when rows of the table are selected.
+  // DOCUMENTATION: https://ant.design/components/table/#rowSelection
   const rowSelection = {
+    fixed: true,
     onChange: (selectedRowKeys, selectedRows) => {
       props.onSelectRow(selectedRows);
     },
     getCheckboxProps: record => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      // Eventually, we can disable/enable certain rows.
+      // Think: If someone reports as COVID symptoms, we can mark a column as "COVID symptomatic",
+      // and disable their row selection (cannot match them to a hcw anymore).
+      disabled: record.name === 'Disabled User', 
       name: record.name,
     }),
   };
 
-  // If no columns, no table
+  // If no columns, do not render the table. It looks weird.
   if (props.columns.length === 0) {
     return <> </>;
-  }
-
-  function rowClassNameGetter(row, index) {
-    // Right now just if it is not empty string or not empty list, consider it matached
-    if (row[props.matchColumn.key] && row[props.matchColumn.key] !== "[]") {
-      return "matched-row"
-    } else {
-      return "unmatched-row"
-    }
   }
 
   return (
@@ -34,7 +32,7 @@ export default function MyTable(props) {
         type: props.selectType,
         ...rowSelection,
       }}
-      rowClassName={rowClassNameGetter}
+      rowClassName={props.rowClassNameGetter}
       dataSource={props.data} 
       columns={props.columns}
       bordered 
