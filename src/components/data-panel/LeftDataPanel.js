@@ -24,15 +24,19 @@ export default function LeftDataPanel(props) {
 
     // Right now just if it is not empty string or not empty list, consider it matached
     const matched = row[matchColumn.key] && row[matchColumn.key] !== "[]";
-    
-    if (selectedRows.includes(row) && matched) {
+    const selected = selectedRows.map(r => r.key).includes(row.key);
+
+    if (selected && matched) {
       return "selected-matched-row-left"
+    }
+    
+    if (selected) {
+      return "selected-row"
     }
     
     if (matched) {
       return "matched-row"
     }
-    
     return "unmatched-row"
   }
 

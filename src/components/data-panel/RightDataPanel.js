@@ -59,6 +59,7 @@ export default function RightDataPanel(props) {
     // Be careful to make sure selectedLeftRow AND selectedLeftRow[leftMatchColumn.key] are non-NULL
     // Otherwise, this will explode
     const selectedLeftRow = selectedLeftRows[0];
+
     if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
       selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
       return "selected-matched-row-right"
