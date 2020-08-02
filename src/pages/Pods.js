@@ -28,7 +28,7 @@ import { Card, Row, Col } from "antd";
 export default function Pods() {
 
     const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
-    const { data: rightData, matchColumn: rightMatchColumn, nameColumn: rightNameColumn } = useRecoilValue(rightDataState);
+    const { data: rightData, nameColumn: rightNameColumn } = useRecoilValue(rightDataState);
 
 
     // Take only rows from the left that have been matched

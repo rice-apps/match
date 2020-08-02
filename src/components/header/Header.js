@@ -37,6 +37,7 @@ export default function Header() {
 
     // Triggers google to initialize the client
     useEffect(() => {
+        console.log("creating event listener for google-loaded")
         window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
     }, []);
 

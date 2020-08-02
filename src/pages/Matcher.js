@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
@@ -119,7 +119,7 @@ export default function Matcher() {
     // Check for the the index of the right value in the left cell
     let indexOfRightInLeft = leftValue.map(list => list[0]).indexOf(rightRowIndex)
     // If the right index does not already exist in the left cell, add it
-    if (indexOfRightInLeft == -1) {
+    if (indexOfRightInLeft === -1) {
       leftValue.push([rightRowIndex, rightName]);
     } else {
       // Otherwise, we should remove it, THIS IS UNMATCH!!
@@ -129,7 +129,7 @@ export default function Matcher() {
     // Check for the the index of the right value in the left cell
     let indexOfLeftInRight = rightValue.map(list => list[0]).indexOf(leftRowIndex)
     // If the left index does not already exist in the right cell, add it
-    if (indexOfLeftInRight == -1) {
+    if (indexOfLeftInRight === -1) {
       rightValue.push([leftRowIndex, leftName]);
     } else {
       // Otherwise, we should remove it, THIS IS UNMATCH!!
@@ -140,8 +140,8 @@ export default function Matcher() {
     let rightValueString = JSON.stringify(rightValue);
 
     // Save an empty list [] as a blank cell
-    if (leftValueString == "[]") leftValueString = "";
-    if (rightValueString == "[]") rightValueString = "";
+    if (leftValueString === "[]") leftValueString = "";
+    if (rightValueString === "[]") rightValueString = "";
 
     // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {

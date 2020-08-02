@@ -1,4 +1,3 @@
-export{Externship,Student,MockStudents,MockExternships};
 /*
   IMPORT INSTRUCTIONS:
   To import anything from here simply put:
@@ -64,7 +63,7 @@ class Externship {
     this.matched = [];
   }
 
-  hasSpace(){
+  hasSpace() {
     /*
     Returns a bool, whether or not there are spots left.
     */
@@ -98,7 +97,7 @@ class Externship {
     return unmatchedStudents.length > 0 ? unmatchedStudents[0] : null;
   }
 
-  getNumberOfApplicants(){
+  getNumberOfApplicants() {
     /*
       Returns the number of applicants
     */
@@ -132,8 +131,8 @@ class Externship {
 class Student {
   constructor(
     email,
-    firstName=null, //OPTIONAL
-    lastName=null, //OPTIONAL
+    firstName = null, //OPTIONAL
+    lastName = null, //OPTIONAL
     applications = [], //OPTIONAL
   ) {
     this.email = email
@@ -143,16 +142,16 @@ class Student {
     this.assignedExternship = null;
   }
 
-  getFullName(){
+  getFullName() {
     /*
        Returns the string of the full name of the student
     */
     var first = (this.firstName ? this.firstName : "<No First Name>");
     var last = (this.lastName ? this.lastName : "<No Last Name>");
-    return first.concat(" ",last);
+    return first.concat(" ", last);
   }
 
-  getNumberOfApplications(){
+  getNumberOfApplications() {
     /*
      Returns the number of applications
     */
@@ -162,21 +161,21 @@ class Student {
 
 //Generate Mock Data
 //Define soe students
-var adam = new Student("adz2@rice.edu","Adam", "Zawierucha");
+var adam = new Student("adz2@rice.edu", "Adam", "Zawierucha");
 var anna = new Student("anna@rice.edu", "Anna", "Bai");
-var sanjanaa = new Student("sanj@rice.edu","Sanjanaa","Shanmugam");
-var ryan = new Student("knight@rice.edu",  "Ryan", "Knighlty");
-var johnny = new Student("john@rice.edu","Johnny");
-var bob = new Student("bob@rice.edu","Bob")
-var jill = new Student("jill@rice.edu","Jill")
-var MockStudents = [adam,anna,sanjanaa,ryan,johnny,bob,jill];
+var sanjanaa = new Student("sanj@rice.edu", "Sanjanaa", "Shanmugam");
+var ryan = new Student("knight@rice.edu", "Ryan", "Knighlty");
+var johnny = new Student("john@rice.edu", "Johnny");
+var bob = new Student("bob@rice.edu", "Bob")
+var jill = new Student("jill@rice.edu", "Jill")
+var MockStudents = [adam, anna, sanjanaa, ryan, johnny, bob, jill];
 
 //Define some externships
-var MockExternships = [new Externship("Facebook",3,[anna,adam,ryan,sanjanaa]),
-                       new Externship("Apple",2,[bob,jill,adam]),
-                       new Externship("Netflix",2,[anna,sanjanaa,jill]),
-                       new Externship("Google",1,[ryan,bob,johnny,adam]),
-                      ];
+var MockExternships = [new Externship("Facebook", 3, [anna, adam, ryan, sanjanaa]),
+new Externship("Apple", 2, [bob, jill, adam]),
+new Externship("Netflix", 2, [anna, sanjanaa, jill]),
+new Externship("Google", 1, [ryan, bob, johnny, adam]),
+];
 
 //Add all externships to student's applicatiosn (NON-CRUCIAL, for now!)
 var i;
@@ -188,3 +187,6 @@ for (i in MockExternships) {
     applicant.applications.push(externship);
   }
 }
+
+// Export at bottom, otherwise Chrome will yell
+export { Externship, Student, MockStudents, MockExternships };
