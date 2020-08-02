@@ -71,7 +71,7 @@ export default function RightDataPanel(props) {
     }
 
     // Check if selected
-    if (selectedRightRows && selectedRightRows.includes(row)) {
+    if (selectedRightRows.map(r => r.key).includes(row.key)) {
       return "selected-row"
     }
 

@@ -70,6 +70,10 @@ tr.selected-matched-row-left:hover > td {
 }
 
 /* Basic matched row */
-tr.matched-row:hover td > td {
-    background-color: #bbeb73 !important;
+tr.selected-row > td {
+    background-color: #E6F7FF !important;
+}
+
+tr.selected-row:hover > td {
+    background-color: #c6edff !important;
 }
