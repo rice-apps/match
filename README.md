@@ -81,6 +81,7 @@ Click 'Download Results'
 - [x] pod view page
 - [ ] add tutorial page
   - [ ] add demo video
+- [ ] make sheets data load immediately after signin (shouldn't have to press "upload data" every time)
 
 ## Icebox:
 - [ ] fix auth issue with gapi instantiation
