@@ -60,13 +60,13 @@ tr.selected-matched-row-right:hover > td {
     background-color: #ffd17c !important;
 }
 
-/* Selected + matched left */
+/* Selected + matched left  */
 .selected-matched-row-left > td {
-    background-color: #bbeb73 !important;
+    background-color: #ffdfa4 !important;
 }
 
 tr.selected-matched-row-left:hover > td {
-    background-color: #bbeb73 !important;
+    background-color: #ffd17c !important;
 }
 
 /* Basic matched row */

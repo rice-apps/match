@@ -93,7 +93,7 @@ export default function Matcher() {
 
 
   // This is the big boy function that actually makes matches
-  function makeMatchOrUnmatch(row) {
+  function toggleMatch(row) {
     // Read and parse current match for both left and right
     let leftValue = [];
     if (selectedLeftRows[0][leftMatchColumn.key]) {
@@ -125,7 +125,7 @@ export default function Matcher() {
       // Otherwise, we should remove it, THIS IS UNMATCH!!
       leftValue.splice(indexOfRightInLeft, 1)
     }
-    
+
     // Check for the the index of the right value in the left cell
     let indexOfLeftInRight = rightValue.map(list => list[0]).indexOf(leftRowIndex)
     // If the left index does not already exist in the right cell, add it
@@ -145,15 +145,17 @@ export default function Matcher() {
 
     // If the left data is from Google Sheets, write to it
     if (leftSpreadsheetId) {
+
+      // Set refreshing to be true
+      setLeftData(leftDataState => {
+        return {
+          ...leftDataState,
+          refreshing: true,
+        }
+      })
+
       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
-        console.log("Done writing to left!")
-        // Set refreshing to be true
-        setLeftData(leftDataState => {
-          return {
-            ...leftDataState,
-            refreshing: true,
-          }
-        })
+        console.log("Done writing to left!");
         // This refreshes the data in this app once the spreadsheet is written to
         getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
       });
@@ -161,15 +163,15 @@ export default function Matcher() {
 
     // If the right data is from Google Sheets, write to it
     if (rightSpreadsheetId) {
+      // Set refreshing to be true
+      setRightData(rightDataState => {
+        return {
+          ...rightDataState,
+          refreshing: true,
+        }
+      });
       modifySpreadsheetDataSingleCell(rightSpreadsheetId, rightColumnIndex, rightRowIndex, rightValueString, () => {
-        console.log("Done writing to right!")
-        // Set refreshing to be true
-        setRightData(rightDataState => {
-          return {
-            ...rightDataState,
-            refreshing: true,
-          }
-        })
+        console.log("Done writing to right!");
         // This refreshes the data in this app once the spreadsheet is written to
         getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
       });
@@ -196,7 +198,7 @@ export default function Matcher() {
               <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
                 <LeftDataPanel />
                 <RightDataPanel
-                  makeMatchOrUnmatch={makeMatchOrUnmatch} />
+                  toggleMatch={toggleMatch} />
               </SplitPane>
             </div>
           </LoadingOverlay>
