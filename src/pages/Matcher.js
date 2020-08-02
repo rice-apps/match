@@ -180,9 +180,9 @@ export default function Matcher() {
 
   return (
     <div>
-      <div className="Main">
+      <div>
 
-        <button style={{ position: "absolute", zIndex: 1, marginTop: 10 }} onClick={() => setSidebarOpen(true)}>
+        <button style={{ position: "absolute", zIndex: 1, marginTop: 10, marginLeft: 10 }} onClick={() => setSidebarOpen(true)}>
           Sort/Filter
         </button>
 

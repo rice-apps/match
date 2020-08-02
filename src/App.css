@@ -1,5 +1,5 @@
 .Main {
-  padding-left: 20px;
+  padding-top: 20px;
 }
 
 div[role=navigation] {
@@ -41,6 +41,7 @@ input[type="button"] {
   flex-direction: row;
 }
 
+/* ================== FOR THE RESIZER ================== */
 .Resizer {
   background: #000;
   opacity: 0.2;
@@ -89,4 +90,10 @@ input[type="button"] {
 }
 .Resizer.disabled:hover {
   border-color: transparent;
+}
+
+
+.AboutCard {
+  width: 30vw;
+  margin: 0 auto;
 }
