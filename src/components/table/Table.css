@@ -53,27 +53,27 @@ tr.matched-row:hover > td  {
 
 /* Selected + matched right */
 .selected-matched-row-right > td {
-    background-color: #ffdfa4 !important;
+    background-color: #fffeb6 !important;
 }
 
 tr.selected-matched-row-right:hover > td {
-    background-color: #ffd17c !important;
+    background-color: #fffc65 !important;
 }
 
 /* Selected + matched left  */
 .selected-matched-row-left > td {
-    background-color: #ffdfa4 !important;
+    background-color: #fffeb6 !important;
 }
 
 tr.selected-matched-row-left:hover > td {
-    background-color: #ffd17c !important;
+    background-color: #fffc65 !important;
 }
 
 /* Basic matched row */
 tr.selected-row > td {
-    background-color: #E6F7FF !important;
+    background-color: #d3f1ff !important;
 }
 
 tr.selected-row:hover > td {
-    background-color: #c6edff !important;
+    background-color: #b3e7ff !important;
 }
