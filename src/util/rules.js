@@ -24,13 +24,15 @@ export function applyRules(rules, data, leftRow) {
 function comaSeperatedToList(str) {
   /* Inputs: str
      Output: an array
+     TODO: Ryan Knightly implement
   */
   return None
 }
 
-function countOverlap (listA,listB) {
+function countOverlaps (listA,listB) {
   /*  Inputs: two lists
       Outputs: (intger) number of elements B has in A. (A is HCW, B is student)
+      TODO: Ryan Knightly implement
   */
   return None
 }
@@ -38,8 +40,9 @@ function countOverlap (listA,listB) {
 // There's definitely a much better way to define these comparitors,
 // I am just too lazy to write it rn. Ping Johnny if this is too hard to work with.
 
-const byOverlap = (value) => (a,b) => {
-  
+const byOverlaps = (value) => (a,b) => {
+  //TODO: Adam Zawierucha implement
+
 }
 
 const sortByMapped = map => compareFn => (a, b) => compareFn(map(a), map(b));
