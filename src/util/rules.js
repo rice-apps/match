@@ -202,7 +202,7 @@ function applyFilters(rules, data, leftRow) {
       data = data.filter((a) => {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
       });
-    } else if (rule.operator == "overlap") {
+    } else if (rule.operator === "overlap") {
       data = data.filter((a) => {
         const leftList = commaSeparatedToList(left);
         const aList  = commaSeparatedToList(a[rule.by]);
