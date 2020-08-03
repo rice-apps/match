@@ -168,7 +168,7 @@ function applySorts(rules, data, leftRow) {
     } else if (rule.operator === "leq") {
       let newComparator = sortByMapped(e => e[rule.by])(byLEQ(left));
       comparators.push(newComparator);
-    }
+    } 
   }
   let chainedComparators = sortByFlattened(comparators);
   data.sort(chainedComparators);
@@ -198,6 +198,10 @@ function applyFilters(rules, data, leftRow) {
       data = data.filter((a) => {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
       });
+    } else if (rule.operator == "overlap") {
+      const leftList = comaSeperatedToList(left);
+      const aList  = comaSeperatedToList(a);
+      return countOverlaps(leftList,aList) > 0;
     }
   }
 
