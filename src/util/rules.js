@@ -205,7 +205,7 @@ function applyFilters(rules, data, leftRow) {
     } else if (rule.operator == "overlap") {
       data = data.filter((a) => {
         const leftList = commaSeparatedToList(left);
-        const aList  = commaSeparatedToList(a);
+        const aList  = commaSeparatedToList(a[rule.by]);
         return countOverlaps(leftList,aList) > 0;
       });
     }
