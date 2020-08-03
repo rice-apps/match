@@ -42,7 +42,32 @@ function countOverlaps (listA,listB) {
 
 const byOverlaps = (value) => (a,b) => {
   //TODO: Adam Zawierucha implement
+  //Handle Nulls
+  if (!a && !b) {
+    return 0;
+  } else if (!a) {
+    return 1;
+  } else if (!b) {
+    return -1;
+  }
 
+  //Create lists from strings
+  const leftList = comaSeperatedToList(value);
+  const aList = comaSeperatedToList(a);
+  const bList = comaSeperatedToList(b);
+
+  //Count overlaps
+  const aCount = countOverlaps(leftList,aList);
+  const bCount = countOverlaps(leftList,bList);
+
+  //Compare overlap counts
+  if (aCount > bCount) {
+    return -1
+  } else if (aCount < bCount ) {
+    return 1
+  } else {
+    return 0
+  }
 }
 
 const sortByMapped = map => compareFn => (a, b) => compareFn(map(a), map(b));
