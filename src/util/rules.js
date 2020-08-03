@@ -26,7 +26,8 @@ function commaSeparatedToList(str) {
   /* Inputs: a string of comma seperated values
      Output: an array of strings
   */
-  return str.split(", ")
+  if (typeof str == "string") return str.split(", ");
+  return [];
 }
 
 function countOverlaps (listA,listB) {
