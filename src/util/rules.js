@@ -27,7 +27,7 @@ function comaSeperatedToList(str) {
      Output: an array
      TODO: Ryan Knightly implement
   */
-  return None
+  return null
 }
 
 function countOverlaps (listA,listB) {
@@ -35,7 +35,7 @@ function countOverlaps (listA,listB) {
       Outputs: (intger) number of elements B has in A. (A is HCW, B is student)
       TODO: Ryan Knightly implement
   */
-  return None
+  return null
 }
 
 // There's definitely a much better way to define these comparitors,
@@ -203,9 +203,11 @@ function applyFilters(rules, data, leftRow) {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
       });
     } else if (rule.operator == "overlap") {
-      const leftList = comaSeperatedToList(left);
-      const aList  = comaSeperatedToList(a);
-      return countOverlaps(leftList,aList) > 0;
+      data = data.filter((a) => {
+        const leftList = comaSeperatedToList(left);
+        const aList  = comaSeperatedToList(a);
+        return countOverlaps(leftList,aList) > 0;
+      });
     }
   }
 
