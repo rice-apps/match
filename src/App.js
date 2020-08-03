@@ -4,6 +4,7 @@ import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
 import About from './pages/About';
 import Pods from './pages/Pods';
+import Privacy from './pages/Privacy';
 import Header from './components/header/Header';
 import { Switch, Route } from "react-router-dom";
 import Sidebar from "react-sidebar";
@@ -42,6 +43,7 @@ function App() {
           <Switch>
             <Route path="/pods" component={Pods} />
             <Route path="/about" component={About} />
+            <Route path="/privacy" component={Privacy} />
             <Route path="/settings" component={Settings} />
             <Route path="/ccd" component={Assigner}/>
             <Route path="/" component={Matcher} />
