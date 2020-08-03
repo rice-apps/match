@@ -1,3 +1,4 @@
+import { removeFileItem } from "antd/lib/upload/utils";
 
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
@@ -167,7 +168,10 @@ function applySorts(rules, data, leftRow) {
     } else if (rule.operator === "leq") {
       let newComparator = sortByMapped(e => e[rule.by])(byLEQ(left));
       comparators.push(newComparator);
-    } 
+    } else if (rule.operator === "overlap") {
+      let newComparator = sortByMapped(e => e[rule.by])(byOverlaps(left));
+      comparators.push(newComparator);
+    }
   }
   let chainedComparators = sortByFlattened(comparators);
   data.sort(chainedComparators);
@@ -198,9 +202,11 @@ function applyFilters(rules, data, leftRow) {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
       });
     } else if (rule.operator == "overlap") {
-      const leftList = commaSeparatedToList(left);
-      const aList  = commaSeparatedToList(a);
-      return countOverlaps(leftList,aList) > 0;
+      data = data.filter((a) => {
+        const leftList = commaSeparatedToList(left);
+        const aList  = commaSeparatedToList(a);
+        return countOverlaps(leftList,aList) > 0;
+      });
     }
   }
 
