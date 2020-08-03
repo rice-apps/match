@@ -21,20 +21,19 @@ export function applyRules(rules, data, leftRow) {
   return filtered_and_sorted
 }
 
-function comaSeperatedToList(str) {
-  /* Inputs: str
-     Output: an array
-     TODO: Ryan Knightly implement
+function commaSeparatedToList(str) {
+  /* Inputs: a string of comma seperated values
+     Output: an array of strings
   */
-  return None
+  return str.split(", ")
 }
 
 function countOverlaps (listA,listB) {
-  /*  Inputs: two lists
-      Outputs: (intger) number of elements B has in A. (A is HCW, B is student)
-      TODO: Ryan Knightly implement
+  /*  Inputs: two lists of elements
+      Outputs: (intger) number of elements shared in common between A and B
   */
-  return None
+  return listA.map(val => listB.includes(val)) // Check if each value in B is in A
+              .reduce((a, b) => a + b) // Sum up the overlapping elements
 }
 
 // There's definitely a much better way to define these comparitors,
@@ -52,9 +51,9 @@ const byOverlaps = (value) => (a,b) => {
   }
 
   //Create lists from strings
-  const leftList = comaSeperatedToList(value);
-  const aList = comaSeperatedToList(a);
-  const bList = comaSeperatedToList(b);
+  const leftList = commaSeparatedToList(value);
+  const aList = commaSeparatedToList(a);
+  const bList = commaSeparatedToList(b);
 
   //Count overlaps
   const aCount = countOverlaps(leftList,aList);
@@ -199,8 +198,8 @@ function applyFilters(rules, data, leftRow) {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
       });
     } else if (rule.operator == "overlap") {
-      const leftList = comaSeperatedToList(left);
-      const aList  = comaSeperatedToList(a);
+      const leftList = commaSeparatedToList(left);
+      const aList  = commaSeparatedToList(a);
       return countOverlaps(leftList,aList) > 0;
     }
   }
