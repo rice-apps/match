@@ -21,11 +21,29 @@ export function applyRules(rules, data, leftRow) {
   return filtered_and_sorted
 }
 
+function comaSeperatedToList(str) {
+  /* Inputs: str
+     Output: an array
+  */
+  return None
+}
+
+function countOverlap (listA,listB) {
+  /*  Inputs: two lists
+      Outputs: (intger) number of elements B has in A. (A is HCW, B is student)
+  */
+  return None
+}
 
 // There's definitely a much better way to define these comparitors,
 // I am just too lazy to write it rn. Ping Johnny if this is too hard to work with.
 
+const byOverlap = (value) => (a,b) => {
+  
+}
+
 const sortByMapped = map => compareFn => (a, b) => compareFn(map(a), map(b));
+
 const byMatch = (value) => (a, b) => {
   if (a === value && b === value) {
     return 0
@@ -96,6 +114,7 @@ export const availableOperators = [
   { value: "geq", display: "≥" },
   { value: "leq", display: "≤" },
   { value: "contains", display: "contains" },
+  { value: "overlap", display: "overlap" },
 ];
 
 function applySorts(rules, data, leftRow) {
