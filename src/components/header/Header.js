@@ -38,7 +38,7 @@ export default function Header() {
     // Triggers google to initialize the client
     useEffect(() => {
         // Check if api is already loaded
-        if (window.gapi && !window.gapi.auth2) {
+        if (window.gapi && window.gapi.auth2) {
             handleClientLoad(authenticationCallback);
         } else { 
             // Not already loaded; create event listener
