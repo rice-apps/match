@@ -15,16 +15,18 @@ export function applyRules(rules, data, leftRow, leftNameColumn, rightMatchColum
   let filters = enabledRules.filter(rule => rule.type === "filter");
 
   // Sort matched rows to the top
-  sorts.push({
-    "type": "sort",
-    "enabled": false,
-    "by": rightMatchColumn.key,
-    "operator": "contains",
-    "with": {
-      type: "column",
-      value: leftNameColumn.key,
-    }
-  })
+  if (rightMatchColumn && leftNameColumn) { // Handle nulls
+    sorts.push({
+      "type": "sort",
+      "enabled": false,
+      "by": rightMatchColumn.key,
+      "operator": "contains",
+      "with": {
+        type: "column",
+        value: leftNameColumn.key,
+      }
+    })
+  }
 
   // Filter the data
   let filtered = applyFilters(filters, copiedData, leftRow);
