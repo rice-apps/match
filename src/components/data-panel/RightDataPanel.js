@@ -11,7 +11,7 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 export default function RightDataPanel(props) {
   const [{ data, columns, selectedRows: selectedRightRows,
     matchColumn: rightMatchColumn, nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
-  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn } = useRecoilValue(leftDataState);
+  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
 
   const rules = useRecoilValue(rulesState);
 
@@ -27,7 +27,7 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0]);
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftNameColumn, rightMatchColumn);
 
 
   // Takes in the left and right rows and determines if they're matched together

@@ -2,7 +2,7 @@
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-export function applyRules(rules, data, leftRow) {
+export function applyRules(rules, data, leftRow, leftNameColumn, rightMatchColumn) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
 
@@ -13,6 +13,18 @@ export function applyRules(rules, data, leftRow) {
   let sorts = enabledRules.filter(rule => rule.type === "sort");
   // Get a list of the 'filter' rules
   let filters = enabledRules.filter(rule => rule.type === "filter");
+
+  // Sort matched rows to the top
+  sorts.push({
+    "type": "sort",
+    "enabled": false,
+    "by": rightMatchColumn.key,
+    "operator": "contains",
+    "with": {
+      type: "column",
+      value: leftNameColumn.key,
+    }
+  })
 
   // Filter the data
   let filtered = applyFilters(filters, copiedData, leftRow);
@@ -37,16 +49,11 @@ const byMatch = (value) => (a, b) => {
     return 0;
   }
 };
-const byContains = (value) => (a, b) => {
 
-  // Handle nulls. There should be much cleaner way to handle this, too lazy rn.
-  if (!a && !b) {
-    return 0;
-  } else if (!a) {
-    return 1;
-  } else if (!b) {
-    return -1;
-  }
+const byContains = (value) => (a, b) => {
+  // Handle nulls.
+  if (!a) a = "";
+  if (!b) b = "";
 
   if (a.includes(value) && b.includes(value)) {
     return 0
