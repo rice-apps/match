@@ -65,6 +65,7 @@ export function handleAuthClick() {
 
     if (!window.gapi || !window.gapi.auth2) {
         alert("Sorry! Google API Client does not initialize sometimes, will address this later, but for now refresh the page!");
+        return
     }
 
     window.gapi.auth2.getAuthInstance().signIn();
