@@ -84,6 +84,7 @@ Click 'Download Results'
 - [ ] make sheets data load immediately after signin (shouldn't have to press "upload data" every time)
 
 ## Icebox:
+- [ ] deploy from production branch
 - [ ] automated match making decisions
 - [ ] fix auth issue with gapi instantiation
 - [ ] when page refresh, selected row shows below table, but does not reflect in table
