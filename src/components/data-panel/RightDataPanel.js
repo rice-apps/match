@@ -10,9 +10,11 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 export default function RightDataPanel(props) {
   const [{ data, columns, selectedRows: selectedRightRows,
-    matchColumn: rightMatchColumn, nameColumn: rightNameColumn }, setRightData] = useRecoilState(rightDataState);
-  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
+    matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
+  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn} = useRecoilValue(leftDataState);
 
+  const matchingEnabled = props.matchingEnabled;
+  
   const rules = useRecoilValue(rulesState);
 
   function onSelectRow(rows) {
@@ -32,6 +34,10 @@ export default function RightDataPanel(props) {
 
   // Takes in the left and right rows and determines if they're matched together
   function isMatched(rightRow, leftRow) {
+    //Can't be matched if matching is disabled
+    if (!matchingEnabled) {
+      return false
+    }
     let rightMatches = rightRow[rightMatchColumn.key];
 
     // If right matches is null, just return false.
@@ -60,14 +66,16 @@ export default function RightDataPanel(props) {
     // Otherwise, this will explode
     const selectedLeftRow = selectedLeftRows[0];
 
-    if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
-      selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
-      return "selected-matched-row-right"
-    }
+    if (matchingEnabled) {
+      if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
+        selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
+        return "selected-matched-row-right"
+      }
 
-    // Right now just if it is not empty string or not empty list, consider it matached
-    if (row[rightMatchColumn.key] && row[rightMatchColumn.key] !== "[]") {
-      return "matched-row"
+      // Right now just if it is not empty string or not empty list, consider it matached
+      if (row[rightMatchColumn.key] && row[rightMatchColumn.key] !== "[]") {
+        return "matched-row"
+      }
     }
 
     // Check if selected
@@ -110,7 +118,7 @@ export default function RightDataPanel(props) {
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra={<button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
+              extra= {matchingEnabled && <button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
               key={i}
               style={{ width: 300 }}
               row={row}

@@ -177,7 +177,7 @@ export default function Matcher() {
       });
     }
   }
-
+  const matchingEnabled = true;
   return (
     <div>
       <div>
@@ -196,8 +196,11 @@ export default function Matcher() {
             <div style={{ height: "100vh", width: "100vw" }}>
               {/* Split plane to allow panel resizing */}
               <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-                <LeftDataPanel />
+                <LeftDataPanel
+                  matchingEnabled = {matchingEnabled}
+                />
                 <RightDataPanel
+                  matchingEnabled = {matchingEnabled}
                   toggleMatch={toggleMatch} />
               </SplitPane>
             </div>
