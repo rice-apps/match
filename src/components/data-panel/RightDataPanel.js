@@ -14,7 +14,7 @@ export default function RightDataPanel(props) {
   const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn} = useRecoilValue(leftDataState);
 
   const matchingEnabled = props.matchingEnabled;
-  
+
   const rules = useRecoilValue(rulesState);
 
   function onSelectRow(rows) {
@@ -114,7 +114,7 @@ export default function RightDataPanel(props) {
       <div className="SelectionDisplay">
         {selectedRightRows.map((row, i) => {
           let matched = isMatched(row, selectedLeftRows[0]);
-          let name = row[rightNameColumn.key];
+          let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
           return (<div key={i}>
             <FormattedCard
               title={name}

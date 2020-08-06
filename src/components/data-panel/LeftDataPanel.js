@@ -67,7 +67,7 @@ export default function LeftDataPanel(props) {
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) => {
-          let name = row[nameColumn.key];
+          let name = nameColumn ? row[nameColumn.key] : "Left Card";
           return (<FormattedCard
             title={name}
             key={i}
