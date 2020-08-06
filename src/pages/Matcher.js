@@ -33,26 +33,10 @@ export default function Matcher() {
 
   //Disable matching variables & function
   var matchingEnabled = true;
-  var matchingDisabledReasons = [];
-
-  function disableMatching(reason){
-    matchingEnabled = false;
-    matchingDisabledReasons.push(" "+reason);
-  }
 
   //Disable matching logic
-  if (!leftSpreadsheetId || !rightSpreadsheetId) {
-    disableMatching("you are using a .csv")
-  }
-  if (!rightNameColumn || !leftNameColumn) {
-    disableMatching("no matching columns on either sheet")
-  } else {
-    if (!leftNameColumn) {
-      disableMatching("no matching column on left")
-    }
-    if (!rightNameColumn) {
-      disableMatching("no matching column on right")
-    }
+  if ((!leftSpreadsheetId || !rightSpreadsheetId) || (!rightNameColumn || !leftNameColumn)) {
+    matchingEnabled = false;
   }
 
   function setSidebarOpen(open) {
@@ -231,9 +215,10 @@ export default function Matcher() {
           </LoadingOverlay>
         </div>
 
-        <p>
-          {!matchingEnabled && "Matching is disabled because:"+matchingDisabledReasons.toString()+"."}
-        </p>
+        <div style = {{marginLeft:10, marginBottom:10}}>
+          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
+          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a 'match' column as defined in settings."} </p>
+        </div>
 
       </div>
     </div>
