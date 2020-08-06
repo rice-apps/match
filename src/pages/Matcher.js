@@ -31,6 +31,14 @@ export default function Matcher() {
   var windowWidth = window.innerWidth;
   var defaultPaneSize = Math.round(windowWidth / 2);
 
+  var matchingEnabled = true;
+  var matchingDisabledReasons = [];
+
+  function disableMatching(reason){
+    matchingEnabled = false;
+    matchingDisabledReasons.push(reason);
+  }
+
   function setSidebarOpen(open) {
     setAppState({
       ...appState,
@@ -177,7 +185,7 @@ export default function Matcher() {
       });
     }
   }
-  const matchingEnabled = true;
+
   return (
     <div>
       <div>
@@ -193,7 +201,7 @@ export default function Matcher() {
             spinner
             text='Syncing...'
           >
-            <div style={{ height: "100vh", width: "100vw" }}>
+            <div style={{ height: "90vh", width: "100vw" }}>
               {/* Split plane to allow panel resizing */}
               <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
                 <LeftDataPanel
@@ -206,6 +214,9 @@ export default function Matcher() {
             </div>
           </LoadingOverlay>
         </div>
+
+        <p> {!matchingEnabled && "Matching is disabled because: "+matchingDisabledReasons.toString()+"."} </p>
+
       </div>
     </div>
   );
