@@ -38,3 +38,61 @@ The column name requirements can be changed in the dictioanry in `stc/utils/ccd/
 Each row represents an applicantion, if an externship has no applicants, include a row with just the externships with no value for student name, email, etc.
 
 Click 'Download Results'
+
+## Roadmap (AUGUST MVP):
+
+- [x] gcp deployment 😃
+- [x] grey background to focus on data
+- [x] connect to match.riceapps.org
+- [x] use RECOIL on frontend to simplify state logic
+- [x] google oauth
+- [x] separate pages for ccd and covidsitters with appropriate auth
+  - (again, if we use google integration, this isn't needed)
+- [x] connect to db
+  - [x] actually, directly read/write to google sheet???
+- [ ] column settings
+  - (for each of these, hard code them first, and then make them configurable)
+  - (once you can prove it can be done through hard-coding, then add to recoil state,
+    and create a page/modal/sidebar to allow users to configure this)
+  - [ ] hiding
+  - [ ] variable width lengths based on the longest value in the column
+  - [x] sticky
+- [x] center and widen left card
+- [x] make cards more readable
+- [x] match-making functionality
+  - [x] buttons on top of right cards
+  - [x] buttons actually create matches stored in state LEFT
+  - [x] buttons actually create matches stored in state RIGHT
+  - [x] when a match is made, both sides have colored indicators
+  - [x] when a match is made, it is written to google sheet LEFT
+  - [x] when a match is made, it is written to google sheet RIGHT
+  - [x] unmatch-ability for both LEFT and RIGHT
+  - [x] loading screen while match being made
+  - [ ] handle edge case: should you be able to switch matches???
+- [ ] time data processing
+  - [ ] once this is done, we should be able to sort by who matches the time availability of the hcw best maybe?
+- [x] some complicated ass css for antd table 
+  - [x] color for hover over row
+  - [x] color for fixed column
+  - [x] color for selected row
+  - [x] color for matched student with currently selected hcw
+- [ ] when selecting a hcw, bring the students matched to him/her to the top
+  - [ ] this could also just be some more complicated sort logic ("contains" operation")
+- [x] pod view page
+- [ ] add tutorial page
+  - [ ] add demo video
+- [ ] make sheets data load immediately after signin (shouldn't have to press "upload data" every time)
+
+## Icebox:
+- [ ] automated match making decisions
+- [ ] fix auth issue with gapi instantiation
+- [ ] when page refresh, selected row shows below table, but does not reflect in table
+- [ ] apply for validation with google
+- [ ] data validation on loading!!
+- [ ] clean up app.yaml handlers by using regex
+- [ ] look into sub-domain (i.e. ccd.match.riceapps.org)
+- [ ] select by search auto-complete
+- [ ] email template generation
+- [ ] data backups with timestamps (can look into using GCP storage) 
+- [ ] privacy policy
+- [ ] mobile optimizations
