@@ -31,12 +31,28 @@ export default function Matcher() {
   var windowWidth = window.innerWidth;
   var defaultPaneSize = Math.round(windowWidth / 2);
 
+  //Disable matching variables & function
   var matchingEnabled = true;
   var matchingDisabledReasons = [];
 
   function disableMatching(reason){
     matchingEnabled = false;
-    matchingDisabledReasons.push(reason);
+    matchingDisabledReasons.push(" "+reason);
+  }
+
+  //Disable matching logic
+  if (!leftSpreadsheetId || !rightSpreadsheetId) {
+    disableMatching("you are using a .csv")
+  }
+  if (!rightNameColumn || !leftNameColumn) {
+    disableMatching("no matching columns on either sheet")
+  } else {
+    if (!leftNameColumn) {
+      disableMatching("no matching column on left")
+    }
+    if (!rightNameColumn) {
+      disableMatching("no matching column on right")
+    }
   }
 
   function setSidebarOpen(open) {
@@ -215,7 +231,9 @@ export default function Matcher() {
           </LoadingOverlay>
         </div>
 
-        <p> {!matchingEnabled && "Matching is disabled because: "+matchingDisabledReasons.toString()+"."} </p>
+        <p>
+          {!matchingEnabled && "Matching is disabled because:"+matchingDisabledReasons.toString()+"."}
+        </p>
 
       </div>
     </div>
