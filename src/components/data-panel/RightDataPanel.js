@@ -113,13 +113,16 @@ export default function RightDataPanel(props) {
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
         {selectedRightRows.map((row, i) => {
-          let matched = isMatched(row, selectedLeftRows[0]);
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
-          var matchButton =  <button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>;
+          var matchButton = null;
+          if (matchingEnabled) {
+            let matched = isMatched(row, selectedLeftRows[0]);
+            matchButton = <button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>;
+          }
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra={matchingEnabled && matchButton}
+              extra={matchButton}
               key={i}
               style={{ width: 300 }}
               row={row}
