@@ -31,10 +31,6 @@ export default function Matcher() {
   var windowWidth = window.innerWidth;
   var defaultPaneSize = Math.round(windowWidth / 2);
 
-  //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightNameColumn && leftNameColumn && rightMatchColumn && leftMatchColumn;
-
-
   function setSidebarOpen(open) {
     setAppState({
       ...appState,
@@ -197,25 +193,16 @@ export default function Matcher() {
             spinner
             text='Syncing...'
           >
-            <div style={{ height: "90vh", width: "100vw" }}>
+            <div style={{ height: "100vh", width: "100vw" }}>
               {/* Split plane to allow panel resizing */}
               <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-                <LeftDataPanel
-                  matchingEnabled = {matchingEnabled}
-                />
+                <LeftDataPanel />
                 <RightDataPanel
-                  matchingEnabled = {matchingEnabled}
                   toggleMatch={toggleMatch} />
               </SplitPane>
             </div>
           </LoadingOverlay>
         </div>
-
-        <div style = {{marginLeft:10, marginBottom:10}}>
-          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
-          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a match column and a name column as defined in settings."} </p>
-        </div>
-
       </div>
     </div>
   );

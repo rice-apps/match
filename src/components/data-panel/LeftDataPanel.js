@@ -6,9 +6,9 @@ import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { useRecoilState } from 'recoil';
 import { leftDataState } from '../../store/atoms';
 
+
 export default function LeftDataPanel(props) {
-  const [{ data, columns, selectedRows, matchColumn, nameColumn}, setLeftData] = useRecoilState(leftDataState);
-  const matchingEnabled = props.matchingEnabled;
+  const [{ data, columns, selectedRows, matchColumn, nameColumn }, setLeftData] = useRecoilState(leftDataState);
 
   function onSelectRow(rows) {
     setLeftData(data => {
@@ -21,24 +21,22 @@ export default function LeftDataPanel(props) {
 
   // This determines the CSS class of all rows in this left table
   function leftRowClassNameGetter(row, index) {
+
     // Right now just if it is not empty string or not empty list, consider it matached
+    const matched = row[matchColumn.key] && row[matchColumn.key] !== "[]";
     const selected = selectedRows.map(r => r.key).includes(row.key);
 
-    if (matchingEnabled){
-      const matched = row[matchColumn.key] && row[matchColumn.key] !== "[]";
-      if (selected && matched) {
-        return "selected-matched-row-left"
-      }
-
-      if (matched) {
-        return "matched-row"
-      }
+    if (selected && matched) {
+      return "selected-matched-row-left"
     }
-
+    
     if (selected) {
       return "selected-row"
     }
-
+    
+    if (matched) {
+      return "matched-row"
+    }
     return "unmatched-row"
   }
 
@@ -67,7 +65,7 @@ export default function LeftDataPanel(props) {
       {/* This just renders in the selected rows */}
       <div className="SelectionDisplay">
         {selectedRows.map((row, i) => {
-          let name = nameColumn ? row[nameColumn.key] : "Left Card";
+          let name = row[nameColumn.key];
           return (<FormattedCard
             title={name}
             key={i}
