@@ -32,12 +32,8 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = true;
+  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightNameColumn && leftNameColumn && rightMatchColumn && leftMatchColumn;
 
-  //Disable matching logic
-  if ((!leftSpreadsheetId || !rightSpreadsheetId) || (!rightNameColumn || !leftNameColumn)) {
-    matchingEnabled = false;
-  }
 
   function setSidebarOpen(open) {
     setAppState({
@@ -217,7 +213,7 @@ export default function Matcher() {
 
         <div style = {{marginLeft:10, marginBottom:10}}>
           <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
-          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a 'match' column as defined in settings."} </p>
+          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a match column and a name column as defined in settings."} </p>
         </div>
 
       </div>

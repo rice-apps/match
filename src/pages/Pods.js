@@ -76,7 +76,7 @@ export default function Pods() {
 
 
     return (
-        <div>
+          <div>
             <div className="Main">
                 {groupedPods.map(groupOfPods => {
                     return (<Row gutter={[16, 16]}>
