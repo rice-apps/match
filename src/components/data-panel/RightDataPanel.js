@@ -115,10 +115,11 @@ export default function RightDataPanel(props) {
         {selectedRightRows.map((row, i) => {
           let matched = isMatched(row, selectedLeftRows[0]);
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
+          var matchButton =  <button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>;
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra= {matchingEnabled && <button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
+              extra={matchingEnabled && matchButton}
               key={i}
               style={{ width: 300 }}
               row={row}
