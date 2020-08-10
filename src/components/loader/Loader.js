@@ -34,6 +34,12 @@ export default function CSVFileUploader(props) {
 
     function loadGoogleSheet() {
         console.log("Loading google sheet")
+        props.onUpload(oldDataState => {
+            return {
+                ...oldDataState,
+                refreshing: true // show data is loading
+            }
+        });
         getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
     }
 
@@ -53,6 +59,7 @@ export default function CSVFileUploader(props) {
                 return {
                     ...oldDataState,
                     ...newDataState,
+                    refreshing: false
                 }
             });
         } else {
