@@ -30,6 +30,21 @@ export default function Pods() {
     const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
     const { data: rightData, nameColumn: rightNameColumn } = useRecoilValue(rightDataState);
 
+    function generateEmail(hcw, students) {
+        let addresses = students.map((student) => student.email).join(', ');
+        let subject = "You have been assigned to a pod!";
+        let body = "Congratulations! You have been assigned to a pod.\n" + 
+                   "You have been matched to " + hcw.name + ", who you can reach at " + hcw.email + ".";
+        let ccAddress = hcw.email; // TODO: change to appropriate address
+
+        var url = "mailto:" + addresses +
+                "?subject=" + subject +
+                "&body=" + body +
+                "&cc=" + ccAddress;
+
+        var win = window.open(url, '_blank');
+    }
+
     //Pods enabled
     if (rightNameColumn && leftNameColumn && leftMatchColumn) {
       // Take only rows from the left that have been matched
@@ -93,6 +108,7 @@ export default function Pods() {
                                                   })
                                               }
                                           </ul>
+                                          <button onClick={() => generateEmail(hcw, students)}>Generate Email</button>
                                       </Card>
                                   </Col>
                               )
