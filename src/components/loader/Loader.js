@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CSVReader from 'react-csv-reader';
 import { formatData } from '../../util/dataFormatter';
 import { Input } from 'antd';
@@ -32,7 +32,14 @@ export default function CSVFileUploader(props) {
         alert("Error loading in CSV:" + JSON.stringify(error, null, 2));
     }
 
-    function onGoogleSheetClick() {
+    function loadGoogleSheet() {
+        console.log("Loading google sheet")
+        props.onUpload(oldDataState => {
+            return {
+                ...oldDataState,
+                refreshing: true // show data is loading
+            }
+        });
         getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
     }
 
@@ -52,6 +59,7 @@ export default function CSVFileUploader(props) {
                 return {
                     ...oldDataState,
                     ...newDataState,
+                    refreshing: false
                 }
             });
         } else {
@@ -63,8 +71,16 @@ export default function CSVFileUploader(props) {
         setSpreadsheetId(e.target.value);
     }
 
+    useEffect(() => {
+        // Load sheet automatically if signed in
+        if (window.gapi && window.gapi.auth2 // Google api loaded and initialized
+            && user != null) { // Signed in
+            loadGoogleSheet()
+        }
+    }, [user]);
+
     return (
-        <div className="Loader">
+        <div className="Loader" style={props.style}>
             {/* If user is signed in, use Google sheets API. If not, upload csv for data loading. */}
             {user ?
                 <div>
@@ -73,7 +89,7 @@ export default function CSVFileUploader(props) {
                         onChange={onSpreadsheetIdChange}
                         defaultValue={defaultSpreadsheetId}
                         style={{ width: "400px" }} /> &nbsp;
-                    <button onClick={onGoogleSheetClick}>Upload data</button>
+                    <button onClick={loadGoogleSheet}>Upload data</button>
                 </div>
                 : <CSVReader
                     cssClass="csv-reader-input"
