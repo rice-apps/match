@@ -32,6 +32,20 @@ export default function ColumnSettingsPanel({ data, setData, title }) {
         )
     }
 
+    function  setColumnVisibility(column, setDataStateFunction) {
+      let newColumn = {
+          ...column,
+          hidden: column.hidden ? false : true
+      };
+      setDataStateFunction(
+          oldDataState => {
+              return {
+                  ...oldDataState,
+                  columns: Object.assign([], oldDataState.columns, { [column.index]: newColumn }),
+              }
+          }
+      )
+    }
 
     return (
         <div style={{ width: "30%", paddingTop: 20 }}>
@@ -73,6 +87,7 @@ export default function ColumnSettingsPanel({ data, setData, title }) {
                                     <p style={{ width: 300 }}>{column.fullTitle}</p> &nbsp;
                                     <Checkbox checked={column.fixed === "left"} onChange={() => setColumnFixed(column, setData, "left")}>FL</Checkbox>
                                     <Checkbox checked={column.fixed === "right"} onChange={() => setColumnFixed(column, setData, "right")}>FR</Checkbox>
+                                    <Checkbox checked={column.hidden} onChange={() => setColumnVisibility(column, setData)}>Hide</Checkbox>
                                 </div>
                             )
                         })}
