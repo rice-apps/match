@@ -24,6 +24,12 @@ handlers:
       secure: always
       redirect_http_response_code: 301
 
+    - url: /privacy
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+    
     - url: /
       static_files: build/index.html
       upload: build/index.html

@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { applicationState, leftDataState, rightDataState } from '../store/atoms';
 
 import ColumnSettingsPanel from '../components/settings/ColumnSettingsPanel';
+import SheetsSettingsPanel from '../components/settings/SheetsSettingsPanel';
 
 export default function Settings() {
   const { user } = useRecoilValue(applicationState);
@@ -21,6 +22,7 @@ export default function Settings() {
           <ColumnSettingsPanel data={leftData} setData={setLeftData} title={"All left column settings"} />
           <ColumnSettingsPanel data={rightData} setData={setRightData} title={"All right column settings"} />
         </div>
+        <SheetsSettingsPanel setLeftData={setLeftData} setRightData = {setRightData}/>
       </div>
     </div >
   );

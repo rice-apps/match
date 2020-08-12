@@ -30,7 +30,33 @@ export default function Pods() {
     const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
     const { data: rightData, nameColumn: rightNameColumn } = useRecoilValue(rightDataState);
 
+    function generateEmail(hcw, students) {
+        let addresses = students.map((student) => student.email).join(', ');
+        let subject = "You have been assigned to a pod!";
+        let body = "Congratulations! You have been assigned to a pod.\n" +
+            "You have been matched to " + hcw.name + ", who you can reach at " + hcw.email + ".";
+        let ccAddress = hcw.email; // TODO: change to appropriate address
 
+        var url = "mailto:" + addresses +
+            "?subject=" + subject +
+            "&body=" + body +
+            "&cc=" + ccAddress;
+
+        window.open(url, '_blank');
+    }
+
+
+    let podsAreEnabled = rightNameColumn && leftNameColumn && leftMatchColumn;
+    if (!podsAreEnabled) {
+        return (
+            <div style={{ marginLeft: 10, marginBottom: 10 }}>
+                <b style={{ color: 'red' }}> Pods are disabled: </b>
+                <p style={{ color: 'red' }}> Ensure each sheet has a match column and a name column as defined in settings. </p>
+            </div>
+        );
+    }
+
+    // Pods enabled
     // Take only rows from the left that have been matched
     let leftMatched = leftData.filter(leftRow => {
         return leftRow[leftMatchColumn.key] && leftRow[leftMatchColumn.key] !== "[]";
@@ -73,8 +99,6 @@ export default function Pods() {
         }
         groupedPods[groupedPods.length - 1].push(pods[i]);
     }
-
-
     return (
         <div>
             <div className="Main">
@@ -94,6 +118,7 @@ export default function Pods() {
                                                 })
                                             }
                                         </ul>
+                                        <button onClick={() => generateEmail(hcw, students)}>Generate Email</button>
                                     </Card>
                                 </Col>
                             )
