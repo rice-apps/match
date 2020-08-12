@@ -15,7 +15,7 @@ export default function MyTable(props) {
       // Eventually, we can disable/enable certain rows.
       // Think: If someone reports as COVID symptoms, we can mark a column as "COVID symptomatic",
       // and disable their row selection (cannot match them to a hcw anymore).
-      disabled: record.name === 'Disabled User', 
+      disabled: record.name === 'Disabled User',
       name: record.name,
     }),
   };
@@ -27,16 +27,16 @@ export default function MyTable(props) {
 
   return (
     <div>
-      <Table 
+      <Table
       rowSelection={{
         type: props.selectType,
         ...rowSelection,
       }}
       rowClassName={props.rowClassNameGetter}
-      dataSource={props.data} 
-      columns={props.columns}
-      bordered 
-      size="small" 
+      dataSource={props.data}
+      columns={props.columns.filter(column => column.hidden ? false : true)}
+      bordered
+      size="small"
       scroll={{ y: 500 }}
       />
     </div>
