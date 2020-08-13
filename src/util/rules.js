@@ -1,3 +1,4 @@
+import { removeFileItem } from "antd/lib/upload/utils";
 
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
@@ -35,11 +36,57 @@ export function applyRules(rules, data, leftRow, leftNameColumn, rightMatchColum
   return filtered_and_sorted
 }
 
+function commaSeparatedToList(str) {
+  /* Inputs: a string of comma seperated values
+     Output: an array of strings
+  */
+  if (typeof str == "string") return str.split(", ");
+  return [];
+}
+
+function countOverlaps (listA,listB) {
+  /*  Inputs: two lists of elements
+      Outputs: (intger) number of elements shared in common between A and B
+  */
+  return listA.map(val => listB.includes(val)) // Check if each value in B is in A
+              .reduce((a, b) => a + b) // Sum up the overlapping elements
+}
 
 // There's definitely a much better way to define these comparitors,
 // I am just too lazy to write it rn. Ping Johnny if this is too hard to work with.
 
+const byOverlaps = (value) => (a,b) => {
+  //TODO: Adam Zawierucha implement
+  //Handle Nulls
+  if (!a && !b) {
+    return 0;
+  } else if (!a) {
+    return 1;
+  } else if (!b) {
+    return -1;
+  }
+
+  //Create lists from strings
+  const leftList = commaSeparatedToList(value);
+  const aList = commaSeparatedToList(a);
+  const bList = commaSeparatedToList(b);
+
+  //Count overlaps
+  const aCount = countOverlaps(leftList,aList);
+  const bCount = countOverlaps(leftList,bList);
+
+  //Compare overlap counts
+  if (aCount > bCount) {
+    return -1
+  } else if (aCount < bCount ) {
+    return 1
+  } else {
+    return 0
+  }
+}
+
 const sortByMapped = map => compareFn => (a, b) => compareFn(map(a), map(b));
+
 const byMatch = (value) => (a, b) => {
   if (a === value && b === value) {
     return 0
@@ -105,6 +152,7 @@ export const availableOperators = [
   { value: "geq", display: "≥" },
   { value: "leq", display: "≤" },
   { value: "contains", display: "contains" },
+  { value: "overlap", display: "overlap" },
 ];
 
 function applySorts(rules, data, leftRow) {
@@ -129,6 +177,9 @@ function applySorts(rules, data, leftRow) {
       comparators.push(newComparator);
     } else if (rule.operator === "leq") {
       let newComparator = sortByMapped(e => e[rule.by])(byLEQ(left));
+      comparators.push(newComparator);
+    } else if (rule.operator === "overlap") {
+      let newComparator = sortByMapped(e => e[rule.by])(byOverlaps(left));
       comparators.push(newComparator);
     }
   }
@@ -159,6 +210,12 @@ function applyFilters(rules, data, leftRow) {
     } else if (rule.operator === "leq") {
       data = data.filter((a) => {
         return convertIfNumeric(a[rule.by]) <= convertIfNumeric(left)
+      });
+    } else if (rule.operator === "overlap") {
+      data = data.filter((a) => {
+        const leftList = commaSeparatedToList(left);
+        const aList  = commaSeparatedToList(a[rule.by]);
+        return countOverlaps(leftList,aList) > 0;
       });
     }
   }
