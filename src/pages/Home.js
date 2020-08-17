@@ -34,11 +34,6 @@ export default function Home() {
            <Button type={'primary'} block={true} disabled={true} shape={'round'} href='/general'>General (Coming Soon!)</Button>
           </Card>
           <p></p>
-          <Card title={'Help'} className="AboutCard">
-            <p>
-              To learn how to use this software go to <a href='/help'>match.riceapps.org/help</a> to read and watch demo videos.
-            </p>
-          </Card>
         </div>
       </div>
   );
