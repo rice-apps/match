@@ -1,4 +1,5 @@
 import React from 'react';
+import Home from './pages/Home';
 import Matcher from './pages/Matcher';
 import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
@@ -41,12 +42,13 @@ function App() {
         <Header />
         <div className="Content">
           <Switch>
-            <Route path="/pods" component={Pods} />
             <Route path="/about" component={About} />
             <Route path="/privacy" component={Privacy} />
-            <Route path="/settings" component={Settings} />
             <Route path="/ccd" component={Assigner}/>
-            <Route path="/" component={Matcher} />
+            <Route path="/covidsitters/pods" component={Pods}/>
+            <Route path="/covidsitters/settings" component={Settings}/>
+            <Route path="/covidsitters" component={Matcher}/>
+            <Route path="/" component={Home} />
           </Switch>
         </div>
       </Sidebar>
