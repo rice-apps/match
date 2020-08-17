@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { handleClientLoad, handleAuthClick, handleSignoutClick } from '../../util/gapi';
 import { Navbar, Nav } from 'react-bootstrap';
+import { Button } from 'antd';
 import "./Header.css"
 
 import { useRecoilState } from 'recoil';
@@ -58,23 +59,20 @@ export default function Header() {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href="/pods">Pods</Nav.Link>
-                    <Nav.Link href="/settings">Settings</Nav.Link>
-                    <Nav.Link> | </Nav.Link>
-                    <Nav.Link href="/about">About</Nav.Link>
+                    <Nav.Link href="/Home">Home</Nav.Link>
                     <Nav.Link href="/privacy">Privacy</Nav.Link>
-                    <Nav.Link href="/ccd">CCD</Nav.Link>
+                    <Nav.Link href="/help">Help</Nav.Link>
                 </Nav>
 
                 <Navbar.Text>
                     {user ? "Signed in as: " + user.firstName : ""}
                 </Navbar.Text> &nbsp;
-                <button onClick={handleClearClick}>Refresh</button> &nbsp;
+                <Button onClick={handleClearClick} size='small'>Refresh</Button> &nbsp;
                 {user ?
                     <div className="AuthenticationSection">
-                         <button onClick={handleSignoutClick}>Sign Out</button> &nbsp;
+                         <Button onClick={handleSignoutClick} size='small'>Sign Out</Button> &nbsp;
                     </div> :
-                    <button onClick={handleAuthClick}>Sign In</button>}
+                    <Button onClick={handleAuthClick} size='small'>Sign In</Button>}
             </Navbar.Collapse>
         </Navbar>        
     );
