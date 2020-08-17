@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRecoilValue } from 'recoil';
 import { leftDataState, rightDataState } from '../store/atoms';
-import { Card, Row, Col } from "antd";
+import { Card, Row, Col,Button } from "antd";
 
 
 // SAMPLE PODS DATA STRUCTURE:
@@ -101,9 +101,18 @@ export default function Pods() {
     }
     return (
         <div>
+            <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
+                <span>
+                <b> </b>
+                <Button type={'primary'} href={'/covidsitters'}> Back to Matching </Button>
+                <b> </b>
+                <Button href={'/covidsitters/settings'}>Settings</Button>
+                </span>
+            </div>
             <div className="Main">
                 {groupedPods.map(groupOfPods => {
-                    return (<Row gutter={[16, 16]}>
+                    return (
+                    <Row gutter={[16, 16]}>
                         {groupOfPods.map((pod, i) => {
                             let { left: hcw, right: students } = pod;
                             return (

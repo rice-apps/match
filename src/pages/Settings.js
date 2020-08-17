@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedCard } from '../components/formatted-card/FormattedCard';
+import { Button } from 'antd';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { applicationState, leftDataState, rightDataState } from '../store/atoms';
@@ -14,6 +15,14 @@ export default function Settings() {
 
   return (
     <div>
+      <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
+        <span>
+        <b> </b>
+        <Button type={'primary'} href={'/covidsitters'}> Back to Matching </Button>
+        <b> </b>
+        <Button href={'/covidsitters/pods'}>See Pods</Button>
+        </span>
+      </div>
       <div className="Main">
         <div className="SettingsPanel">
           <div style={{ width: 400, paddingTop: 20 }}>

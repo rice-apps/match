@@ -3,6 +3,8 @@ import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
 
+import { Button } from 'antd';
+
 import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../util/gapi';
 import { formatData } from '../util/dataFormatter';
 
@@ -181,11 +183,16 @@ export default function Matcher() {
   return (
     <div>
       <div>
-
-        <button style={{ position: "absolute", zIndex: 1, marginTop: 10, marginLeft: 10 }} onClick={() => setSidebarOpen(true)}>
-          Sort/Filter
-        </button>
-
+        <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
+          <span>
+            <b>     </b>
+            <Button type={'primary'} onClick={() => setSidebarOpen(true)}> Sorts & Filters </Button>
+            <b> </b>
+            <Button href={'/covidsitters/pods'}> See Pods </Button>
+            <b> </b>
+            <Button href={'/covidsitters/settings'}> Settings</Button>
+          </span>
+        </div>
         <div className="Body">
           {/* This is the loading screen */}
           <LoadingOverlay
