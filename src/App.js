@@ -3,7 +3,7 @@ import Home from './pages/Home';
 import Matcher from './pages/Matcher';
 import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
-import About from './pages/About';
+import Help from './pages/Help';
 import Pods from './pages/Pods';
 import Privacy from './pages/Privacy';
 import Header from './components/header/Header';
@@ -42,7 +42,7 @@ function App() {
         <Header />
         <div className="Content">
           <Switch>
-            <Route path="/about" component={About} />
+            <Route path="/help" component={Help} />
             <Route path="/privacy" component={Privacy} />
             <Route path="/ccd" component={Assigner}/>
             <Route path="/covidsitters/pods" component={Pods}/>
