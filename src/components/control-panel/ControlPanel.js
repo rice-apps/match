@@ -129,7 +129,7 @@ export default function ControlPanel() {
   return (
   <div className="ControlPanel">
     <h2>Sort</h2>
-    {rules.map((rule, i) => (
+    {rules.filter(r=>r.type ==="sort").length > 0 ? rules.map((rule, i) => (
       rule.type === "sort" &&
     <div className="Rule" key={i}>
       <div style={{ display: "flex", justifyContent:"space-between", width: 300}}>
@@ -192,16 +192,22 @@ export default function ControlPanel() {
           </Tooltip>
         </div>
       </div>
-    </div>))}
+    </div>)) 
+    : 
+    <>
+      <p><i>No filters added.</i></p>
+      <p>Filters are useful to hide data that don't meet certain criteria. Click the "+" sign to create one!</p>
+    </>
+    }
 
-    <button onClick={newSort}>+</button>
+    <Button shape='circle' onClick={newSort}><b>+</b></Button>
 
     <br/>
     <br/>
 
     <h2>Filter</h2>
 
-    {rules.map((rule, i) => (
+    {rules.filter(r=>r.type==='filter').length > 0 ? rules.map((rule, i) => (
       rule.type === "filter" &&
     <div className="Rule" key={i}>
       <div style={{ display: "flex", justifyContent:"space-between", width: 300}}>
@@ -264,9 +270,15 @@ export default function ControlPanel() {
           </Tooltip>
         </div>
       </div>
-    </div>))}
+    </div>))
+    :
+    <>
+     <p><i>No sorts added.</i></p>
+      <p>Sorts are useful rank elements by some criteria. Click the "+" sign to create one!</p>
+    </>
+  }   
 
-    <button onClick={newFilter}>+</button>
+    <Button shape='circle' onClick={newFilter}><b>+</b></Button>
 
   </div>
   )

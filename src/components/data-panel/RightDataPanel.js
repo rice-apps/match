@@ -3,6 +3,7 @@ import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
+import {Button} from "antd";
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
@@ -110,7 +111,7 @@ export default function RightDataPanel(props) {
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra={<button onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</button>}
+              extra={<Button danger={matched} onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</Button>}
               key={i}
               style={{ width: 300 }}
               row={row}

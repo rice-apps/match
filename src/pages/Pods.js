@@ -127,7 +127,7 @@ export default function Pods() {
                                                 })
                                             }
                                         </ul>
-                                        <button onClick={() => generateEmail(hcw, students)}>Generate Email</button>
+                                        <Button block={true} onClick={() => generateEmail(hcw, students)}>Generate Email</Button>
                                     </Card>
                                 </Col>
                             )

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CSVReader from 'react-csv-reader';
 import { formatData } from '../../util/dataFormatter';
-import { Input } from 'antd';
+import { Input, Button} from 'antd';
 import './Loader.css';
 
 import { getSpreadsheetData } from '../../util/gapi';
@@ -89,7 +89,7 @@ export default function CSVFileUploader(props) {
                         onChange={onSpreadsheetIdChange}
                         defaultValue={defaultSpreadsheetId}
                         style={{ width: "400px" }} /> &nbsp;
-                    <button onClick={loadGoogleSheet}>Upload data</button>
+                    <Button type = 'primary' onClick={loadGoogleSheet}>Upload data</Button>
                 </div>
                 : <CSVReader
                     cssClass="csv-reader-input"
