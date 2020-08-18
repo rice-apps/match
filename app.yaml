@@ -1,24 +1,6 @@
 runtime: nodejs12
 handlers:
-    - url: /settings
-      static_files: build/index.html
-      upload: build/index.html
-      secure: always
-      redirect_http_response_code: 301
-      
-    - url: /pods
-      static_files: build/index.html
-      upload: build/index.html
-      secure: always
-      redirect_http_response_code: 301
-
-    - url: /about
-      static_files: build/index.html
-      upload: build/index.html
-      secure: always
-      redirect_http_response_code: 301
-
-    - url: /ccd
+    - url: /help
       static_files: build/index.html
       upload: build/index.html
       secure: always
@@ -29,7 +11,31 @@ handlers:
       upload: build/index.html
       secure: always
       redirect_http_response_code: 301
-    
+
+    - url: /ccd
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+      
+    - url: /covidsitters
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+
+    - url: /covidsitters/settings
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+      
+    - url: /covidsitters/pods
+      static_files: build/index.html
+      upload: build/index.html
+      secure: always
+      redirect_http_response_code: 301
+
     - url: /
       static_files: build/index.html
       upload: build/index.html
