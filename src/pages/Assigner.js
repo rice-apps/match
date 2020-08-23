@@ -9,26 +9,28 @@ export default function Assigner() {
   const [csvData, setCsvData] = useState([]);
 
   function handleData(fileData) {
-    // Handle the data uploaded by the user
-    let data = getStudentsAndExternships(fileData);
-    let students = data.students;
-    let externships = data.externships;
+    if (fileData && fileData.data){
+      // Handle the data uploaded by the user
+      let data = getStudentsAndExternships(fileData);
+      let students = data.students;
+      let externships = data.externships;
 
-    //Sort externships based on priority
-    externships.sort((a, b) => a.getPriority() - b.getPriority());
+      //Sort externships based on priority
+      externships.sort((a, b) => a.getPriority() - b.getPriority());
 
-    //Match students
-    let assignments = makeAssignments(externships);
-    let unmatchedStudents = getUnmatchedStudents(students);
+      //Match students
+      let assignments = makeAssignments(externships);
+      let unmatchedStudents = getUnmatchedStudents(students);
 
-    // Statistic Calls
-    // console.log("Matched Student Count:", getMatchedStudents(students).length);
-    // console.log("Unmatched Student Count:", unmatchedStudents.length);
-    // console.log("Average Matched Rank:", getAverageMatchedRank(students));
+      // Statistic Calls
+      // console.log("Matched Student Count:", getMatchedStudents(students).length);
+      // console.log("Unmatched Student Count:", unmatchedStudents.length);
+      // console.log("Average Matched Rank:", getAverageMatchedRank(students));
 
-    setCsvData(
-      exportCSV(assignments, unmatchedStudents)
-    );
+      setCsvData(
+        exportCSV(assignments, unmatchedStudents)
+      );
+    }
   }
 
   return (
