@@ -41,32 +41,32 @@
 
 /* THIS DETERMINES ROW COLOR NORMALLY */
 .matched-row > td {
-    background-color: #d2eea9 !important;
+    background-color: #eeeeee !important;
 }
 
 /* THIS DETERMINES ROW COLOR ON HOVER (note :hover css selector) */
 tr.matched-row:hover > td  {
-    background-color: #bbeb73 !important;
+    background-color: #e0e0e0 !important;
 }
 
 /* Repeat the above two rules for each case: */
 
 /* Selected + matched right */
 .selected-matched-row-right > td {
-    background-color: #fffeb6 !important;
+    background-color: #d3f1ff !important;
 }
 
 tr.selected-matched-row-right:hover > td {
-    background-color: #fffc65 !important;
+    background-color: #b3e7ff !important;
 }
 
 /* Selected + matched left  */
 .selected-matched-row-left > td {
-    background-color: #fffeb6 !important;
+    background-color: #d3f1ff !important;
 }
 
 tr.selected-matched-row-left:hover > td {
-    background-color: #fffc65 !important;
+    background-color: #b3e7ff !important;
 }
 
 /* Basic matched row */
