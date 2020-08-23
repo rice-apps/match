@@ -40,6 +40,7 @@ export default function Assigner() {
           <Loader
             onUpload={handleData}
             allowManualSort={true}
+            allowCSV={true}
           />
           {/* CSV Downloader */}
           <CSVLink data={csvData} filename={"ListOfMatches.csv"} >Download CSV</CSVLink>

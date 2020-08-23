@@ -91,7 +91,7 @@ export default function CSVFileUploader(props) {
                         style={{ width: "400px" }} /> &nbsp;
                     <Button type = 'primary' onClick={loadGoogleSheet}>Upload data</Button>
                 </div>
-                : <CSVReader
+                : props.allowCSV ? <CSVReader
                     cssClass="csv-reader-input"
                     label="Upload CSV file here "
                     onFileLoaded={onFileLoaded}
@@ -99,6 +99,8 @@ export default function CSVFileUploader(props) {
                     inputId="ObiWan"
                     inputStyle={{ color: 'red' }}
                 />
+                :
+                <p>Please login to upload a Google Sheet.</p>
             }
         </div>);
 }
