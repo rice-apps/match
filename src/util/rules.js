@@ -152,7 +152,7 @@ export const availableOperators = [
   { value: "geq", display: "≥" },
   { value: "leq", display: "≤" },
   { value: "contains", display: "contains" },
-  { value: "overlap", display: "overlap" },
+  { value: "overlap", display: "intersects" },
 ];
 
 function applySorts(rules, data, leftRow) {
