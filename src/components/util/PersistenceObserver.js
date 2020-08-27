@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTransactionObservation_UNSTABLE } from 'recoil';
 
+// See https://recoiljs.org/docs/guides/persistence for documentation on how to persist state in local storage using Recoil
+// This is what this PersistenceObserver allows us.
 
 export default function PersistenceObserver() {
     useTransactionObservation_UNSTABLE(({ atomValues, atomInfo, modifiedAtoms }) => {
