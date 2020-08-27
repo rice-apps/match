@@ -3,6 +3,7 @@ import { removeFileItem } from "antd/lib/upload/utils";
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
+
 export function applyRules(rules, data, leftRow, leftNameColumn, rightMatchColumn) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
@@ -54,6 +55,7 @@ function countOverlaps (listA,listB) {
 
 // There's definitely a much better way to define these comparitors,
 // I am just too lazy to write it rn. Ping Johnny if this is too hard to work with.
+// // See https://css-tricks.com/level-up-your-sort-game/ for explanation on how sorting is done
 
 const byOverlaps = (value) => (a,b) => {
   //TODO: Adam Zawierucha implement
