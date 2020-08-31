@@ -117,8 +117,8 @@ export default function RightDataPanel(props) {
               } else if(isGloballyMatched(row)) {
                 //Disabled "Already Matched"
                 let leftName = getRightMatch(row)[1];
-                let tooltip = name+" is matched to "+leftName+" already!";
-                return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Matched"}</Button></Tooltip>;
+                let tooltip = name+" is already matched to "+leftName+"!";
+                return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
               } else {
                 //Match
                 return <Button onClick = {() => props.match(row)}>{"Match!"}</Button>;
