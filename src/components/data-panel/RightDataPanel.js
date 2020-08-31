@@ -3,7 +3,7 @@ import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
-import {Button} from "antd";
+import {Button, Tooltip} from "antd";
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
@@ -116,7 +116,9 @@ export default function RightDataPanel(props) {
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               } else if(isGloballyMatched(row)) {
                 //Disabled "Already Matched"
-                return <Button disabled={true}>{"Matched"}</Button>;
+                let leftName = getRightMatch(row)[1];
+                let tooltip = name+" is matched to "+leftName+" already!";
+                return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Matched"}</Button></Tooltip>;
               } else {
                 //Match
                 return <Button onClick = {() => props.match(row)}>{"Match!"}</Button>;
