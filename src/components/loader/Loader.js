@@ -55,6 +55,8 @@ export default function CSVFileUploader(props) {
             // For now, assuming name Column is 4th
             // MIGHT HAVE TO CHANGE THIS LATER!
             newDataState.nameColumn = newDataState.columns[3];
+            // Assuming email column is 3rd
+            newDataState.emailColumn = newDataState.columns[2];
             props.onUpload(oldDataState => {
                 return {
                     ...oldDataState,
