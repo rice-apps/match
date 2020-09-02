@@ -44,6 +44,7 @@ export const leftDataState = atom({
         selectedRows: [],
         matchColumn: null,
         nameColumn: null,
+        emailColumn: null,
         spreadsheetId: null,
         refreshing: false,
     }, // default value (aka initial value)
@@ -62,6 +63,7 @@ export const rightDataState = atom({
         selectedRows: [],
         matchColumn: null,
         nameColumn: null,
+        emailColumn: null,
         spreadsheetId: null,
         refreshing: false,
     },

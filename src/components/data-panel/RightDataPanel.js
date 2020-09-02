@@ -3,7 +3,7 @@ import Loader from '../../components/loader/Loader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';
-import {Button} from "antd";
+import {Button, Tooltip} from "antd";
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
@@ -34,31 +34,25 @@ export default function RightDataPanel(props) {
 
 
   // Takes in the left and right rows and determines if they're matched together
-  function isMatched(rightRow, leftRow) {
-    //Can't be matched if matching is disabled
-    if (!matchingEnabled) {
-      return false
-    }
+
+  function getRightMatch(rightRow){
     let rightMatches = rightRow[rightMatchColumn.key];
-
     // If right matches is null, just return false.
-    // NOTE: IF YOU JSON.PARSE ON A NULL VALUE, IT WILL CRASH THE APP!
-    // AVOID THIS AT ALL COSTS
-    if (!rightMatches) {
-      return false;
-    }
-
-    // Right should only have one match, so just check first one
-    let rightMatch = JSON.parse(rightMatches)[0];
-
-    // Remember, the cell values are list of [index, name]
-    if (leftRow && rightMatch[0] === parseInt(leftRow.key) + 2) {
-      return true;
+    if (rightMatches) {
+      return JSON.parse(rightMatches)[0];
     } else {
-      return false;
+      return null;
     }
   }
-
+  function isLocallyMatched(rightRow, leftRow) {
+    // Read Right Match
+    let rightMatch = getRightMatch(rightRow);
+    return (rightMatch && leftRow) && (rightMatch[0] === parseInt(leftRow.key) + 2)
+  }
+  function isGloballyMatched(rightRow){
+    let rightMatch = getRightMatch(rightRow);
+    return rightMatch && rightMatch.length > 0;
+  }
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
 
@@ -115,15 +109,26 @@ export default function RightDataPanel(props) {
       <div className="SelectionDisplay">
         {selectedRightRows.map((row, i) => {
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
-          var matchButton = null;
-          let matched;
-          if (matchingEnabled) {
-            matched = isMatched(row, selectedLeftRows[0]);
+          function generateButton() {
+            if (matchingEnabled) {
+              if (isLocallyMatched(row, selectedLeftRows[0])) {
+                //Unmatch
+                return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
+              } else if(isGloballyMatched(row)) {
+                //Disabled "Already Matched"
+                let leftName = getRightMatch(row)[1];
+                let tooltip = name+" is already matched to "+leftName+"!";
+                return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
+              } else {
+                //Match
+                return <Button onClick = {() => props.match(row)}>{"Match!"}</Button>;
+              }
+            }
           }
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra={<Button danger={matched} onClick={() => props.toggleMatch(row)}>{matched ? "Unmatch!" : "Match!"}</Button>}
+              extra={generateButton()}
               key={i}
               style={{ width: 300 }}
               row={row}

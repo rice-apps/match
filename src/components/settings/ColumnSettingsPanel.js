@@ -75,6 +75,20 @@ export default function ColumnSettingsPanel({ data, setData, title }) {
                         })}
                     </Select>
                 </div>
+                
+                <br />
+
+                <div>
+                    Email Column: &nbsp;
+                <Select value={data.emailColumn ? data.emailColumn.title : null} style={{ width: 250 }}
+                        onChange={(value) => changeColumn(value, 'emailColumn', data, setData)}>
+                        {data.columns.map((column, i) => {
+                            return (
+                                <Option key={i}>{column.title}</Option>
+                            )
+                        })}
+                    </Select>
+                </div>
 
                 <br />
 

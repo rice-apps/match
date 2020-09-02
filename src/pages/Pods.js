@@ -27,13 +27,14 @@ import { Card, Row, Col,Button } from "antd";
 
 export default function Pods() {
 
-    const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn } = useRecoilValue(leftDataState);
-    const { data: rightData, nameColumn: rightNameColumn } = useRecoilValue(rightDataState);
+    const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn } = useRecoilValue(leftDataState);
+    const { data: rightData, nameColumn: rightNameColumn, emailColumn: rightEmailColumn } = useRecoilValue(rightDataState);
 
     function generateEmail(hcw, students) {
+        const lineBreak = "%0D%0A";
         let addresses = students.map((student) => student.email).join(', ');
         let subject = "You have been assigned to a pod!";
-        let body = "Congratulations! You have been assigned to a pod.\n" +
+        let body = "Congratulations! You have been assigned to a pod." + lineBreak +
             "You have been matched to " + hcw.name + ", who you can reach at " + hcw.email + ".";
         let ccAddress = hcw.email; // TODO: change to appropriate address
 
@@ -74,7 +75,7 @@ export default function Pods() {
             return {
                 key: rightIndex,
                 name: rightRow[rightNameColumn.key],
-                email: "testing@gmail.com",
+                email: rightRow[rightEmailColumn.key],
             }
         });
 
@@ -84,7 +85,7 @@ export default function Pods() {
             left: {
                 key: leftRow.key,
                 name: leftRow[leftNameColumn.key],
-                email: "testing@gmail.com",
+                email: leftRow[leftEmailColumn.key],
             },
             right: students
         }
