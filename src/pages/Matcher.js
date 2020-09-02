@@ -98,90 +98,93 @@ export default function Matcher() {
   }
 
 
-  // This is the big boy function that actually makes matches
-  function toggleMatch(row) {
-    // Read and parse current match for both left and right
-    let leftValue = [];
-    if (selectedLeftRows[0][leftMatchColumn.key]) {
-      leftValue = JSON.parse(selectedLeftRows[0][leftMatchColumn.key]);
+  // These functions actually match and unmatch
+  function writeToGoogleSheets(left,right){
+     // Stringify both left and right before writing to Google Sheets
+     let leftValueString = JSON.stringify(left.value);
+     let rightValueString = JSON.stringify(right.value);
+ 
+     // Save an empty list [] as a blank cell
+     if (leftValueString === "[]") leftValueString = "";
+     if (rightValueString === "[]") rightValueString = "";
+ 
+     // If the left data is from Google Sheets, write to it
+     if (leftSpreadsheetId) {
+ 
+       // Set refreshing to be true
+       setLeftData(leftDataState => {
+         return {
+           ...leftDataState,
+           refreshing: true,
+         }
+       })
+ 
+       modifySpreadsheetDataSingleCell(leftSpreadsheetId, left.columnIndex, left.rowIndex, leftValueString, () => {
+         console.log("Done writing to left!");
+         // This refreshes the data in this app once the spreadsheet is written to
+         getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
+       });
+     }
+ 
+     // If the right data is from Google Sheets, write to it
+     if (rightSpreadsheetId) {
+       // Set refreshing to be true
+       setRightData(rightDataState => {
+         return {
+           ...rightDataState,
+           refreshing: true,
+         }
+       });
+       modifySpreadsheetDataSingleCell(rightSpreadsheetId, right.columnIndex, right.rowIndex, rightValueString, () => {
+         console.log("Done writing to right!");
+         // This refreshes the data in this app once the spreadsheet is written to
+         getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
+       });
+     }
+  }
+
+  function getLeftRightInfo(row){
+    return {
+      left: {
+        value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
+        rowIndex: parseInt(selectedLeftRows[0].key) + 2,
+        columnIndex: leftMatchColumn.index + 1,
+        name: selectedLeftRows[0][leftNameColumn.key]
+      },
+      right:{
+        value: row[rightMatchColumn.key] ? JSON.parse(row[rightMatchColumn.key]) : [],
+        rowIndex: parseInt(row.key) + 2,
+        columnIndex: rightMatchColumn.index + 1,
+        name: row[rightNameColumn.key]
+      }
     }
-    let rightValue = []
-    if (row[rightMatchColumn.key]) {
-      // THIS IS UNMATCH!! because right side cannot be matched twice!!
-      rightValue = JSON.parse(row[rightMatchColumn.key]);
-    }
+  }
 
-    // Get the indices for both left and right
-    // These indices must index by 1, not 0 as specified by the Google Sheets API
-    let leftRowIndex = parseInt(selectedLeftRows[0].key) + 2;
-    let leftColumnIndex = leftMatchColumn.index + 1;
-    let rightRowIndex = parseInt(row.key) + 2;
-    let rightColumnIndex = rightMatchColumn.index + 1;
+  function match(row) {
+    //Get info
+    let info = getLeftRightInfo(row);
+    let left = info.left;
+    let right = info.right;
+    //Match logic
+    left.value.push([right.rowIndex, right.name]);
+    right.value.push([left.rowIndex, left.name]);
+    //Write to google sheets
+    writeToGoogleSheets(left,right)
+  }
 
-    // Get the names for both left and right
-    let leftName = selectedLeftRows[0][leftNameColumn.key];
-    let rightName = row[rightNameColumn.key];
-
-    // Check for the the index of the right value in the left cell
-    let indexOfRightInLeft = leftValue.map(list => list[0]).indexOf(rightRowIndex)
-    // If the right index does not already exist in the left cell, add it
-    if (indexOfRightInLeft === -1) {
-      leftValue.push([rightRowIndex, rightName]);
-    } else {
-      // Otherwise, we should remove it, THIS IS UNMATCH!!
-      leftValue.splice(indexOfRightInLeft, 1)
-    }
-
-    // Check for the the index of the right value in the left cell
-    let indexOfLeftInRight = rightValue.map(list => list[0]).indexOf(leftRowIndex)
-    // If the left index does not already exist in the right cell, add it
-    if (indexOfLeftInRight === -1) {
-      rightValue.push([leftRowIndex, leftName]);
-    } else {
-      // Otherwise, we should remove it, THIS IS UNMATCH!!
-      rightValue.splice(indexOfLeftInRight, 1)
-    }
-    // Stringify both left and right before writing to Google Sheets
-    let leftValueString = JSON.stringify(leftValue);
-    let rightValueString = JSON.stringify(rightValue);
-
-    // Save an empty list [] as a blank cell
-    if (leftValueString === "[]") leftValueString = "";
-    if (rightValueString === "[]") rightValueString = "";
-
-    // If the left data is from Google Sheets, write to it
-    if (leftSpreadsheetId) {
-
-      // Set refreshing to be true
-      setLeftData(leftDataState => {
-        return {
-          ...leftDataState,
-          refreshing: true,
-        }
-      })
-
-      modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftColumnIndex, leftRowIndex, leftValueString, () => {
-        console.log("Done writing to left!");
-        // This refreshes the data in this app once the spreadsheet is written to
-        getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
-      });
-    }
-
-    // If the right data is from Google Sheets, write to it
-    if (rightSpreadsheetId) {
-      // Set refreshing to be true
-      setRightData(rightDataState => {
-        return {
-          ...rightDataState,
-          refreshing: true,
-        }
-      });
-      modifySpreadsheetDataSingleCell(rightSpreadsheetId, rightColumnIndex, rightRowIndex, rightValueString, () => {
-        console.log("Done writing to right!");
-        // This refreshes the data in this app once the spreadsheet is written to
-        getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
-      });
-    }
+  function unmatch(row) {
+    //Get info
+    let info = getLeftRightInfo(row);
+    let left = info.left;
+    let right = info.right;
+    //Get Cross indecies
+    let leftInRightIndex = right.value.map(list => list[0]).indexOf(left.rowIndex);
+    let rightInLeftIndex = left.value.map(list => list[0]).indexOf(right.rowIndex);
+    //Unmatch logic
+    left.value.splice(rightInLeftIndex, 1)
+    right.value.splice(leftInRightIndex, 1)
+    //Write to google sheets
+    writeToGoogleSheets(left,right)
   }
 
   return (
@@ -212,7 +215,8 @@ export default function Matcher() {
                 />
                 <RightDataPanel
                   matchingEnabled = {matchingEnabled}
-                  toggleMatch={toggleMatch} />
+                  match = {match}
+                  unmatch = {unmatch}/>
               </SplitPane>
             </div>
           </LoadingOverlay>
