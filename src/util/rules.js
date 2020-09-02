@@ -15,16 +15,30 @@ export function applyRules(rules, data, leftRow, leftNameColumn, rightMatchColum
   // Get a list of the 'filter' rules
   let filters = enabledRules.filter(rule => rule.type === "filter");
 
-  // Sort matched rows to the top
+  //DEFAULT SORTS
+  // Sort matched left rows to the top
   if (rightMatchColumn && leftNameColumn) { // Handle nulls
     sorts.push({
       "type": "sort",
-      "enabled": false,
+      "enabled": true,
       "by": rightMatchColumn.key,
       "operator": "contains",
       "with": {
         type: "column",
         value: leftNameColumn.key,
+      }
+    })
+  }
+  //Sort unmatched people up (to sort matched people to bottom)
+  if (rightMatchColumn && leftNameColumn) { // Handle nulls
+    sorts.push({
+      "type": "sort",
+      "enabled": true,
+      "by": rightMatchColumn.key,
+      "operator": "equals",
+      "with": {
+        type: "constant",
+        value: undefined,
       }
     })
   }
