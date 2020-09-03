@@ -73,14 +73,6 @@ export default function CSVFileUploader(props) {
         setSpreadsheetId(e.target.value);
     }
 
-    useEffect(() => {
-        // Load sheet automatically if signed in
-        if (window.gapi && window.gapi.auth2 // Google api loaded and initialized
-            && user != null) { // Signed in
-            loadGoogleSheet()
-        }
-    }, [user]);
-
     return (
         <div className="Loader" style={props.style}>
             {/* If user is signed in, use Google sheets API. If not, upload csv for data loading. */}
