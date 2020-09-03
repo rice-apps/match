@@ -1,6 +1,5 @@
-
 import React from 'react';
-import Loader from '../../components/loader/Loader';
+import SheetsLoader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 
@@ -47,8 +46,8 @@ export default function LeftDataPanel(props) {
   return (
     <div className="DataPanel">
 
-      {/* Loader to accept csv input */}
-      {data.length === 0 && <Loader
+      {/* Data Loader */}
+      {data.length === 0 && <SheetsLoader
         onUpload={setLeftData}
         allowManualSort={true}
       />}

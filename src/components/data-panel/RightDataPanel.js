@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from '../../components/loader/Loader';
+import Loader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules } from '../../util/rules';

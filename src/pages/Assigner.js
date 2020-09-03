@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import Loader from '../components/loader/Loader';
+import Loader from '../components/loader/CSVFileLoader';
 import { makeAssignments, getUnmatchedStudents } from '../util/ccd/assignerLogic'
 import { getStudentsAndExternships } from '../util/ccd/externshipParser'
 import { exportCSV } from '../util/ccd/csvWriter'
 import { CSVLink } from 'react-csv';
+import CSVFileUploader from '../components/loader/CSVFileLoader';
 
 export default function Assigner() {
   const [csvData, setCsvData] = useState([]);
@@ -37,7 +38,7 @@ export default function Assigner() {
     <div>
       <div className="Main">
         <div className="Body">
-          <Loader
+          <CSVFileUploader
             onUpload={handleData}
             allowManualSort={true}
             allowCSV={true}

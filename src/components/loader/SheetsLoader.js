@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import CSVReader from 'react-csv-reader';
 import { formatData } from '../../util/dataFormatter';
 import { Input, Button} from 'antd';
 import './Loader.css';
@@ -13,24 +12,12 @@ import { applicationState } from '../../store/atoms';
 const DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4"
 const DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM"
 
-export default function CSVFileUploader(props) {
+export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.
     const defaultSpreadsheetId = props.allowManualSort ? DEFAULT_HCW_SPREADSHEET_ID : DEFAULT_STUDENT_SPREADSHEET_ID
     const [spreadsheetId, setSpreadsheetId] = useState(defaultSpreadsheetId)
 
     const { user } = useRecoilValue(applicationState);
-
-    function onFileLoaded(data) {
-        console.log(data);
-        var newDataState = formatData(data, props.allowManualSort);
-        newDataState.selectedRows = [];
-        console.log(newDataState);
-        props.onUpload(newDataState);
-    }
-
-    function onError(error) {
-        alert("Error loading in CSV:" + JSON.stringify(error, null, 2));
-    }
 
     function loadGoogleSheet() {
         console.log("Loading google sheet")
@@ -85,16 +72,8 @@ export default function CSVFileUploader(props) {
                         style={{ width: "400px" }} /> &nbsp;
                     <Button type = 'primary' onClick={loadGoogleSheet}>Upload data</Button>
                 </div>
-                : props.allowCSV ? <CSVReader
-                    cssClass="csv-reader-input"
-                    label="Upload CSV file here "
-                    onFileLoaded={onFileLoaded}
-                    onError={onError}
-                    inputId="ObiWan"
-                    inputStyle={{ color: 'red' }}
-                />
                 :
-                <p>Please login to upload a Google Sheet.</p>
+                <p>Please log-in to upload a Google Sheet.</p>
             }
         </div>);
 }
