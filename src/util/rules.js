@@ -101,7 +101,24 @@ const byOverlaps = (value) => (a,b) => {
   }
 }
 
-const sortByMapped = map => compareFn => (a, b) => compareFn(map(a), map(b));
+// Sanitize values input by users
+const sanitizeInput = (input) => {
+  // Check type
+  // (typeof val==='string')
+  let sanitizedInput = input;
+  if (input instanceof String) {
+    // Convert to lowercase if string
+    sanitizeInput = input.toLowerCase();
+  }
+  return sanitizedInput;
+}
+
+// Sanitize and apply map
+const sortByMapped = map => compareFn => (a, b) => {
+  const sanitizedA = sanitizeInput(a);
+  const sanitizedB = sanitizeInput(b);
+  return compareFn(map(sanitizedA), map(sanitizedB));
+};
 
 const byMatch = (value) => (a, b) => {
   if (a === value && b === value) {
