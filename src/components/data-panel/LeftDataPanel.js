@@ -1,5 +1,6 @@
 import React from 'react';
 import SheetsLoader from '../loader/SheetsLoader';
+import SheetsFetcher from '../loader/SheetsFetcher';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 
@@ -47,7 +48,7 @@ export default function LeftDataPanel(props) {
     <div className="DataPanel">
 
       {/* Data Loader */}
-      {data.length === 0 && <SheetsLoader
+      {data.length === 0 && <SheetsFetcher
         onUpload={setLeftData}
         allowManualSort={true}
       />}

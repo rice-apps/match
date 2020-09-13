@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { formatData } from '../../util/dataFormatter';
 import { Input, Button} from 'antd';
 import './Loader.css';
 
-import { getSpreadsheetData } from '../../util/gapi';
+import { loadGoogleSheet } from './uploader';
 
 import { useRecoilValue } from 'recoil';
 import { applicationState } from '../../store/atoms';
@@ -19,43 +18,6 @@ export default function SheetsLoader(props) {
 
     const { user } = useRecoilValue(applicationState);
 
-    function loadGoogleSheet() {
-        console.log("Loading google sheet")
-        props.onUpload(oldDataState => {
-            return {
-                ...oldDataState,
-                refreshing: true // show data is loading
-            }
-        });
-        getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
-    }
-
-    function onSpreadsheetLoaded(response) {
-        var range = response.result;
-        if (range.values.length > 0) {
-            var newDataState = formatData(range.values, props.allowManualSort);
-            newDataState.selectedRows = [];
-            newDataState.spreadsheetId = spreadsheetId;
-            // For now, assuming name Column is last
-            // MIGHT HAVE TO CHANGE THIS LATER!
-            newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
-            // For now, assuming name Column is 4th
-            // MIGHT HAVE TO CHANGE THIS LATER!
-            newDataState.nameColumn = newDataState.columns[3];
-            // Assuming email column is 3rd
-            newDataState.emailColumn = newDataState.columns[2];
-            props.onUpload(oldDataState => {
-                return {
-                    ...oldDataState,
-                    ...newDataState,
-                    refreshing: false
-                }
-            });
-        } else {
-            alert('No data found.');
-        }
-    }
-
     function onSpreadsheetIdChange(e) {
         setSpreadsheetId(e.target.value);
     }
@@ -70,7 +32,7 @@ export default function SheetsLoader(props) {
                         onChange={onSpreadsheetIdChange}
                         defaultValue={defaultSpreadsheetId}
                         style={{ width: "400px" }} /> &nbsp;
-                    <Button type = 'primary' onClick={loadGoogleSheet}>Upload data</Button>
+                    <Button type = 'primary' onClick={() => loadGoogleSheet(spreadsheetId,props.onUpload)}>Upload data</Button>
                 </div>
                 :
                 <p>Please log-in to upload a Google Sheet.</p>
