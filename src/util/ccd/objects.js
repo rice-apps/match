@@ -169,9 +169,9 @@ class Student {
 
   getYear() {
     /*
-       Returns the string of the class of the student
+       Returns the string of the year of the student
     */
-    var year = (this.year || "<No Class>"); 
+    var year = (this.year || "<No Year>"); 
     return year;
   }
 
