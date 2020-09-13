@@ -146,9 +146,33 @@ class Student {
     /*
        Returns the string of the full name of the student
     */
-    var first = (this.firstName ? this.firstName : "<No First Name>");
-    var last = (this.lastName ? this.lastName : "<No Last Name>");
+    var first = (this.firstName || "<No First Name>");
+    var last = (this.lastName || "<No Last Name>");
     return first.concat(" ", last);
+  }
+
+  getEmail() {
+    /*
+       Returns the string of the email of the student
+    */
+    var email = (this.email || "<No Email>"); 
+    return email;
+  }
+
+  getMajor() {
+    /*
+       Returns the string of the major of the student
+    */
+    var major = (this.major || "<No Major>"); 
+    return major;
+  }
+
+  getYear() {
+    /*
+       Returns the string of the class of the student
+    */
+    var year = (this.year || "<No Class>"); 
+    return year;
   }
 
   getNumberOfApplications() {
