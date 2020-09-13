@@ -106,18 +106,18 @@ const sanitizeInput = (input) => {
   // Check type
   // (typeof val==='string')
   let sanitizedInput = input;
-  if (input instanceof String) {
+  if (typeof input === 'string' || input instanceof String) {
     // Convert to lowercase if string
-    sanitizeInput = input.toLowerCase();
+    sanitizedInput = input.toLowerCase();
   }
   return sanitizedInput;
 }
 
 // Sanitize and apply map
 const sortByMapped = map => compareFn => (a, b) => {
-  const sanitizedA = sanitizeInput(a);
-  const sanitizedB = sanitizeInput(b);
-  return compareFn(map(sanitizedA), map(sanitizedB));
+  const sanitizedA = sanitizeInput(map(a));
+  const sanitizedB = sanitizeInput(map(b));
+  return compareFn(sanitizedA, sanitizedB);
 };
 
 const byMatch = (value) => (a, b) => {
