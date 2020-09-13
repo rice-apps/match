@@ -2,6 +2,7 @@ export function exportCSV(assignments, unmatchedStudents) {
     //Exports list of Externship objects with matched students and list of unmatched students into a CSV file
     //Input: assignments - list of Externship objects, unmatchedStudents - list of Student objects
     //Output: CSV file
+    
         //example output:   externship1, student1
         //                  externship1, student2
         //                  externship2, student3
