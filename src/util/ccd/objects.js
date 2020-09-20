@@ -111,6 +111,13 @@ class Externship {
     return this.numberOfSpots;
   }
 
+  getCompanyName() {
+    /*
+      Returns the number of spots available
+    */
+    return this.companyName;
+  }
+
   getPriority() {
     /*
       Returns an integer
@@ -124,7 +131,15 @@ class Externship {
       Returns the students rank
     */
     var index = this.applicants.indexOf(studentObject);
+    // If index = -1, not found. Return index +1 if needed.
     return (index === -1 ? -1 : (startAtOne ? index + 1 : index));
+  }
+
+  getIsUnmatched() {
+    /*
+      Returns whether or not an externship has a match
+    */
+    return (this.matched.length === 0 ? true : false);
   }
 }
 

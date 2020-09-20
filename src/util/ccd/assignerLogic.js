@@ -21,6 +21,14 @@ export function makeAssignments(externships) {
   return externships;
 }
 
+export function getUnmatchedExternships(externships) {
+  /*
+    Inputs: List of Externship objects
+    Outputs: List of the externship who weren't assigned students
+  */
+  return externships.filter(externship => externship.getIsUnmatched());
+}
+
 export function getUnmatchedStudents(students) {
   /*
     Inputs: List of Student objects
@@ -36,6 +44,7 @@ export function getMatchedStudents(students) {
   */
   return students.filter(student => student.assignedExternship != null);
 }
+
 
 export function getAverageMatchedRank(students) {
   /*
