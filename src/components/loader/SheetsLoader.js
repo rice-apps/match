@@ -3,14 +3,17 @@ import { formatData } from '../../util/dataFormatter';
 import { Input, Button} from 'antd';
 import './Loader.css';
 
-import { getSpreadsheetData } from '../../util/gapi';
+import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
 
 import { useRecoilValue } from 'recoil';
 import { applicationState } from '../../store/atoms';
 
 
-const DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4"
-const DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM"
+
+const DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4";
+const DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM";
+
+const MATCH_COLUMN_NAME = "__MATCH__";
 
 export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.
@@ -29,8 +32,11 @@ export default function SheetsLoader(props) {
         });
         getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
     }
+    
+
 
     function onSpreadsheetLoaded(response) {
+        console.log("OnSpreadsheetLoaded start")
         var range = response.result;
         if (range.values.length > 0) {
             var newDataState = formatData(range.values, props.allowManualSort);
@@ -38,7 +44,19 @@ export default function SheetsLoader(props) {
             newDataState.spreadsheetId = spreadsheetId;
             // For now, assuming name Column is last
             // MIGHT HAVE TO CHANGE THIS LATER!
-            newDataState.matchColumn = newDataState.columns[newDataState.columns.length - 1];
+            console.log(newDataState.columns);
+            const indexMatch = findIndexOfColumnWithKey(MATCH_COLUMN_NAME, newDataState.columns)
+            if (indexMatch === -1) {
+                console.log("line 50")
+                createColumn(MATCH_COLUMN_NAME, newDataState.columns.length)
+                console.log("line 52")
+            } else {
+                newDataState.matchColumn = newDataState.columns[indexMatch];
+                console.log("no need to create column")
+            }
+            
+
+
             // For now, assuming name Column is 4th
             // MIGHT HAVE TO CHANGE THIS LATER!
             newDataState.nameColumn = newDataState.columns[3];
@@ -54,10 +72,27 @@ export default function SheetsLoader(props) {
         } else {
             alert('No data found.');
         }
+        console.log("OnSpreadsheetLoaded end")
     }
 
     function onSpreadsheetIdChange(e) {
         setSpreadsheetId(e.target.value);
+    }
+
+    const findIndexOfColumnWithKey = (key, columns) => {
+        const res = columns.findIndex((obj) => {
+            return obj.key === key
+        }) 
+        return res === undefined ? -1 : res
+    }
+    
+    const createColumn = (name, columnIndex) => {
+        console.log("line 90, going to create column")
+        modifySpreadsheetDataSingleCell(spreadsheetId, columnIndex, 0, name, () => {
+            console.log("Created column line 92")
+            getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
+            console.log("line 94 finished refreshing")
+          });
     }
 
     return (
