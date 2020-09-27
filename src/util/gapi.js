@@ -183,6 +183,7 @@ export function appendSpreadsheetDataBatch(spreadsheetId, callbackFunction) {
     console.log(spreadsheetId)
     console.log(window.gapi.client.sheets)
     console.log(window.gapi.client.sheets.spreadsheets)
+    console.log(window.gapi.auth)
     window.gapi.client.sheets.spreadsheets.batchUpdate({
         "spreadsheetId": spreadsheetId,
         "resource": {
@@ -193,9 +194,41 @@ export function appendSpreadsheetDataBatch(spreadsheetId, callbackFunction) {
                   "dimension": "COLUMNS",
                   "length": 1
                 }
-            }
-        ]}
+            }],
+            "auth": window.gapi.auth2.getAuthInstance();
+        }
     }).then(callbackFunction ? callbackFunction : () => console.log("Success adding a column!"), (response) => {
         alert('Error: ' + response.result.error.message);
     });
 }
+/*
+var requests = [];
+// Change the spreadsheet's title.
+requests.push({
+  updateSpreadsheetProperties: {
+    properties: {
+      title: title
+    },
+    fields: 'title'
+  }
+});
+// Find and replace text.
+requests.push({
+  findReplace: {
+    find: find,
+    replacement: replacement,
+    allSheets: true
+  }
+});
+// Add additional requests (operations) ...
+
+var batchUpdateRequest = {requests: requests}
+
+gapi.client.sheets.spreadsheets.batchUpdate({
+  spreadsheetId: spreadsheetId,
+  resource: batchUpdateRequest
+}).then((response) => {
+  var findReplaceResponse = response.result.replies[1].findReplace;
+  console.log(`${findReplaceResponse.occurrencesChanged} replacements made.`);
+});
+*/
