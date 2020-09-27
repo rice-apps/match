@@ -3,7 +3,7 @@ import { formatData } from '../../util/dataFormatter';
 import { Input, Button} from 'antd';
 import './Loader.css';
 
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
+import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../../util/gapi';
 
 import { useRecoilValue } from 'recoil';
 import { applicationState } from '../../store/atoms';
@@ -45,7 +45,8 @@ export default function SheetsLoader(props) {
             // For now, assuming name Column is last
             // MIGHT HAVE TO CHANGE THIS LATER!
             console.log(newDataState.columns);
-            const indexMatch = findIndexOfColumnWithKey(MATCH_COLUMN_NAME, newDataState.columns)
+
+            const indexMatch = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
             if (indexMatch === -1) {
                 console.log("line 50")
                 createColumn(MATCH_COLUMN_NAME, newDataState.columns.length)
@@ -79,18 +80,20 @@ export default function SheetsLoader(props) {
         setSpreadsheetId(e.target.value);
     }
 
-    const findIndexOfColumnWithKey = (key, columns) => {
+    const findIndexOfColumnWithName = (name, columns) => {
         const res = columns.findIndex((obj) => {
-            return obj.key === key
-        }) 
+            return obj.fullTitle === name
+        })
+        console.log("res of find index of column", res)
         return res === undefined ? -1 : res
     }
     
     const createColumn = (name, columnIndex) => {
         console.log("line 90, going to create column")
-        modifySpreadsheetDataSingleCell(spreadsheetId, columnIndex, 0, name, () => {
+        appendSpreadsheetDataBatch(spreadsheetId, () => {
+            console.log(spreadsheetId)
             console.log("Created column line 92")
-            getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
+            //getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
             console.log("line 94 finished refreshing")
           });
     }
