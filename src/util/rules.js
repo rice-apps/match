@@ -218,6 +218,7 @@ function applySorts(rules, data, leftRow) {
     } else if(rule.operator === "distance"){
       //TODO:
       //sort by distance
+
     }
   }
   let chainedComparators = sortByFlattened(comparators);

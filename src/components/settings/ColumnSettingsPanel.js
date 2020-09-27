@@ -93,9 +93,9 @@ export default function ColumnSettingsPanel({ data, setData, title }) {
                 <br />
 
                 <div>
-                    Zipcode Column: &nbsp;
-                <Select value={data.emailColumn ? data.emailColumn.title : null} style={{ width: 250 }}
-                        onChange={(value) => changeColumn(value, 'emailColumn', data, setData)}>
+                    Zip Column: &nbsp;
+                <Select value={data.zipcodeColumn ? data.zipcodeColumn.title : null} style={{ width: 250 }}
+                        onChange={(value) => changeColumn(value, 'zipcodeColumn', data, setData)}>
                         {data.columns.map((column, i) => {
                             return (
                                 <Option key={i}>{column.title}</Option>
