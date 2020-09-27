@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Loader from '../components/loader/CSVFileLoader';
-import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships } from '../util/ccd/assignerLogic'
+import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships, getStats } from '../util/ccd/assignerLogic'
 import { getStudentsAndExternships } from '../util/ccd/externshipParser'
-import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV } from '../util/ccd/csvWriter'
+import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStatsCSV } from '../util/ccd/csvWriter'
 import { CSVLink } from 'react-csv';
 import CSVFileUploader from '../components/loader/CSVFileLoader';
 
@@ -10,6 +10,7 @@ export default function Assigner() {
   const [csvData, setCsvData] = useState([]);
   const [csvExternshipData, setCsvExternshipData] = useState([]);
   const [csvStudentData, setCsvStudentData] = useState([]);
+  const [csvStats, setCsvStats] = useState([]);
 
   function handleData(fileData) {
     if (fileData && fileData.data){
@@ -29,6 +30,10 @@ export default function Assigner() {
 
       //Finds unmatched externships
       let unmatchedExternships = getUnmatchedExternships(externships);
+      
+      //Gets all of the desired statistics
+      let stats = getStats(students, externships);
+      
 
       // Statistic Calls
       // console.log("Matched Student Count:", getMatchedStudents(students).length);
@@ -43,6 +48,9 @@ export default function Assigner() {
       );
       setCsvStudentData(
         exportUnmatchedStudentsCSV(unmatchedStudents)
+      );
+      setCsvStats(
+        exportStatsCSV(stats)
       );
     }
   }
@@ -60,6 +68,7 @@ export default function Assigner() {
           <CSVLink data={csvData} filename={"ListOfMatches.csv"} >Download CSV</CSVLink>
           <CSVLink data={csvExternshipData} filename={"ListOfUnmatchedExternships.csv"} >Download externship CSV</CSVLink>
           <CSVLink data={csvStudentData} filename={"ListOfUnmatchedStudents.csv"} >Download students CSV</CSVLink>
+          <CSVLink data={csvStats} filename={"Stats.csv"} >Download stats CSV</CSVLink>
         </div>
       </div>
     </div>
