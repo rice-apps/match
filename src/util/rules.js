@@ -186,6 +186,7 @@ export const availableOperators = [
   { value: "leq", display: "≤" },
   { value: "contains", display: "contains" },
   { value: "overlap", display: "intersects" },
+  { value: "distance", display: "distance" },
 ];
 
 function applySorts(rules, data, leftRow) {
@@ -214,6 +215,9 @@ function applySorts(rules, data, leftRow) {
     } else if (rule.operator === "overlap") {
       let newComparator = sortByMapped(e => e[rule.by])(byOverlaps(left));
       comparators.push(newComparator);
+    } else if(rule.operator === "distance"){
+      //TODO:
+      //sort by distance
     }
   }
   let chainedComparators = sortByFlattened(comparators);
@@ -250,6 +254,9 @@ function applyFilters(rules, data, leftRow) {
         const aList  = commaSeparatedToList(a[rule.by]);
         return countOverlaps(leftList,aList) > 0;
       });
+    } else if(rule.operator === "distance"){
+      //TODO:
+      //sort by distance
     }
   }
 
