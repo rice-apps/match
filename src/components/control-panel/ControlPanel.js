@@ -58,7 +58,7 @@ export default function ControlPanel() {
   };
 
   const handleOpChange = (value, i) => {
-    // update with by and
+    // update with by: zip code column, and value: zip code column
     if (value === "distance") {
       const newRules = replaceItemAtIndex(rules, i, {
         ...rules[i],
