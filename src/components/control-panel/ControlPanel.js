@@ -124,12 +124,12 @@ export default function ControlPanel() {
     });
   };
 
-  const createSortDefaultSetting = (by, value) => {
+  const createSortDefaultSetting = (by, value, operator) => {
     return {
       type: "sort",
       enabled: true,
       by: by,
-      operator: "equals",
+      operator: operator,
       with: {
         type: "constant",
         value: value,
@@ -138,15 +138,17 @@ export default function ControlPanel() {
   };
 
   const applySortDefaultSettings = () => {
-    // Type of student and subject are not included in current columns
-    let time = rightColumns[11].key;
-    let day = rightColumns[14].key;
-    let special_acc = rightColumns[23].key;
+    
+    let time = rightColumns[10].key;
+    let weeklyHours = rightColumns[16].key;
+    let special_acc = rightColumns[17].key;
+    let subject = rightColumns[19].key;
 
     const defaultSettings = [
-      createSortDefaultSetting(time, "evening"),
-      createSortDefaultSetting(day, "Saturday"),
-      createSortDefaultSetting(special_acc, "yes"),
+      createSortDefaultSetting(time, "evening", "contains"),
+      createSortDefaultSetting(weeklyHours, "5", "geq"),
+      createSortDefaultSetting(special_acc, "ADHD, Dyslexia", "overlap"),
+      createSortDefaultSetting(subject, "Algebra", "contains")
     ];
     setRules((oldRules) => defaultSettings);
   };
@@ -154,9 +156,9 @@ export default function ControlPanel() {
   return (
     <div className="ControlPanel">
       <h2>Sort</h2>
-      <Checkbox onChange={applySortDefaultSettings}>
-        Enable Default Sorts
-      </Checkbox>
+      <Button onClick={applySortDefaultSettings}>
+        Use Default Sorts
+      </Button>
       {rules.filter((r) => r.type === "sort").length > 0 ? (
         rules.map(
           (rule, i) =>
