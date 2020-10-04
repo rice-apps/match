@@ -13,7 +13,13 @@ const data = require("./data.json");
  * @return distance in miles (float)
  */
 export function zipcodesToDistance(zipcode1,zipcode2){
-    return coordinatesToDistance(data[zipcode1], data[zipcode2]);
+    let coord1 = data[zipcode1]
+    let coord2 = data[zipcode2]
+    if (coord1 && coord2){
+        return coordinatesToDistance(data[zipcode1], data[zipcode2]);
+    } else {
+        return null
+    }
 }
 
 /**
