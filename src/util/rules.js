@@ -183,7 +183,19 @@ const byLEQ = (value) => (a, b) => {
 const byDistance = (value) => (a, b) => {
   let dist2a = zipcodesToDistance(value, a);
   let dist2b = zipcodesToDistance(value, b);
-  return dist2a <= dist2b;
+  if (dist2a === dist2b) {
+    return 0;
+  }
+  if (dist2a === null) {
+    return 1;
+  }
+  if (dist2b === null) {
+    return -1;
+  }
+  if (dist2a < dist2b) {
+    return -1;
+  }
+  return 1;
 };
 
 const sortByFlattened = (fns) => (a, b) =>
