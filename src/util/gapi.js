@@ -195,7 +195,7 @@ export function appendSpreadsheetDataBatch(spreadsheetId, callbackFunction) {
                   "length": 1
                 }
             }],
-            "auth": window.gapi.auth2.getAuthInstance();
+            "auth": window.gapi.auth2.getAuthInstance()
         }
     }).then(callbackFunction ? callbackFunction : () => console.log("Success adding a column!"), (response) => {
         alert('Error: ' + response.result.error.message);
