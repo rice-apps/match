@@ -4,7 +4,8 @@ import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships, getStat
 import { getStudentsAndExternships } from '../util/ccd/externshipParser'
 import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStatsCSV } from '../util/ccd/csvWriter'
 import { CSVLink } from 'react-csv';
-import CSVFileUploader from '../components/loader/CSVFileLoader';
+import SheetsLoader from '../components/loader/SheetsLoader';
+import CSVFileLoader from '../components/loader/CSVFileLoader';
 
 export default function Assigner() {
   const [csvData, setCsvData] = useState([]);
@@ -13,6 +14,7 @@ export default function Assigner() {
   const [csvStats, setCsvStats] = useState([]);
 
   function handleData(fileData) {
+    console.log(fileData);
     if (fileData && fileData.data){
       // Handle the data uploaded by the user
       let data = getStudentsAndExternships(fileData);
@@ -59,7 +61,7 @@ export default function Assigner() {
     <div>
       <div className="Main">
         <div className="Body">
-          <CSVFileUploader
+          <SheetsLoader
             onUpload={handleData}
             allowManualSort={true}
             allowCSV={true}
