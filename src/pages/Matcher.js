@@ -5,7 +5,7 @@ import SplitPane from 'react-split-pane';
 
 import { Button } from 'antd';
 
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../util/gapi';
+import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
 import { formatData } from '../util/dataFormatter';
 
 import { useRecoilState } from 'recoil';
@@ -13,7 +13,7 @@ import { rightDataState, leftDataState, applicationState } from '../store/atoms'
 
 import LoadingOverlay from 'react-loading-overlay';
 
-
+const MATCH_COLUMN_NAME = "__MATCH__";
 export default function Matcher() {
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
@@ -43,6 +43,7 @@ export default function Matcher() {
       sidebarOpen: open
     });
   }
+
 
   // This basically refreshes the data in memory, see where this is used.
   function onLeftSpreadsheetLoaded(response) {
@@ -186,9 +187,30 @@ export default function Matcher() {
     //Write to google sheets
     writeToGoogleSheets(left,right)
   }
+  const createColumn = (name, isLeft) => {
+    if (isLeft && leftMatchColumn == null) {
+
+      appendSpreadsheetDataBatch(leftSpreadsheetId, () => {
+        //getSpreadsheetData(leftSpreadsheetId, onSpreadsheetLoaded);
+
+    });
+    }
+    if (!isLeft && rightMatchColumn == null) {
+
+      appendSpreadsheetDataBatch(rightSpreadsheetId, () => {
+            //getSpreadsheetData(rightSpreadsheetId, onSpreadsheetLoaded);
+
+        });
+    }
+    
+  }
 
   return (
     <div>
+      <div style = {{marginLeft:10, marginBottom:10}}>
+          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
+          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a column named __Match__ and a name column as defined in settings."} </p>
+        </div>
       <div>
         <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
           <span>
@@ -198,6 +220,9 @@ export default function Matcher() {
             <Button href={'/covidsitters/pods'}> See Pods </Button>
             <b> </b>
             <Button href={'/covidsitters/settings'}> Settings</Button>
+            <b> </b>
+            {!leftMatchColumn && <Button onClick={e => createColumn(MATCH_COLUMN_NAME, true)}> Create Match Column Left</Button>}
+            {!rightMatchColumn && <Button onClick={e => createColumn(MATCH_COLUMN_NAME, false)}> Create Match Column Right</Button>}
           </span>
         </div>
         <div className="Body">
@@ -220,11 +245,6 @@ export default function Matcher() {
               </SplitPane>
             </div>
           </LoadingOverlay>
-        </div>
-
-        <div style = {{marginLeft:10, marginBottom:10}}>
-          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
-          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a match column and a name column as defined in settings."} </p>
         </div>
 
       </div>
