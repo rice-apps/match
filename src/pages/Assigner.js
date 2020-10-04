@@ -7,71 +7,167 @@ import { CSVLink } from 'react-csv';
 import SheetsLoader from '../components/loader/SheetsLoader';
 import CSVFileLoader from '../components/loader/CSVFileLoader';
 
+import { useRecoilState } from 'recoil';
+import { ccdState } from '../store/atoms';
+
+/**
+ * This actually creates the assignments, creates a list of unmatched/matched students, and calcualtes the stats.
+ * In essence, this is the logic handling.
+ * 
+ * @param rowData An array of row objects.
+ * @return an object containing all the the output data
+ */
+function processData(rowData) {
+  if (rowData){
+    // Handle the data uploaded by the user
+    let things = getStudentsAndExternships(rowData);
+    let students = things.students;
+    let externships = things.externships;
+    //Sort externships based on priority
+    externships.sort((a, b) => a.getPriority() - b.getPriority());
+    //Create output data
+    let outputData = {
+      assignments:makeAssignments(externships),
+      unmatchedStudents:getUnmatchedStudents(students),
+      unmatchedExternships:getUnmatchedExternships(externships),
+      stats:getStats(students, externships)
+    }
+    return outputData;
+  }
+}
+
+/**
+ * Take in rowData and column headers and validate the data.
+ * -Ensure it has all the necessary columns (see externshipParser)
+ * -Ensure there's nothing else whack about it
+ * (You may not need both parameters, so feel free to change inputs)
+ * 
+ * @param rowData An array of row objects
+ * @param columns An array of column headers
+ * @return {isValid: (boolean) whether or not the data is good to go, m
+ *          essage: (string) what's wrong with the data, null otherwise}
+ */ 
+function validate(rowData,columns){
+  //TODO: Implement
+  if(false){
+    return {
+      isValid:true,
+      message:null
+    };
+  } else {
+    return {
+      isValid:false,
+      message:"Data is WHACK my dude."
+    };
+  }
+}
+
+
 export default function Assigner() {
+  const [{ data, columns, isRefreshing}, setDataState] = useRecoilState(ccdState);
+
   const [csvData, setCsvData] = useState([]);
   const [csvExternshipData, setCsvExternshipData] = useState([]);
   const [csvStudentData, setCsvStudentData] = useState([]);
   const [csvStats, setCsvStats] = useState([]);
 
-  function handleData(fileData) {
-    console.log(fileData);
-    if (fileData && fileData.data){
-      // Handle the data uploaded by the user
-      let data = getStudentsAndExternships(fileData);
-      let students = data.students;
-      let externships = data.externships;
+  /**
+   * This function is called when the "match"/"assign" button is pressed.
+   * 
+   * It should do the following:
+   * - Double check the data is indeed validated
+   * - Process the data (call handleData)
+   * - Create new sheets on the Google sheet
+   * - Route the user to the sheet after it is done
+   * 
+   * @params N/A
+   * @return N/A
+   */
+  function onAssignmentRequest(){
+    //TODO: Implement
+    //Use data/columns from useRecoilState call
+    return null;
+  }
 
-      //Sort externships based on priority
-      externships.sort((a, b) => a.getPriority() - b.getPriority());
-
-      //Matched students
-      let assignments = makeAssignments(externships);
-
-      //Finds unmatched students
-      let unmatchedStudents = getUnmatchedStudents(students);
-
-      //Finds unmatched externships
-      let unmatchedExternships = getUnmatchedExternships(externships);
-      
-      //Gets all of the desired statistics
-      let stats = getStats(students, externships);
-      
-
-      // Statistic Calls
-      // console.log("Matched Student Count:", getMatchedStudents(students).length);
-      // console.log("Unmatched Student Count:", unmatchedStudents.length);
-      // console.log("Average Matched Rank:", getAverageMatchedRank(students));
-
-      setCsvData(
-        exportCSV(assignments)
-      );
-      setCsvExternshipData(
-        exportExternshipsCSV(unmatchedExternships)
-      );
-      setCsvStudentData(
-        exportUnmatchedStudentsCSV(unmatchedStudents)
-      );
-      setCsvStats(
-        exportStatsCSV(stats)
-      );
+  /**
+   * This essentially return the appropriate component based on the status
+   * of the data
+   * 
+   * @params N/A
+   * @return a component that should be displayed on the page
+   */
+  function getStatusComponent(){
+    if(isRefreshing){ //DATA IS REFESHING
+      //TODO: Return some activity activity indicator/description
+      return(getLoadingComponent())
+    } else if (data.length == 0){ //DATA DOESN'T EXIST
+      return(getUploaderComponent())
+    } else { //YO THE DATA EXISTS
+      let validationResult = validate(data,columns);
+      if(validationResult.isValid){
+        return(getGoodComponent());
+      } else {
+        return(getBadComponent(validationResult.message));
+      }
     }
   }
 
+   /**
+   * This will be rendered when the data is loading (refreshing = true)
+   * @return a react component
+   */
+  function getLoadingComponent(){
+    //TODO: Return some activity activity indicator/description
+    return(<p>Loading</p>)
+  }
+
+  /**
+   * This will be rendered when there is no data
+   * @return a react component
+   */
+  function getUploaderComponent(){
+      //Return a data uploader
+      //TODO: make it prettier and probs add more info
+      return (<div>
+        <SheetsLoader onUpload={setDataState}/>
+      </div>);
+  }
+
+  /**
+   * This should return a good to go card
+   * @return a react component
+   */
+  function getGoodComponent(){
+    //TODO: Make it be like "yo data is legit", green check more, and add assignmentRequst button. 
+    //TODO: Also maybe preview data? like name of file or something
+    return(<div>
+      <p> ur data is good</p>            
+      <p> you uploaded spreadsheet x</p>
+      <button onClick={onAssignmentRequest}> bOIIIIII GET THAT DATA MATCHED </button>
+    </div>);
+  }
+
+  /** 
+   * This should return an appropriate "invalid" card
+   * 
+   * @param invalidReason, (string) the reason why its not valid
+   * @return a React component
+   */
+  function getBadComponent(invalidReason){
+      //TODO: phat red x, and state why its wrong
+      //TODO: probably add link to sheet
+      //TODO: maybe add refresh button if its necessary
+      return <div>It's not valid, idiot: {invalidReason}</div>
+  }
+
+  //The final compnent
   return (
-    <div>
-      <div className="Main">
-        <div className="Body">
-          <SheetsLoader
-            onUpload={handleData}
-            allowManualSort={true}
-            allowCSV={true}
-          />
-          {/* CSV Downloader */}
-          <CSVLink data={csvData} filename={"ListOfMatches.csv"} >Download CSV</CSVLink>
-          <CSVLink data={csvExternshipData} filename={"ListOfUnmatchedExternships.csv"} >Download externship CSV</CSVLink>
-          <CSVLink data={csvStudentData} filename={"ListOfUnmatchedStudents.csv"} >Download students CSV</CSVLink>
-          <CSVLink data={csvStats} filename={"Stats.csv"} >Download stats CSV</CSVLink>
+    <div className="Main">
+      <div className="Body">
+        <div> {/* Add instructions here */}
+          Instructions!
         </div>
+        {getStatusComponent()}   
       </div>
     </div>
   );

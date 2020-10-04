@@ -72,6 +72,20 @@ export const rightDataState = atom({
     }
 });
 
+// Tells us about the right data set (data, columns, and selectedRows)
+export const ccdState = atom({
+    key: 'ccdState',
+    default: {
+        data: [],
+        columns: [],
+        spreadsheetId: null,
+        refreshing: false,
+    },
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
+});
+
 
 // Tells us about the rules currently in use
 export const rulesState = atom({

@@ -58,7 +58,7 @@ function linkStudentToExternship(studentObject,externshipObject) {
    studentObject.applications.push(externshipObject);
 }
 
-export function getStudentsAndExternships(fileData) {
+export function getStudentsAndExternships(data) {
     /*  Inputs: fileData - a JS object containing CSV data
         Outputs: {
             students: a list of all unique student objects found in fileData
@@ -71,9 +71,9 @@ export function getStudentsAndExternships(fileData) {
     var externshipMap = {}; //externshipName -> externshipObject
 
     //Grow through each row of csv file
-    for (var i = 0; i < fileData.data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
         //Read csv row
-        var row = fileData.data[i];
+        var row = data[i];
 
         //Handle student
         var studentKey = row[columnNames.email];
