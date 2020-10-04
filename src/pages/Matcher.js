@@ -208,8 +208,7 @@ export default function Matcher() {
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
-          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
-          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a column named __Match__ and a name column as defined in settings."} </p>
+          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that each Google sheet has a column named \"__MATCH__\" and a name column as defined in settings.": ""} </p>
         </div>
       <div>
         <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
@@ -221,8 +220,6 @@ export default function Matcher() {
             <b> </b>
             <Button href={'/covidsitters/settings'}> Settings</Button>
             <b> </b>
-            {!leftMatchColumn && <Button onClick={e => createColumn(MATCH_COLUMN_NAME, true)}> Create Match Column Left</Button>}
-            {!rightMatchColumn && <Button onClick={e => createColumn(MATCH_COLUMN_NAME, false)}> Create Match Column Right</Button>}
           </span>
         </div>
         <div className="Body">

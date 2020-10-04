@@ -48,9 +48,9 @@ export default function SheetsLoader(props) {
 
             const indexMatch = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
             if (indexMatch === -1) {
-                alert("No match column")
+                // alert("No match column")
                 //createColumn(MATCH_COLUMN_NAME, newDataState.columns.length)
-                //newDataState.matchColumn = null;
+                newDataState.matchColumn = null;
             } else {
                 newDataState.matchColumn = newDataState.columns[indexMatch];
       
