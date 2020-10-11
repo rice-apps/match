@@ -1,10 +1,11 @@
 import { removeFileItem } from "antd/lib/upload/utils";
 import { zipcodesToDistance } from "./zipcode/zipcodeLogic";
 
+const MAX_ZIPCODE_DISTANCE = 30.0; // in miles
+
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-
 export function applyRules(
   rules,
   data,
@@ -289,8 +290,10 @@ function applyFilters(rules, data, leftRow) {
         return countOverlaps(leftList, aList) > 0;
       });
     } else if (rule.operator === "distance") {
-      //TODO:
-      //sort by distance
+      //filter by distance
+      data = data.filter((a) => {
+        return zipcodesToDistance(left, a[rule.by]) <= MAX_ZIPCODE_DISTANCE;
+      });
     }
   }
 
