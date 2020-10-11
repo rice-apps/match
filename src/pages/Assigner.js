@@ -6,9 +6,9 @@ import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStat
 import { CSVLink } from 'react-csv';
 import SheetsLoader from '../components/loader/SheetsLoader';
 import CSVFileLoader from '../components/loader/CSVFileLoader';
-
-import { useRecoilState } from 'recoil';
-import { ccdState } from '../store/atoms';
+import { pushRows } from '../util/ccd/sheetsWriter'
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { ccdState, applicationState } from '../store/atoms';
 
 /**
  * This actually creates the assignments, creates a list of unmatched/matched students, and calcualtes the stats.
@@ -65,6 +65,7 @@ function validate(rowData,columns){
 
 export default function Assigner() {
   const [{ data, columns, isRefreshing}, setDataState] = useRecoilState(ccdState);
+  const { user } = useRecoilValue(applicationState);
 
   const [csvData, setCsvData] = useState([]);
   const [csvExternshipData, setCsvExternshipData] = useState([]);
@@ -167,8 +168,9 @@ export default function Assigner() {
       <div className="Body">
         <div> {/* Add instructions here */}
           Instructions!
+          {user ? <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','Sheet3',[['hello testing']])}> joe mama</button> : <p> no user lsoer</p> } 
+          getStatusComponent()
         </div>
-        {getStatusComponent()}   
       </div>
     </div>
   );

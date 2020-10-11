@@ -1,4 +1,4 @@
-import { } from "../../util/gapi.js"
+import { modifySpreadsheetData, modifySpreadsheetDataSingleCell} from "../../util/gapi.js"
 
 export function exportCSV(assignments) {
     //Exports list of Externship objects with matched students and list of unmatched students into a CSV file
@@ -98,6 +98,13 @@ export function exportStatsCSV(stats) {
     return rows;
 }
 
-function pushRows(sheetID, tabName, rows){
-    
+export function pushRows(spreadsheetId, tabName, values){
+    let range = `'${tabName}'!A1:Z1000`
+    modifySpreadsheetDataSingleCell(spreadsheetId, 5, 7, "hello world!", ()=>console.log("joe mama!"))
+    //modifySpreadsheetData(spreadsheetId, range, values, ()=>console.log("hello") )
+    // ar query = {
+    //     auth: authClient,
+    //     spreadsheetId: 'sheetID', 
+    //     range: "'sheetID'!rows",
+    // };
 }
