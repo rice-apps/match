@@ -63,23 +63,25 @@ export default function ControlPanel() {
     if (value === "distance") {
       const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const newRules = replaceItemAtIndex(rules, i, {
-        ...rules[i],
-        operator: "distance",
-        with: {
-          type: "column",
-          value: leftColumns[idxLeft].key,
-        },
-        by: rightColumns[idxRight].key,
-      });
-      setRules(newRules);
-    } else {
-      const newRules = replaceItemAtIndex(rules, i, {
-        ...rules[i],
-        operator: value,
-      });
-      setRules(newRules);
-    }    
+      if (idxLeft !== -1 && idxRight !== -1) {
+        const newRules = replaceItemAtIndex(rules, i, {
+          ...rules[i],
+          operator: "distance",
+          with: {
+            type: "column",
+            value: leftColumns[idxLeft].key,
+          },
+          by: rightColumns[idxRight].key,
+        });
+        setRules(newRules);
+        return;
+      }
+    }
+    const newRules = replaceItemAtIndex(rules, i, {
+      ...rules[i],
+      operator: value,
+    });
+    setRules(newRules); 
   };
 
   const handleCheck = (event, i) => {
