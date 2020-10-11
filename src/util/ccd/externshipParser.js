@@ -98,3 +98,7 @@ export function getStudentsAndExternships(data) {
     //Return lists in object
     return {students:studentList,externships:externshipList};
 }
+
+export function getColumnNames(){
+    return columnNames;
+}

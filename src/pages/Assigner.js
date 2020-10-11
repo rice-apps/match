@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Loader from '../components/loader/CSVFileLoader';
 import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships, getStats } from '../util/ccd/assignerLogic'
-import { getStudentsAndExternships } from '../util/ccd/externshipParser'
+import { getStudentsAndExternships, getColumnNames } from '../util/ccd/externshipParser'
 import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStatsCSV } from '../util/ccd/csvWriter'
 import { CSVLink } from 'react-csv';
 import SheetsLoader from '../components/loader/SheetsLoader';
@@ -42,29 +42,49 @@ function processData(rowData) {
  * -Ensure there's nothing else whack about it
  * (You may not need both parameters, so feel free to change inputs)
  * 
- * @param rowData An array of row objects
  * @param columns An array of column headers
  * @return {isValid: (boolean) whether or not the data is good to go, m
  *          essage: (string) what's wrong with the data, null otherwise}
  */ 
-function validate(rowData,columns){
+function validate(columns){
   //TODO: Implement
-  if(false){
+  var missingColumns = [];
+
+  for (const col in getColumnNames()){
+    
+    if(!(col in columns)){
+      missingColumns.push(col);
+    }
+  }
+
+  console.log(missingColumns)
+
+  if (missingColumns.length === 0){
     return {
-      isValid:true,
-      message:null
-    };
+    isValid:true,
+    message:null
+    }
   } else {
+    // not sure why building it one by one isnt working  
+
+    // var colsMissing = "";
+    // colsMissing.concat("hello");
+    // console.log(colsMissing)
+    // for (var i = 1; i < missingColumns.length; i++){
+    //   colsMissing.concat(", " + missingColumns[i]);
+    // }
+    
     return {
       isValid:false,
-      message:"Data is WHACK my dude."
-    };
+      message:"Spreadsheet is missing: " + String(missingColumns)
+    }; 
   }
+  
 }
 
 
 export default function Assigner() {
-  const [{ data, columns, isRefreshing}, setDataState] = useRecoilState(ccdState);
+  const [{ data, columns, isRefreshing, spreadsheetId}, setDataState] = useRecoilState(ccdState);
 
   const [csvData, setCsvData] = useState([]);
   const [csvExternshipData, setCsvExternshipData] = useState([]);
@@ -87,7 +107,29 @@ export default function Assigner() {
     //TODO: Implement
     //Use data/columns from useRecoilState call
     //processData(data) //?maybe? stuff like this
-    return null;
+
+    const validationObj = validate(columns)
+    
+    // if data is not valid, return message
+    if(!validationObj.isValid){
+      return validationObj.message
+    } else {
+      const processedData = processData(data)
+      setCsvData(
+        exportCSV(processedData.assignments)
+      );
+      setCsvExternshipData(
+        exportExternshipsCSV(processedData.unmatchedExternships)
+      );
+      setCsvStudentData(
+        exportUnmatchedStudentsCSV(processedData.unmatchedStudents)
+      );
+      setCsvStats(
+        exportStatsCSV(processedData.stats)
+      );
+    }
+    // add route to the proper google sheet
+    return;
   }
 
   /**
@@ -104,7 +146,7 @@ export default function Assigner() {
     } else if (data.length == 0){ //DATA DOESN'T EXIST
       return(getUploaderComponent())
     } else { //YO THE DATA EXISTS
-      let validationResult = validate(data,columns);
+      let validationResult = validate(columns);
       if(validationResult.isValid){
         return(getGoodComponent());
       } else {
@@ -158,10 +200,10 @@ export default function Assigner() {
       //TODO: phat red x, and state why its wrong
       //TODO: probably add link to sheet
       //TODO: maybe add refresh button if its necessary
-      return <div> It's not valid, idiot: {invalidReason} </div>
+      return <div> Data is incomplete! <p>{invalidReason}</p> </div>
   }
 
-  //The final compnent
+  //The final component
   return (
     <div className="Main">
       <div className="Body">
