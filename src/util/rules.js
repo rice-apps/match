@@ -7,11 +7,7 @@ const MAX_ZIPCODE_DISTANCE = 30.0; // in miles
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
 export function applyRules(
-  rules,
-  data,
-  leftRow,
-  leftNameColumn,
-  rightMatchColumn
+  rules, data, leftRow, leftEmailColumn, rightMatchColumn
 ) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
@@ -26,7 +22,7 @@ export function applyRules(
 
   //DEFAULT SORTS
   // Sort matched left rows to the top
-  if (rightMatchColumn && leftNameColumn) {
+  if (rightMatchColumn && leftEmailColumn) {
     // Handle nulls
     sorts.push({
       type: "sort",
@@ -35,12 +31,12 @@ export function applyRules(
       operator: "contains",
       with: {
         type: "column",
-        value: leftNameColumn.key,
+        value: leftEmailColumn.key,
       },
     });
   }
   //Sort unmatched people up (to sort matched people to bottom)
-  if (rightMatchColumn && leftNameColumn) {
+  if (rightMatchColumn && leftEmailColumn) {
     // Handle nulls
     sorts.push({
       type: "sort",
