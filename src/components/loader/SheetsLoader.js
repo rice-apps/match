@@ -3,12 +3,10 @@ import { formatData } from '../../util/dataFormatter';
 import { Input, Button} from 'antd';
 import './Loader.css';
 
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../../util/gapi';
+import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../../util/gapi';
 
 import { useRecoilValue } from 'recoil';
 import { applicationState } from '../../store/atoms';
-
-
 
 const DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4";
 const DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM";
@@ -48,7 +46,6 @@ export default function SheetsLoader(props) {
 
             const indexMatch = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
             if (indexMatch === -1) {
-                // alert("No match column")
                 //createColumn(MATCH_COLUMN_NAME, newDataState.columns.length)
                 newDataState.matchColumn = null;
             } else {
@@ -56,8 +53,6 @@ export default function SheetsLoader(props) {
       
             }
             
-
-
             // For now, assuming name Column is 4th
             // MIGHT HAVE TO CHANGE THIS LATER!
             newDataState.nameColumn = newDataState.columns[3];
@@ -86,16 +81,6 @@ export default function SheetsLoader(props) {
         })
         console.log("res of find index of column", res)
         return res === undefined ? -1 : res
-    }
-    
-    const createColumn = (name, columnIndex) => {
-        console.log("line 90, going to create column")
-        appendSpreadsheetDataBatch(spreadsheetId, () => {
-            console.log(spreadsheetId)
-            console.log("Created column line 92")
-            //getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
-            console.log("line 94 finished refreshing")
-          });
     }
 
     return (
