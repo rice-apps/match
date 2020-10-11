@@ -19,14 +19,14 @@ export default function Matcher() {
   const [
     { matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
-      nameColumn: rightNameColumn,
+      emailColumn: rightEmailColumn,
       refreshing: rightRefreshing,
     }, setRightData] = useRecoilState(rightDataState);
   const [
     { selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
       spreadsheetId: leftSpreadsheetId,
-      nameColumn: leftNameColumn,
+      emailColumn: leftEmailColumn,
       refreshing: leftRefreshing,
     }, setLeftData] = useRecoilState(leftDataState);
 
@@ -34,8 +34,7 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightNameColumn && leftNameColumn && rightMatchColumn && leftMatchColumn;
-
+  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && rightMatchColumn && leftMatchColumn;
 
   function setSidebarOpen(open) {
     setAppState({
@@ -149,13 +148,13 @@ export default function Matcher() {
         value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
         rowIndex: parseInt(selectedLeftRows[0].key) + 2,
         columnIndex: leftMatchColumn.index + 1,
-        name: selectedLeftRows[0][leftNameColumn.key]
+        entryId: selectedLeftRows[0][leftEmailColumn.key]
       },
       right:{
         value: row[rightMatchColumn.key] ? JSON.parse(row[rightMatchColumn.key]) : [],
         rowIndex: parseInt(row.key) + 2,
         columnIndex: rightMatchColumn.index + 1,
-        name: row[rightNameColumn.key]
+        entryId: row[rightEmailColumn.key]
       }
     }
   }
@@ -166,8 +165,8 @@ export default function Matcher() {
     let left = info.left;
     let right = info.right;
     //Match logic
-    left.value.push([right.rowIndex, right.name]);
-    right.value.push([left.rowIndex, left.name]);
+    left.value.push(right.entryId);
+    right.value.push(left.entryId);
     //Write to google sheets
     writeToGoogleSheets(left,right)
   }
