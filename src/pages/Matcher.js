@@ -187,6 +187,8 @@ export default function Matcher() {
     //Write to google sheets
     writeToGoogleSheets(left,right)
   }
+
+  // This function creates a new column, and is not being used yet
   const createColumn = (name, isLeft) => {
     if (isLeft && leftMatchColumn == null) {
 
@@ -208,7 +210,7 @@ export default function Matcher() {
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
-          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that each Google sheet has a column named \"__MATCH__\" and a name column as defined in settings.": ""} </p>
+          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that each Google sheet has a column named \"MATCH\" and a name column as defined in settings.": ""} </p>
         </div>
       <div>
         <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>

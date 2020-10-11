@@ -13,7 +13,7 @@ import { applicationState } from '../../store/atoms';
 const DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4";
 const DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM";
 
-const MATCH_COLUMN_NAME = "__MATCH__";
+const MATCH_COLUMN_NAME = "MATCH";
 
 export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.
