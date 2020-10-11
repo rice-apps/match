@@ -152,26 +152,6 @@ export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunc
     });
 }
 
-// /**
-//  * Writes Google spreadsheet
-//  * @param {string} spreadsheetId The spreadsheet
-//  * @param {string} range The range of the spreadsheet
-//  * @param {list[list[string]]} values The values to write
-//  * @param {function} callbackFunction 
-//  */
-// export function appendSpredsheetData(spreadsheetId, range, values, callbackFunction) {
-//     window.gapi.client.sheets.spreadsheets.values.append({
-//         "spreadsheetId": spreadsheetId,
-//         "range": range,
-//         "valueInputOption": "USER_ENTERED",
-//         "resource": {
-//             "values": values
-//         }
-//     }).then(callbackFunction ? callbackFunction : () => console.log("Success writing to Google Sheet!"), (response) => {
-//         alert('Error: ' + response.result.error.message);
-//     });
-// }
-
 /**
  * Writes Google spreadsheet
  * @param {string} spreadsheetId The spreadsheet
@@ -179,11 +159,8 @@ export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunc
  * @param {list[list[string]]} values The values to write
  * @param {function} callbackFunction 
  */
-export function appendSpreadsheetDataBatch(spreadsheetId, callbackFunction) {
-    console.log(spreadsheetId)
-    console.log(window.gapi.client.sheets)
-    console.log(window.gapi.client.sheets.spreadsheets)
-    console.log(window.gapi.auth)
+export function createColumn(spreadsheetId, callbackFunction) {
+    // NOTE: This function is not tested
     window.gapi.client.sheets.spreadsheets.batchUpdate({
         "spreadsheetId": spreadsheetId,
         "resource": {

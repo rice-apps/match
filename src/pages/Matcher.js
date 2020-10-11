@@ -188,25 +188,6 @@ export default function Matcher() {
     writeToGoogleSheets(left,right)
   }
 
-  // This function creates a new column, and is not being used yet
-  const createColumn = (name, isLeft) => {
-    if (isLeft && leftMatchColumn == null) {
-
-      appendSpreadsheetDataBatch(leftSpreadsheetId, () => {
-        //getSpreadsheetData(leftSpreadsheetId, onSpreadsheetLoaded);
-
-    });
-    }
-    if (!isLeft && rightMatchColumn == null) {
-
-      appendSpreadsheetDataBatch(rightSpreadsheetId, () => {
-            //getSpreadsheetData(rightSpreadsheetId, onSpreadsheetLoaded);
-
-        });
-    }
-    
-  }
-
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
