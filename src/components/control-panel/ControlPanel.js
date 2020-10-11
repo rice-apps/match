@@ -60,50 +60,26 @@ export default function ControlPanel() {
 
   const handleOpChange = (value, i) => {
     // update with by: zip code column, and value: zip code column
-    // console.log("value top of handle op change", value)
     if (value === "distance") {
-      setRules(prevRules => {
-        // console.log("leftcolumns", leftColumns);
-        const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-        const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-        let newRules = [...prevRules];
-        if (idxLeft !== -1) {
-          // newRules[idxLeft] = {
-          //   ...prevRules[idxLeft],
-          //   by: leftColumns[idxLeft],
-          // }
-          newRules = replaceItemAtIndex(prevRules, idxLeft, {
-            ...prevRules[idxLeft],
-            by: leftColumns[idxLeft],
-          });
-          // console.log("going to call handle left", idxLeft, leftColumns[idxLeft].key)
-          // handleLeftChange(leftColumns[idxLeft].key, idxLeft);
-        }
-        if (idxRight !== -1) {
-          // newRules[idxRight] = {
-          //   ...prevRules[idxRight],
-          //   by: rightColumns[idxRight],
-          // }
-          newRules = replaceItemAtIndex(newRules, idxRight, {
-            ...prevRules[idxRight],
-            by: rightColumns[idxRight],
-          });
-        }
-        // console.log("newRules", newRules);
-        return newRules;
+      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const newRules = replaceItemAtIndex(rules, i, {
+        ...rules[i],
+        operator: "distance",
+        with: {
+          type: "column",
+          value: leftColumns[idxLeft].key,
+        },
+        by: rightColumns[idxRight].key,
       });
-      
-        // console.log("going to call handle right", idxRight, rightColumns[idxRight].key)
-        // handleRightChange(rightColumns[idxRight].key, idxRight);
-    }       
-    // } else {
-      setRules(prevRules => replaceItemAtIndex(prevRules, i, {
-      ...prevRules[i],
-      operator: value,
-    }));
-    // }
-
-    
+      setRules(newRules);
+    } else {
+      const newRules = replaceItemAtIndex(rules, i, {
+        ...rules[i],
+        operator: value,
+      });
+      setRules(newRules);
+    }    
   };
 
   const handleCheck = (event, i) => {
