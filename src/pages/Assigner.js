@@ -158,7 +158,7 @@ export default function Assigner() {
       //TODO: phat red x, and state why its wrong
       //TODO: probably add link to sheet
       //TODO: maybe add refresh button if its necessary
-      return <div>It's not valid, idiot: {invalidReason}</div>
+      return <div> It's not valid, idiot: {invalidReason} </div>
   }
 
   //The final compnent
