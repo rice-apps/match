@@ -3,6 +3,7 @@ import Loader from '../components/loader/CSVFileLoader';
 import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships, getStats } from '../util/ccd/assignerLogic'
 import { getStudentsAndExternships, getColumnNames } from '../util/ccd/externshipParser'
 import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStatsCSV } from '../util/ccd/csvWriter'
+import { pushRows } from '../util/ccd/sheetsWriter'
 import { CSVLink } from 'react-csv';
 import SheetsLoader from '../components/loader/SheetsLoader';
 import CSVFileLoader from '../components/loader/CSVFileLoader';
@@ -209,7 +210,7 @@ export default function Assigner() {
       <div className="Body">
         <div> {/* Add instructions here */}
           Instructions!
-          {user ? <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','RyanRules',[['hello testing']])}> joe mama</button> : <p> no user lsoer</p> } 
+          <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','RyanRules',[['hello testing']])}> joe mama</button>
           {getStatusComponent()}
         </div>
         {getStatusComponent()}   
