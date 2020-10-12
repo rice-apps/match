@@ -151,3 +151,19 @@ export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunc
         alert('Error: ' + response.result.error.message);
     });
 }
+
+export function addSpreadsheetTab(spreadsheetId, tabTitle, callbackFunction) {
+    return window.gapi.client.sheets.spreadsheets.batchUpdate({
+        "spreadsheetId": spreadsheetId,
+        "resource": {
+            "requests": [{'addSheet':{
+                    'properties':{
+                        'title': tabTitle
+                    }
+                } }]
+        }
+    })
+//     .then(callbackFunction ? callbackFunction : () => console.log("Success writing to Google Sheet!"), (response) => {
+//         alert('Error: ' + response.result.error.message);
+//     });
+}

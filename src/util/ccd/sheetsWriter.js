@@ -1,4 +1,4 @@
-import { modifySpreadsheetData, modifySpreadsheetDataSingleCell} from "../../util/gapi.js"
+import { modifySpreadsheetData, addSpreadsheetTab} from "../../util/gapi.js"
 
 export function exportCSV(assignments) {
     //Exports list of Externship objects with matched students and list of unmatched students into a CSV file
@@ -99,9 +99,15 @@ export function exportStatsCSV(stats) {
 }
 
 export function pushRows(spreadsheetId, tabName, values){
-    let range = `'${tabName}'!A1:Z1000`
-    modifySpreadsheetDataSingleCell(spreadsheetId, 5, 7, "hello world!", ()=>console.log("joe mama!"))
-    //modifySpreadsheetData(spreadsheetId, range, values, ()=>console.log("hello") )
+    //modifySpreadsheetDataSingleCell(spreadsheetId, 5, 7, "hello world!", ()=>console.log("joe mama!"))
+    console.log("BOOMERALERT")
+    addSpreadsheetTab(spreadsheetId,tabName).then(
+
+
+    )
+    console.log("ZOOMERALRT")
+    let range = `'${tabName}'!1:1000` // 'RyanRules'!1:1000
+    modifySpreadsheetData(spreadsheetId, range, values, () => console.log("hello") )
     // ar query = {
     //     auth: authClient,
     //     spreadsheetId: 'sheetID', 

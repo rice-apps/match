@@ -168,7 +168,7 @@ export default function Assigner() {
       <div className="Body">
         <div> {/* Add instructions here */}
           Instructions!
-          {/* {user ? <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','Sheet3',[['hello testing']])}> joe mama</button> : <p> no user lsoer</p> }  */}
+          {user ? <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','RyanRules',[['hello testing']])}> joe mama</button> : <p> no user lsoer</p> } 
           {getStatusComponent()}
         </div>
       </div>
