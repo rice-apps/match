@@ -42,7 +42,7 @@ function processData(rowData) {
 }
 
 function writeData(id,outputData){
-  const time = new Date().getTime() - 160000000000
+  const time = new Date().toString()
   writeToTab(id,"Results "+time,outputData.assignments)
   writeToTab(id,"Unmatched Students "+time,outputData.unmatchedStudents)
   writeToTab(id,"Unmatched Externships "+time,outputData.unmatchedExternships)
