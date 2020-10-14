@@ -100,5 +100,5 @@ export function getStudentsAndExternships(data) {
 }
 
 export function getColumnNames(){
-    return columnNames;
+    return Object.values(columnNames);
 }

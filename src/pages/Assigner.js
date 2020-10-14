@@ -11,6 +11,10 @@ import CSVFileLoader from '../components/loader/CSVFileLoader';
 import { useRecoilState } from 'recoil';
 import { ccdState } from '../store/atoms';
 
+import { Card, Button } from 'antd';
+
+const cardStyle = {margin:15}
+
 /**
  * This actually creates the assignments, creates a list of unmatched/matched students, and calcualtes the stats.
  * In essence, this is the logic handling.
@@ -50,15 +54,22 @@ function processData(rowData) {
 function validate(columns){
   //TODO: Implement
   var missingColumns = [];
-
-  for (const col in getColumnNames()){
-    
-    if(!(col in columns)){
-      missingColumns.push(col);
+  const neededCols = getColumnNames()
+  for(const i in neededCols){
+    var has = false;
+    for(const j in columns){
+      var col = columns[j]
+      if(col.key == neededCols[i]) {
+        has = true
+      }
+    }
+    if(!has){
+      var strNeed = neededCols[i];
+      strNeed = strNeed.replace(/_/g, ' ');
+      strNeed = strNeed.toUpperCase(strNeed);
+      missingColumns.push(strNeed);
     }
   }
-
-  console.log(missingColumns)
 
   if (missingColumns.length === 0){
     return {
@@ -68,16 +79,15 @@ function validate(columns){
   } else {
     // not sure why building it one by one isnt working  
 
-    // var colsMissing = "";
-    // colsMissing.concat("hello");
-    // console.log(colsMissing)
-    // for (var i = 1; i < missingColumns.length; i++){
-    //   colsMissing.concat(", " + missingColumns[i]);
-    // }
+    var colsMissing = "";
+    for (var i = 0; i < missingColumns.length; i++){
+      colsMissing += missingColumns[i];
+      if (i < missingColumns.length-1) colsMissing+=", "
+    }
     
     return {
       isValid:false,
-      message:"Spreadsheet is missing: " + String(missingColumns)
+      message:<p>The sheet is missing columns: <b>{colsMissing}</b></p>
     }; 
   }
   
@@ -113,23 +123,12 @@ export default function Assigner() {
     
     // if data is not valid, return message
     if(!validationObj.isValid){
-      return validationObj.message
+      alert("Oops! Something went wrong :( \n" + validationObj.message)
     } else {
-      const processedData = processData(data)
-      setCsvData(
-        exportCSV(processedData.assignments)
-      );
-      setCsvExternshipData(
-        exportExternshipsCSV(processedData.unmatchedExternships)
-      );
-      setCsvStudentData(
-        exportUnmatchedStudentsCSV(processedData.unmatchedStudents)
-      );
-      setCsvStats(
-        exportStatsCSV(processedData.stats)
-      );
+      //Make the match
+      alert("Matched!\nThe output files have been added to your sheet :)")
+      //route to google sheet
     }
-    // add route to the proper google sheet
     return;
   }
 
@@ -162,7 +161,7 @@ export default function Assigner() {
    */
   function getLoadingComponent(){
     //TODO: Return some activity activity indicator/description
-    return(<p>Loading</p>)
+    return(<p>Loading...</p>)
   }
 
   /**
@@ -173,7 +172,10 @@ export default function Assigner() {
       //Return a data uploader
       //TODO: make it prettier and probs add more info
       return (<div>
-        <SheetsLoader onUpload={setDataState}/>
+        <Card title = "Upload Data" style={cardStyle}>
+          <p> To upload data, copy and paste the URL of the externship/student data into the box below. Ensure you are logged into the appropriate Google account.</p>
+          <SheetsLoader onUpload={setDataState}/>
+        </Card>
       </div>);
   }
 
@@ -184,11 +186,11 @@ export default function Assigner() {
   function getGoodComponent(){
     //TODO: Make it be like "yo data is legit", green check more, and add assignmentRequst button. 
     //TODO: Also maybe preview data? like name of file or something
-    return(<div>
-      <p> ur data is good</p>            
-      <p> you uploaded spreadsheet x</p>
-      <button onClick={onAssignmentRequest}> bOIIIIII GET THAT DATA MATCHED </button>
-    </div>);
+    return(<Card title = "Ready to Match!" style = {cardStyle}>
+      <p> Your data has been validated, and we are ready to make matches.</p>            
+      <p> When you press the button below, the four output files will be added to the spreadsheet in four seperate tabs.</p>
+      <Button type = "primary" shape="round" onClick={onAssignmentRequest}> Match </Button>
+    </Card>);
   }
 
   /** 
@@ -201,20 +203,23 @@ export default function Assigner() {
       //TODO: phat red x, and state why its wrong
       //TODO: probably add link to sheet
       //TODO: maybe add refresh button if its necessary
-      return <div> Data is incomplete! <p>{invalidReason}</p> </div>
+      return <Card title = "Data Invalid!" style = {cardStyle}>
+        <p> Unfortunately your Google sheet data cannot be processed because something is wrong with your data. {invalidReason} </p>
+        <p> Please modify the sheet accordingly and reupload it.</p>
+        <SheetsLoader onUpload={setDataState}/>
+      </Card>
   }
 
   //The final component
   return (
     <div className="Main">
-      <div className="Body">
-        <div> {/* Add instructions here */}
-          Instructions!
-          <button onClick={pushRows('1OJnfxhHzps7MZIhfcSXxQo9z13lvKe4yQ7pClTX_HPY','RyanRules',[['hello testing']])}> joe mama</button>
-          {getStatusComponent()}
-        </div>
+        <Card title = "Instructions" style={cardStyle}> {/* Add instructions here */}
+          <p>1. Upload data</p>
+          <p>2. Blah</p>
+          <p>3. Click match</p>
+          <p>Output files will be generated in 4 seperate tabs in linked Google Sheet</p>
+        </Card>
         {getStatusComponent()}   
-      </div>
     </div>
   );
 }
