@@ -163,7 +163,7 @@ export function addSpreadsheetTab(spreadsheetId, tabTitle, callbackFunction) {
                 } }]
         }
     })
-//     .then(callbackFunction ? callbackFunction : () => console.log("Success writing to Google Sheet!"), (response) => {
-//         alert('Error: ' + response.result.error.message);
-//     });
+    .then(callbackFunction ? callbackFunction : () => console.log("Success writing to Google Sheet!"), (response) => {
+        alert('Error: ' + response.result.error.message);
+    });
 }

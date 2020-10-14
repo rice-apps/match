@@ -3,7 +3,7 @@ import Loader from '../components/loader/CSVFileLoader';
 import { makeAssignments, getUnmatchedStudents, getUnmatchedExternships, getStats } from '../util/ccd/assignerLogic'
 import { getStudentsAndExternships, getColumnNames } from '../util/ccd/externshipParser'
 import { exportCSV, exportExternshipsCSV, exportUnmatchedStudentsCSV, exportStatsCSV } from '../util/ccd/csvWriter'
-import { pushRows } from '../util/ccd/sheetsWriter'
+import { writeToTab } from '../util/ccd/sheetsWriter'
 import { CSVLink } from 'react-csv';
 import SheetsLoader from '../components/loader/SheetsLoader';
 import CSVFileLoader from '../components/loader/CSVFileLoader';
@@ -32,13 +32,21 @@ function processData(rowData) {
     externships.sort((a, b) => a.getPriority() - b.getPriority());
     //Create output data
     let outputData = {
-      assignments:makeAssignments(externships),
-      unmatchedStudents:getUnmatchedStudents(students),
-      unmatchedExternships:getUnmatchedExternships(externships),
-      stats:getStats(students, externships)
+      assignments:exportCSV(makeAssignments(externships)),
+      unmatchedStudents:exportUnmatchedStudentsCSV(getUnmatchedStudents(students)),
+      unmatchedExternships:exportExternshipsCSV(getUnmatchedExternships(externships)),
+      stats:exportStatsCSV(getStats(students, externships))
     }
     return outputData;
   }
+}
+
+function writeData(id,outputData){
+  const time = new Date().getTime() - 160000000000
+  writeToTab(id,"Results "+time,outputData.assignments)
+  writeToTab(id,"Unmatched Students "+time,outputData.unmatchedStudents)
+  writeToTab(id,"Unmatched Externships "+time,outputData.unmatchedExternships)
+  writeToTab(id,"Statistics "+time,outputData.stats)
 }
 
 /**
@@ -126,6 +134,8 @@ export default function Assigner() {
       alert("Oops! Something went wrong :( \n" + validationObj.message)
     } else {
       //Make the match
+      const outputData = processData(data)
+      writeData(spreadsheetId, outputData)
       alert("Matched!\nThe output files have been added to your sheet :)")
       //route to google sheet
     }
