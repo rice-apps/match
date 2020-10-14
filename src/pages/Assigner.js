@@ -223,12 +223,6 @@ export default function Assigner() {
   //The final component
   return (
     <div className="Main">
-        <Card title = "Instructions" style={cardStyle}> {/* Add instructions here */}
-          <p>1. Upload data</p>
-          <p>2. Blah</p>
-          <p>3. Click match</p>
-          <p>Output files will be generated in 4 seperate tabs in linked Google Sheet</p>
-        </Card>
         {getStatusComponent()}   
     </div>
   );
