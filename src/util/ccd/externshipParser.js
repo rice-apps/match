@@ -10,7 +10,7 @@ var columnNames = {
     email: "applicant_email",
     first: "applicant_first",
     last: "applicant_last",
-    //externshipName: "externships", handled in code
+    externshipName: "externship",
     jobId: "job_id",
     postingId: "posting_id",
     ranking: "ranking",
