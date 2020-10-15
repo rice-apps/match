@@ -104,12 +104,6 @@ function validate(columns){
 
 export default function Assigner() {
   const [{ data, columns, isRefreshing, spreadsheetId}, setDataState] = useRecoilState(ccdState);
-
-  const [csvData, setCsvData] = useState([]);
-  const [csvExternshipData, setCsvExternshipData] = useState([]);
-  const [csvStudentData, setCsvStudentData] = useState([]);
-  const [csvStats, setCsvStats] = useState([]);
-
   /**
    * This function is called when the "match"/"assign" button is pressed.
    * 
