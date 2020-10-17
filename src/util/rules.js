@@ -6,8 +6,8 @@ const MAX_ZIPCODE_DISTANCE = 30.0; // in miles
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-export function applyRules(
-  rules, data, leftRow, leftEmailColumn, rightMatchColumn) {
+
+export function applyRules(rules, data, leftRow, leftEmailColumn, rightMatchColumn) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
 

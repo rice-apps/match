@@ -57,7 +57,17 @@ export default function SheetsLoader(props) {
     }
 
     function onSpreadsheetIdChange(e) {
-        setSpreadsheetId(e.target.value);
+        e.persist() // probably not necessary
+        const input = e.target.value;
+        if (input.includes("/")) {
+            const arr = input.split("/")
+            const index = arr.indexOf("spreadsheets")
+            if (0 < index && index <= arr.length - 3 && arr[index+1] === "d") {
+                setSpreadsheetId(arr[index+2]);
+            }
+        } else {
+            setSpreadsheetId(e.target.value);
+        }
     }
 
     return (
@@ -66,7 +76,7 @@ export default function SheetsLoader(props) {
             {user ?
                 <div>
                     <Input
-                        placeholder="Copy & paste the ID of the Google sheet"
+                        placeholder="Copy & paste the ID or URL of the Google sheet"
                         onChange={onSpreadsheetIdChange}
                         defaultValue={defaultSpreadsheetId}
                         style={{ width: "400px" }} /> &nbsp;
