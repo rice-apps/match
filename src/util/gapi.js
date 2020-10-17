@@ -151,3 +151,61 @@ export function modifySpreadsheetData(spreadsheetId, range, values, callbackFunc
         alert('Error: ' + response.result.error.message);
     });
 }
+
+/**
+ * Writes Google spreadsheet
+ * @param {string} spreadsheetId The spreadsheet
+ * @param {string} range The range of the spreadsheet
+ * @param {list[list[string]]} values The values to write
+ * @param {function} callbackFunction 
+ */
+export function createColumn(spreadsheetId, callbackFunction) {
+    // NOTE: This function is not tested
+    window.gapi.client.sheets.spreadsheets.batchUpdate({
+        "spreadsheetId": spreadsheetId,
+        "resource": {
+            "requests": [
+            {
+                "appendDimension": {
+                  "sheetId" : (spreadsheetId === "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4") ? 442302205 : 1290302008,
+                  "dimension": "COLUMNS",
+                  "length": 1
+                }
+            }],
+            "auth": window.gapi.auth2.getAuthInstance()
+        }
+    }).then(callbackFunction ? callbackFunction : () => console.log("Success adding a column!"), (response) => {
+        alert('Error: ' + response.result.error.message);
+    });
+}
+/*
+var requests = [];
+// Change the spreadsheet's title.
+requests.push({
+  updateSpreadsheetProperties: {
+    properties: {
+      title: title
+    },
+    fields: 'title'
+  }
+});
+// Find and replace text.
+requests.push({
+  findReplace: {
+    find: find,
+    replacement: replacement,
+    allSheets: true
+  }
+});
+// Add additional requests (operations) ...
+
+var batchUpdateRequest = {requests: requests}
+
+gapi.client.sheets.spreadsheets.batchUpdate({
+  spreadsheetId: spreadsheetId,
+  resource: batchUpdateRequest
+}).then((response) => {
+  var findReplaceResponse = response.result.replies[1].findReplace;
+  console.log(`${findReplaceResponse.occurrencesChanged} replacements made.`);
+});
+*/
