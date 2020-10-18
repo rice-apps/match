@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { leftDataState, rightDataState } from '../store/atoms';
 import { Card, Row, Col,Button } from "antd";
-
+import { useLocation } from 'react-router-dom';
 
 // SAMPLE PODS DATA STRUCTURE:
 // let pods = [{
@@ -27,6 +27,7 @@ import { Card, Row, Col,Button } from "antd";
 
 export default function Pods() {
 
+    const route = useLocation().pathname.split("/")[1];
     const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn } = useRecoilValue(leftDataState);
     const { data: rightData, nameColumn: rightNameColumn, emailColumn: rightEmailColumn } = useRecoilValue(rightDataState);
 
@@ -105,9 +106,9 @@ export default function Pods() {
             <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
                 <span>
                 <b> </b>
-                <Button type={'primary'} href={'/covidsitters'}> Back to Matching </Button>
+                <Button type={'primary'} href={'/' + route}> Back to Matching </Button>
                 <b> </b>
-                <Button href={'/covidsitters/settings'}>Settings</Button>
+                <Button href={'/' + route+'/settings'}>Settings</Button>
                 </span>
             </div>
             <div className="Main">
