@@ -43,11 +43,12 @@ function processData(rowData) {
 }
 
 function writeData(id,outputData){
-  const time = new Date().toString()
-  writeToTab(id,"Results "+time,outputData.assignments)
-  writeToTab(id,"Unmatched Students "+time,outputData.unmatchedStudents)
-  writeToTab(id,"Unmatched Externships "+time,outputData.unmatchedExternships)
-  writeToTab(id,"Statistics "+time,outputData.stats)
+  const t = new Date()
+  const timestamp = `(${t.getMonth()}/${t.getDate()} ${t.getHours()}:${t.getMinutes()})`
+  writeToTab(id,"Results "+timestamp,outputData.assignments)
+  writeToTab(id,"Unmatched Students "+timestamp,outputData.unmatchedStudents)
+  writeToTab(id,"Unmatched Externships "+timestamp,outputData.unmatchedExternships)
+  writeToTab(id,"Statistics "+timestamp,outputData.stats)
 }
 
 /**
