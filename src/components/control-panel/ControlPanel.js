@@ -81,7 +81,11 @@ export default function ControlPanel() {
       ...rules[i],
       operator: value,
     });
+<<<<<<< HEAD
     setRules(newRules); 
+=======
+    setRules(newRules);
+>>>>>>> default-sorts
   };
 
   const handleCheck = (event, i) => {
@@ -143,6 +147,7 @@ export default function ControlPanel() {
     });
   };
 
+<<<<<<< HEAD
   return (
     <div className="ControlPanel">
       <h2>Sort</h2>
@@ -219,10 +224,81 @@ export default function ControlPanel() {
                         onChange={(value) => handleLeftChange(value, i)}
                       >
                         {leftColumns.map((col, i) => (
+=======
+  const createSortDefaultSetting = (by, value, operator) => {
+    return {
+      type: "sort",
+      enabled: true,
+      by: by,
+      operator: operator,
+      with: {
+        type: "constant",
+        value: value,
+      },
+    };
+  };
+
+  const applySortDefaultSettings = () => {
+    
+    let time = rightColumns[10].key;
+    let weeklyHours = rightColumns[16].key;
+    let special_acc = rightColumns[17].key;
+    let subject = rightColumns[19].key;
+
+    const defaultSettings = [
+      createSortDefaultSetting(time, "evening", "contains"),
+      createSortDefaultSetting(weeklyHours, "5", "geq"),
+      createSortDefaultSetting(special_acc, "ADHD, Dyslexia", "overlap"),
+      createSortDefaultSetting(subject, "Algebra", "contains")
+    ];
+    setRules((oldRules) => defaultSettings);
+  };
+
+  return (
+    <div className="ControlPanel">
+      <h2>Sort</h2>
+      <Button onClick={applySortDefaultSettings}>
+        Use Default Sorts
+      </Button>
+      {rules.filter((r) => r.type === "sort").length > 0 ? (
+        rules.map(
+          (rule, i) =>
+            rule.type === "sort" && (
+              <div className="Rule" key={i}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: 300,
+                  }}
+                >
+                  <Checkbox
+                    defaultChecked={rule.enabled}
+                    onChange={(event) => handleCheck(event, i)}
+                  >
+                    Enabled
+                  </Checkbox>
+                  <Button danger onClick={() => deleteRule(i)} type="text">
+                    Delete
+                  </Button>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div>
+                    {/* SELECT column for RIGHT side */}
+                    <Tooltip placement="top" title={"Right column"}>
+                      <Select
+                        value={rule.by}
+                        size={"small"}
+                        style={{ width: 200 }}
+                        onChange={(event) => handleRightChange(event, i)}
+                      >
+                        {rightColumns.map((col, i) => (
+>>>>>>> default-sorts
                           <Option key={i} value={col.key}>
                             {col.title}
                           </Option>
                         ))}
+<<<<<<< HEAD
                         <Option value={"constant"}>Constant</Option>
                       </Select>
                     </Tooltip>
@@ -375,6 +451,202 @@ export default function ControlPanel() {
         </>
       )}
 
+=======
+                      </Select>
+                    </Tooltip>
+
+                    {/* SELECT operator */}
+
+                    <Tooltip placement="top" title={"Operator"}>
+                      <Select
+                        value={rule.operator}
+                        size={"small"}
+                        style={{ width: 100 }}
+                        onChange={(value) => handleOpChange(value, i)}
+                      >
+                        {availableOperators.map((operator, i) => {
+                          return (
+                            <Option value={operator.value} key={i}>
+                              {operator.display}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </Tooltip>
+                  </div>
+                  <div>
+                    {/* SELECT column for LEFT side */}
+                    <Tooltip placement="top" title={"Left column or constant"}>
+                      <Select
+                        value={
+                          rule.with.type === "column"
+                            ? rule.with.value
+                            : "constant"
+                        }
+                        size={"small"}
+                        style={{ width: 200 }}
+                        onChange={(value) => handleLeftChange(value, i)}
+                      >
+                        {leftColumns.map((col, i) => (
+                          <Option key={i} value={col.key}>
+                            {col.title}
+                          </Option>
+                        ))}
+                        <Option value={"constant"}>Constant</Option>
+                      </Select>
+                    </Tooltip>
+                    {/* TEXT entry for constant comparator */}
+                    <Tooltip placement="top" title={"Input for constant"}>
+                      <Input
+                        disabled={rule.with.type === "column" ? true : false}
+                        value={
+                          rule.with.type === "column" ? "" : rule.with.value
+                        }
+                        allowClear
+                        style={{ width: 100 }}
+                        size={"small"}
+                        onChange={(event) => handleTextInput(event, i)}
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+            )
+        )
+      ) : (
+        <>
+          <p>
+            <i>No filters added.</i>
+          </p>
+          <p>
+            Filters are useful to hide data that don't meet certain criteria.
+            Click the "+" sign to create one!
+          </p>
+        </>
+      )}
+
+      <Button shape="circle" onClick={newSort}>
+        <b>+</b>
+      </Button>
+
+      <br />
+      <br />
+
+      <h2>Filter</h2>
+      <Checkbox onChange={applySortDefaultSettings}>
+        Enable Default Filters
+      </Checkbox>
+      {rules.filter((r) => r.type === "filter").length > 0 ? (
+        rules.map(
+          (rule, i) =>
+            rule.type === "filter" && (
+              <div className="Rule" key={i}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: 300,
+                  }}
+                >
+                  <Checkbox
+                    defaultChecked={rule.enabled}
+                    onChange={(event) => handleCheck(event, i)}
+                  >
+                    Enabled
+                  </Checkbox>
+                  <Button danger onClick={() => deleteRule(i)} type="text">
+                    Delete
+                  </Button>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <div>
+                    {/* SELECT column for RIGHT side */}
+                    <Tooltip placement="top" title={"Right column"}>
+                      <Select
+                        value={rule.by}
+                        size={"small"}
+                        style={{ width: 200 }}
+                        onChange={(event) => handleRightChange(event, i)}
+                      >
+                        {rightColumns.map((col, i) => (
+                          <Option key={i} value={col.key}>
+                            {col.title}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Tooltip>
+
+                    {/* SELECT operator */}
+
+                    <Tooltip placement="top" title={"Operator"}>
+                      <Select
+                        value={rule.operator}
+                        size={"small"}
+                        style={{ width: 100 }}
+                        onChange={(value) => handleOpChange(value, i)}
+                      >
+                        {availableOperators.map((operator, i) => {
+                          return (
+                            <Option value={operator.value} key={i}>
+                              {operator.display}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </Tooltip>
+                  </div>
+                  <div>
+                    {/* SELECT column for LEFT side */}
+                    <Tooltip placement="top" title={"Left column or constant"}>
+                      <Select
+                        value={
+                          rule.with.type === "column"
+                            ? rule.with.value
+                            : "constant"
+                        }
+                        size={"small"}
+                        style={{ width: 200 }}
+                        onChange={(value) => handleLeftChange(value, i)}
+                      >
+                        {leftColumns.map((col, i) => (
+                          <Option key={i} value={col.key}>
+                            {col.title}
+                          </Option>
+                        ))}
+                        <Option value={"constant"}>Constant</Option>
+                      </Select>
+                    </Tooltip>
+                    {/* TEXT entry for constant comparator */}
+                    <Tooltip placement="top" title={"Input for constant"}>
+                      <Input
+                        disabled={rule.with.type === "column" ? true : false}
+                        value={
+                          rule.with.type === "column" ? "" : rule.with.value
+                        }
+                        allowClear
+                        style={{ width: 100 }}
+                        size={"small"}
+                        onChange={(event) => handleTextInput(event, i)}
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+            )
+        )
+      ) : (
+        <>
+          <p>
+            <i>No sorts added.</i>
+          </p>
+          <p>
+            Sorts are useful rank elements by some criteria. Click the "+" sign
+            to create one!
+          </p>
+        </>
+      )}
+
+>>>>>>> default-sorts
       <Button shape="circle" onClick={newFilter}>
         <b>+</b>
       </Button>
