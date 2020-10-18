@@ -95,7 +95,7 @@ function validate(columns){
     
     return {
       isValid:false,
-      message:<p>The sheet is missing columns: <b>{colsMissing}</b></p>
+      message:<p>The sheet is missing columns: <b style={{color:"red"}}>{colsMissing}</b></p>
     }; 
   }
   
