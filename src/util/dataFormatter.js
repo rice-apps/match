@@ -49,8 +49,10 @@ export function formatData(data, allowManualSort) {
             var rowObject = { key: i.toString() }
             row.map(
                 (columnValue, ii) => {
-                    var columnName = columnObjects[ii].key;
-                    rowObject[columnName] = columnValue;
+                    if(columnObjects[ii]){
+                        var columnName = columnObjects[ii].key;
+                        rowObject[columnName] = columnValue;
+                    }
                     return null;
                 }
             )
