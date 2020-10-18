@@ -44,7 +44,7 @@ function processData(rowData) {
 
 function writeData(id,outputData){
   const t = new Date()
-  const timestamp = `(${t.getMonth()}/${t.getDate()} ${t.getHours()}:${t.getMinutes()})`
+  const timestamp = `(${t.getMonth()+1}/${t.getDate()} ${t.getHours()}:${t.getMinutes()})`
   writeToTab(id,"Results "+timestamp,outputData.assignments)
   writeToTab(id,"Unmatched Students "+timestamp,outputData.unmatchedStudents)
   writeToTab(id,"Unmatched Externships "+timestamp,outputData.unmatchedExternships)
