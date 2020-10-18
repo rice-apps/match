@@ -12,7 +12,7 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 export default function RightDataPanel(props) {
   const [{ data, columns, selectedRows: selectedRightRows,
     matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
-  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn} = useRecoilValue(leftDataState);
+  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn} = useRecoilValue(leftDataState);
 
   const matchingEnabled = props.matchingEnabled;
 
@@ -30,14 +30,14 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftNameColumn, rightMatchColumn);
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, rightMatchColumn);
 
 
   // Takes in the left and right rows and determines if they're matched together
 
   function getRightMatch(rightRow){
     let rightMatches = rightRow[rightMatchColumn.key];
-    // If right matches is null, just return false.
+    // If right matches is null, just return null.
     if (rightMatches) {
       return JSON.parse(rightMatches)[0];
     } else {
@@ -47,11 +47,12 @@ export default function RightDataPanel(props) {
   function isLocallyMatched(rightRow, leftRow) {
     // Read Right Match
     let rightMatch = getRightMatch(rightRow);
-    return (rightMatch && leftRow) && (rightMatch[0] === parseInt(leftRow.key) + 2)
+    let leftEmail = leftRow[leftEmailColumn.key];
+    return (rightMatch && leftRow) && (rightMatch == leftEmail)
   }
   function isGloballyMatched(rightRow){
     let rightMatch = getRightMatch(rightRow);
-    return rightMatch && rightMatch.length > 0;
+    return rightMatch;
   }
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
@@ -116,8 +117,8 @@ export default function RightDataPanel(props) {
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               } else if(isGloballyMatched(row)) {
                 //Disabled "Already Matched"
-                let leftName = getRightMatch(row)[1];
-                let tooltip = name+" is already matched to "+leftName+"!";
+                let leftEmail = getRightMatch(row);
+                let tooltip = name+" is already matched to "+leftEmail+"!";
                 return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
               } else {
                 //Match

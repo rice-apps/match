@@ -69,11 +69,13 @@ export default function Pods() {
         let matches = JSON.parse(leftRow[leftMatchColumn.key]);
 
         // Map out to actual student data (right data rows)
-        let students = matches.map(match => {
-            let rightIndex = match[0];
-            let rightRow = rightData[rightIndex];
+        let students = matches.map(matchID => {
+            // Search for matched person in right
+            // Using email as matchID
+            let leftInRightIndex = rightData.map(row => row[rightEmailColumn.key]).indexOf(matchID);
+            let rightRow = rightData[leftInRightIndex];
             return {
-                key: rightIndex,
+                key: leftInRightIndex,
                 name: rightRow[rightNameColumn.key],
                 email: rightRow[rightEmailColumn.key],
             }
@@ -111,20 +113,20 @@ export default function Pods() {
                 </span>
             </div>
             <div className="Main">
-                {groupedPods.map(groupOfPods => {
+                {groupedPods.map((groupOfPods, i) => {
                     return (
-                    <Row gutter={[16, 16]}>
-                        {groupOfPods.map((pod, i) => {
+                    <Row key={i} gutter={[16, 16]}>
+                        {groupOfPods.map((pod, j) => {
                             let { left: hcw, right: students } = pod;
                             return (
-                                <Col span={6}>
-                                    <Card key={i} title={"Pod #" + pod.key} size="small" >
+                                <Col key={j} span={6}>
+                                    <Card title={"Pod #" + pod.key} size="small" >
                                         <p><b>Healthcare Worker:</b> {hcw.name} {hcw.email}</p>
                                         <p><b>Volunteers:</b></p>
                                         <ul>
                                             {
-                                                students.map((student, i) => {
-                                                    return <li key={i}>{student.name} {student.email}</li>
+                                                students.map((student, k) => {
+                                                    return <li key={k}>{student.name} {student.email}</li>
                                                 })
                                             }
                                         </ul>

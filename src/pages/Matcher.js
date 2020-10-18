@@ -5,7 +5,7 @@ import SplitPane from 'react-split-pane';
 
 import { Button } from 'antd';
 
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData } from '../util/gapi';
+import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
 import { formatData } from '../util/dataFormatter';
 
 import { useRecoilState } from 'recoil';
@@ -13,20 +13,20 @@ import { rightDataState, leftDataState, applicationState } from '../store/atoms'
 
 import LoadingOverlay from 'react-loading-overlay';
 
-
+const MATCH_COLUMN_NAME = "__MATCH__";
 export default function Matcher() {
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
     { matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
-      nameColumn: rightNameColumn,
+      emailColumn: rightEmailColumn,
       refreshing: rightRefreshing,
     }, setRightData] = useRecoilState(rightDataState);
   const [
     { selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
       spreadsheetId: leftSpreadsheetId,
-      nameColumn: leftNameColumn,
+      emailColumn: leftEmailColumn,
       refreshing: leftRefreshing,
     }, setLeftData] = useRecoilState(leftDataState);
 
@@ -34,8 +34,7 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightNameColumn && leftNameColumn && rightMatchColumn && leftMatchColumn;
-
+  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && rightMatchColumn && leftMatchColumn;
 
   function setSidebarOpen(open) {
     setAppState({
@@ -43,6 +42,7 @@ export default function Matcher() {
       sidebarOpen: open
     });
   }
+
 
   // This basically refreshes the data in memory, see where this is used.
   function onLeftSpreadsheetLoaded(response) {
@@ -149,13 +149,13 @@ export default function Matcher() {
         value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
         rowIndex: parseInt(selectedLeftRows[0].key) + 2,
         columnIndex: leftMatchColumn.index + 1,
-        name: selectedLeftRows[0][leftNameColumn.key]
+        entryId: selectedLeftRows[0][leftEmailColumn.key]
       },
       right:{
         value: row[rightMatchColumn.key] ? JSON.parse(row[rightMatchColumn.key]) : [],
         rowIndex: parseInt(row.key) + 2,
         columnIndex: rightMatchColumn.index + 1,
-        name: row[rightNameColumn.key]
+        entryId: row[rightEmailColumn.key]
       }
     }
   }
@@ -166,8 +166,8 @@ export default function Matcher() {
     let left = info.left;
     let right = info.right;
     //Match logic
-    left.value.push([right.rowIndex, right.name]);
-    right.value.push([left.rowIndex, left.name]);
+    left.value.push(right.entryId);
+    right.value.push(left.entryId);
     //Write to google sheets
     writeToGoogleSheets(left,right)
   }
@@ -189,6 +189,9 @@ export default function Matcher() {
 
   return (
     <div>
+      <div style = {{marginLeft:10, marginBottom:10}}>
+          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that each Google sheet has a column named \"MATCH\" and a name column as defined in settings.": ""} </p>
+        </div>
       <div>
         <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
           <span>
@@ -198,6 +201,7 @@ export default function Matcher() {
             <Button href={'/covidsitters/pods'}> See Pods </Button>
             <b> </b>
             <Button href={'/covidsitters/settings'}> Settings</Button>
+            <b> </b>
           </span>
         </div>
         <div className="Body">
@@ -220,11 +224,6 @@ export default function Matcher() {
               </SplitPane>
             </div>
           </LoadingOverlay>
-        </div>
-
-        <div style = {{marginLeft:10, marginBottom:10}}>
-          <b style = {{color:'red'}}> {!matchingEnabled && "Matching is disabled:"} </b>
-          <p style = {{color:'red'}}> {!matchingEnabled && "Ensure you are using Google Sheets and each sheet has a match column and a name column as defined in settings."} </p>
         </div>
 
       </div>

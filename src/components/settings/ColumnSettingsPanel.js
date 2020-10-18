@@ -92,6 +92,20 @@ export default function ColumnSettingsPanel({ data, setData, title }) {
 
                 <br />
 
+                <div>
+                    Zip Column: &nbsp;
+                <Select value={data.zipcodeColumn ? data.zipcodeColumn.title : null} style={{ width: 250 }}
+                        onChange={(value) => changeColumn(value, 'zipcodeColumn', data, setData)}>
+                        {data.columns.map((column, i) => {
+                            return (
+                                <Option key={i}>{column.title}</Option>
+                            )
+                        })}
+                    </Select>
+                </div>
+
+                <br />
+
                 <Collapse accordion>
                     <Panel header={title} key="1">
                         <h6>Left Columns:</h6>
