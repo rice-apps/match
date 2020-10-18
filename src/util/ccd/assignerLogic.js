@@ -50,7 +50,7 @@ export function getPercentageMatchedHosts(externships) {
     Inputs: List of Student objects
     Outputs: Percentage of externships who were matched to students
   */
-  return getNumberMatchedExternships(externships)/((externships).length * 100.0);
+  return getNumberMatchedExternships(externships)/((externships).length) * 100.0;
 }
 
 export function getUnmatchedStudents(students) {
@@ -74,7 +74,7 @@ export function getPercentageMatchedStudents(students) {
     Inputs: List of Student objects
     Outputs: Percentage of students who are not matched to an externship
   */
-  return getNumberMatchedStudents(students)/((students).length * 100.0);
+  return getNumberMatchedStudents(students)/((students).length) * 100.0;
 }
 
 export function getMatchedStudents(students) {

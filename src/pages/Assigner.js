@@ -14,6 +14,7 @@ import { ccdState } from '../store/atoms';
 import { Card, Button } from 'antd';
 
 const cardStyle = {margin:15}
+const TABNAME = "Rankings"
 
 /**
  * This actually creates the assignments, creates a list of unmatched/matched students, and calcualtes the stats.
@@ -103,7 +104,7 @@ function validate(columns){
 
 
 export default function Assigner() {
-  const [{ data, columns, isRefreshing, spreadsheetId}, setDataState] = useRecoilState(ccdState);
+  const [{ data, columns, isRefreshing, spreadsheetId, isMatched}, setDataState] = useRecoilState(ccdState);
   /**
    * This function is called when the "match"/"assign" button is pressed.
    * 
@@ -111,7 +112,6 @@ export default function Assigner() {
    * - Double check the data is indeed validated
    * - Process the data (call handleData)
    * - Create new sheets on the Google sheet
-   * - Route the user to the sheet after it is done
    * 
    * @params N/A
    * @return N/A
@@ -130,7 +130,13 @@ export default function Assigner() {
       //Make the match
       const outputData = processData(data)
       writeData(spreadsheetId, outputData)
-      alert("Matched!\nThe output files have been added to your sheet :)")
+      setDataState(oldDataState => {
+        return {
+            ...oldDataState,
+            isMatched:true
+        }
+      });
+      //alert("Matched!\nThe output files have been added to your sheet :)")
       //route to google sheet
     }
     return;
@@ -178,7 +184,7 @@ export default function Assigner() {
       return (<div>
         <Card title = "Upload Data" style={cardStyle}>
           <p> To upload data, copy and paste the URL of the externship/student data into the box below. Ensure you are logged into the appropriate Google account.</p>
-          <SheetsLoader onUpload={setDataState}/>
+          <SheetsLoader onUpload={setDataState} tabname={TABNAME}/>
         </Card>
       </div>);
   }
@@ -190,10 +196,13 @@ export default function Assigner() {
   function getGoodComponent(){
     //TODO: Make it be like "yo data is legit", green check more, and add assignmentRequst button. 
     //TODO: Also maybe preview data? like name of file or something
+    var sheetsLink = "https://docs.google.com/spreadsheets/d/" + spreadsheetId;
+    console.log(sheetsLink);
     return(<Card title = "Ready to Match!" style = {cardStyle}>
       <p> Your data has been validated, and we are ready to make matches.</p>            
       <p> When you press the button below, the four output files will be added to the spreadsheet in four seperate tabs.</p>
-      <Button type = "primary" shape="round" onClick={onAssignmentRequest}> Match </Button>
+      <Button type = "primary" shape="round" onClick={onAssignmentRequest} disabled={isMatched}>Match</Button>
+      <Button href={sheetsLink} target ="_blank" type = "link" shape="round" disabled={!isMatched}> Go to results!</Button>
     </Card>);
   }
 
@@ -210,7 +219,7 @@ export default function Assigner() {
       return <Card title = "Data Invalid!" style = {cardStyle}>
         <p> Unfortunately your Google sheet data cannot be processed because something is wrong with your data. {invalidReason} </p>
         <p> Please modify the sheet accordingly and reupload it.</p>
-        <SheetsLoader onUpload={setDataState}/>
+        <SheetsLoader onUpload={setDataState} tabname={TABNAME}/>
       </Card>
   }
 
