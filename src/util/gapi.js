@@ -107,11 +107,12 @@ function columnToLetter(column) {
  * @param {spring} spreadsheetId The spreadsheet
  * @param {function} callbackFunction 
  */
-export function getSpreadsheetData(spreadsheetId, callbackFunction) {
+export function getSpreadsheetData(spreadsheetId, callbackFunction, tabname = null) {
+    console.log((tabname === null) ? 'A1:ZZ' : `'${tabname}'!A1:ZZ`)
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
-        // Select entire sheet range
-        range: 'A1:ZZ', // "'sheet1' A1:ZZ"
+        // Select entire sheet range 
+        range: (tabname === null) ? 'A1:ZZ' : `'${tabname}'!A1:ZZ`
     }).then(callbackFunction, (response) => {
         alert('Error: ' + response.result.error.message);
     });

@@ -66,6 +66,7 @@ export const rightDataState = atom({
         emailColumn: null,
         spreadsheetId: null,
         refreshing: false,
+        isMatched: false,
     },
     persistence_UNSTABLE: {
         type: "persist"
