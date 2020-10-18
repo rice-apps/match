@@ -111,7 +111,7 @@ export function getSpreadsheetData(spreadsheetId, callbackFunction) {
     window.gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
         // Select entire sheet range
-        range: 'A1:ZZ',
+        range: 'A1:ZZ', // "'sheet1' A1:ZZ"
     }).then(callbackFunction, (response) => {
         alert('Error: ' + response.result.error.message);
     });
