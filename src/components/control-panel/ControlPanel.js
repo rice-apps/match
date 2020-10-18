@@ -186,7 +186,7 @@ export default function ControlPanel() {
   };
 
   const applySortDefaultSettings = () => {
-    let defaultSettings;
+    let defaultSettings = [];
     if (route === "hivesforheroes") {
       const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
