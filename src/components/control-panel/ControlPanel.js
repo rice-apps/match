@@ -86,33 +86,6 @@ export default function ControlPanel() {
     setRules(newRules);
   };
 
-  const handleDefaultSort = e => {
-    //const i = rules.indexOf("distance")
-    // see if there's an object containing "operator" as key and "distance" as value
-    console.log("inside default sort")
-    console.log("rules", rules);
-    const containsDistanceSort = rules.some((rule) => 
-      rule.operator === "distance"
-    );
-    console.log(containsDistanceSort);
-    if (!containsDistanceSort) {
-      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const newRules = [...rules, {
-        operator: "distance",
-        with: {
-          type: "column",
-          value: leftColumns[idxLeft].key,
-        },
-        by: rightColumns[idxRight].key,
-      }]
-      console.log(newRules)
-      setRules(newRules);
-    }
-    
-
-  }
-
   const handleCheck = (event, i) => {
     let checked = event.target.checked;
     const newRules = replaceItemAtIndex(rules, i, {
@@ -245,9 +218,6 @@ export default function ControlPanel() {
                   </Checkbox>
                   <Button danger onClick={() => deleteRule(i)} type="text">
                     Delete
-                  </Button>
-                  <Button danger onClick={handleDefaultSort} type="text">
-                    Apply Default Sort
                   </Button>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
