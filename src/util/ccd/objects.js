@@ -111,6 +111,13 @@ class Externship {
     return this.numberOfSpots;
   }
 
+  getCompanyName() {
+    /*
+      Returns the number of spots available
+    */
+    return this.companyName;
+  }
+
   getPriority() {
     /*
       Returns an integer
@@ -124,7 +131,15 @@ class Externship {
       Returns the students rank
     */
     var index = this.applicants.indexOf(studentObject);
+    // If index = -1, not found. Return index +1 if needed.
     return (index === -1 ? -1 : (startAtOne ? index + 1 : index));
+  }
+
+  getIsUnmatched() {
+    /*
+      Returns whether or not an externship has a match
+    */
+    return (this.matched.length === 0 ? true : false);
   }
 }
 
@@ -146,9 +161,33 @@ class Student {
     /*
        Returns the string of the full name of the student
     */
-    var first = (this.firstName ? this.firstName : "<No First Name>");
-    var last = (this.lastName ? this.lastName : "<No Last Name>");
+    var first = (this.firstName || "<No First Name>");
+    var last = (this.lastName || "<No Last Name>");
     return first.concat(" ", last);
+  }
+
+  getEmail() {
+    /*
+       Returns the string of the email of the student
+    */
+    var email = (this.email || "<No Email>"); 
+    return email;
+  }
+
+  getMajor() {
+    /*
+       Returns the string of the major of the student
+    */
+    var major = (this.major || "<No Major>"); 
+    return major;
+  }
+
+  getYear() {
+    /*
+       Returns the string of the year of the student
+    */
+    var year = (this.year || "<No Year>"); 
+    return year;
   }
 
   getNumberOfApplications() {

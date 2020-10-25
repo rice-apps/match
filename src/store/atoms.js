@@ -66,6 +66,21 @@ export const rightDataState = atom({
         emailColumn: null,
         spreadsheetId: null,
         refreshing: false,
+        isMatched: false,
+    },
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
+});
+
+// Tells us about the right data set (data, columns, and selectedRows)
+export const ccdState = atom({
+    key: 'ccdState',
+    default: {
+        data: [],
+        columns: [],
+        spreadsheetId: null,
+        refreshing: false,
     },
     persistence_UNSTABLE: {
         type: "persist"

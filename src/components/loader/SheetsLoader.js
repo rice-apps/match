@@ -28,7 +28,7 @@ export default function SheetsLoader(props) {
                 refreshing: true // show data is loading
             }
         });
-        getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded);
+        getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded, props.tabname);
     }
     
 
