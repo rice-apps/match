@@ -6,7 +6,6 @@ import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { useRecoilState } from 'recoil';
 import { leftDataState } from '../../store/atoms';
 
-
 export default function LeftDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn, nameColumn}, setLeftData] = useRecoilState(leftDataState);
   const matchingEnabled = props.matchingEnabled;
