@@ -13,7 +13,7 @@ import { rightDataState, leftDataState, applicationState } from '../store/atoms'
 
 import LoadingOverlay from 'react-loading-overlay';
 import { useLocation } from 'react-router-dom'
-const MATCH_COLUMN_NAME = "__MATCH__";
+
 export default function Matcher() {
   const route = useLocation().pathname;
 

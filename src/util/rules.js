@@ -306,6 +306,11 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
     return filtered_and_sorted;
   }
 
+  // No selected column
+  if (leftRow == null) {
+    return filtered_and_sorted;
+  }
+
   const zipCodeRule = zipCodeSortIndex > -1 ? sorts[zipCodeSortIndex] : filters[zipCodeFilterIndex];
  
   const leftZip = leftRow[zipCodeRule.with.value];
