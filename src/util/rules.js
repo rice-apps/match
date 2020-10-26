@@ -51,6 +51,10 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, rightMatchColu
   let filtered = applyFilters(filters, copiedData, leftRow);
   // Sort the data
   let filtered_and_sorted = applySorts(sorts, filtered, leftRow);
+
+  // Add distance data to right if used in sort/filter
+  filtered_and_sorted = showDistanceData(filtered_and_sorted, sorts, filters, leftRow);
+
   return filtered_and_sorted;
 }
 
@@ -221,8 +225,6 @@ function applySorts(rules, data, leftRow) {
     if (rule.with.type === "column" && !leftRow) {
       return data;
     }
-    console.log("rule", rule);
-    console.log("rule.by", rule.by);
     let left =
       rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value;
     if (rule.operator === "equals") {
@@ -291,4 +293,49 @@ function applyFilters(rules, data, leftRow) {
   }
 
   return data;
+}
+
+// Add distance data to right if used in sort/filter
+function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
+  // Check for sort/distanc filter
+  const zipCodeSortIndex = sorts.findIndex(sort => sort.operator === "distance");
+  const zipCodeFilterIndex = filters.findIndex(filter => filter.operator === "distance");
+
+  // No zip code sort or filter: just return the input
+  if (zipCodeSortIndex == -1 && zipCodeFilterIndex == -1) {
+    return filtered_and_sorted;
+  }
+
+  const zipCodeRule = zipCodeSortIndex > -1 ? sorts[zipCodeSortIndex] : filters[zipCodeFilterIndex];
+ 
+  const leftZip = leftRow[zipCodeRule.with.value];
+  return filtered_and_sorted.map(row => {
+    let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
+    if (zipDistance != null) {
+      zipDistance = zipDistance.toFixed(2) // round distance
+    }
+
+    // Add lower bound
+    if (zipDistance < 5) {
+      zipDistance = "< 5";
+    }
+
+    // Upper bound
+    if (zipDistance > 150) {
+      zipDistance = "> 150";
+    }
+
+    // Add suffix
+    zipDistance = zipDistance + " mi";
+
+    return {
+      ...row,
+      __estimated_distance__: zipDistance,
+    }
+  });
+}
+
+export function isAnyEnabledDistanceRule(rules) {
+  // Check for enabled sort/distance filter
+  return rules.findIndex(rule => (rule.operator === "distance" && rule.enabled)) > -1;
 }

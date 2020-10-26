@@ -48,6 +48,9 @@ function App() {
             <Route path="/covidsitters/pods" component={Pods}/>
             <Route path="/covidsitters/settings" component={Settings}/>
             <Route path="/covidsitters" component={Matcher}/>
+            <Route path="/hivesforheroes/pods" component={Pods}/>
+            <Route path="/hivesforheroes/settings" component={Settings}/>
+            <Route path="/hivesforheroes" component={Matcher}/>
             <Route path="/" component={Home} />
           </Switch>
         </div>

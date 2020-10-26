@@ -6,6 +6,7 @@ import { rightDataState, leftDataState, rulesState } from "../../store/atoms";
 
 import "./ControlPanel.css";
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+import { useLocation } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -26,6 +27,7 @@ export default function ControlPanel() {
   const { columns: leftColumns } = useRecoilValue(leftDataState);
   const { columns: rightColumns } = useRecoilValue(rightDataState);
   const [rules, setRules] = useRecoilState(rulesState);
+  const route = useLocation().pathname.split("/")[1];
 
   const handleLeftChange = (value, i) => {
     let newRules;
@@ -81,7 +83,7 @@ export default function ControlPanel() {
       ...rules[i],
       operator: value,
     });
-    setRules(newRules); 
+    setRules(newRules);
   };
 
   const handleCheck = (event, i) => {
@@ -143,9 +145,59 @@ export default function ControlPanel() {
     });
   };
 
+  const createSortDefaultSetting = (by, value, operator, type='constant') => {
+    return {
+      type: "sort",
+      enabled: true,
+      by,
+      operator: operator,
+      with: {
+        type, 
+        value,
+      },
+    };
+  };
+
+  const applySortDefaultSettings = () => {
+    let defaultSettings = [];
+    if (route === "hivesforheroes") {
+      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      defaultSettings = [{
+        type: "sort",
+        enabled: true,
+        operator: "distance",
+        with: {
+          type: "column",
+          value: leftColumns[idxLeft].key,
+        },
+        by: rightColumns[idxRight].key,
+      }]; 
+      
+    } else {
+        let time = rightColumns[10].key;
+        let weeklyHours = rightColumns[16].key;
+        let special_acc = rightColumns[17].key;
+        let subject = rightColumns[19].key;
+
+        defaultSettings = [
+          createSortDefaultSetting(time, "evening", "contains"),
+          createSortDefaultSetting(weeklyHours, "5", "geq"),
+          createSortDefaultSetting(special_acc, "ADHD, Dyslexia", "overlap"),
+          createSortDefaultSetting(subject, "Algebra", "contains")
+        ];
+        
+    }
+    console.log("default settings", defaultSettings);
+    setRules(defaultSettings);
+  };
+
   return (
     <div className="ControlPanel">
       <h2>Sort</h2>
+      <Button onClick={applySortDefaultSettings}>
+        Use Default Sorts
+      </Button>
       {rules.filter((r) => r.type === "sort").length > 0 ? (
         rules.map(
           (rule, i) =>
@@ -264,7 +316,9 @@ export default function ControlPanel() {
       <br />
 
       <h2>Filter</h2>
-
+      <Checkbox onChange={applySortDefaultSettings}>
+        Enable Default Filters
+      </Checkbox>
       {rules.filter((r) => r.type === "filter").length > 0 ? (
         rules.map(
           (rule, i) =>

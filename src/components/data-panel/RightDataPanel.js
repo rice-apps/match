@@ -2,7 +2,7 @@ import React from 'react';
 import Loader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
-import { applyRules } from '../../util/rules';
+import { applyRules, isAnyEnabledDistanceRule } from '../../util/rules';
 import {Button, Tooltip} from "antd";
 
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -84,6 +84,24 @@ export default function RightDataPanel(props) {
 
   }
 
+  function addDistanceColumnIfNecessary(columns) {
+    if (selectedLeftRows.length == 0) return columns; // no one is selected
+    if (!isAnyEnabledDistanceRule(rules)) return columns; // no enabled distance rule
+
+    const distanceColumn = {
+      dataIndex: "__estimated_distance__",
+      ellipsis: true,
+      fixed: "right",
+      fullTitle: "Distance Approx.",
+      index: columns.length,
+      key: "__estimated_distance__",
+      title: "Distance Approx.",
+      width: 150
+    }
+
+    return columns.concat([distanceColumn]);
+  }
+
   return (
     <div className="DataPanel">
 
@@ -101,7 +119,7 @@ export default function RightDataPanel(props) {
         rowClassNameGetter={rightRowClassNameGetter}
         onSelectRow={onSelectRow}
         data={sortedData}
-        columns={columns}
+        columns={addDistanceColumnIfNecessary(columns)}
         selectType={"checkbox"}
         matchColumn={rightMatchColumn}
       />
