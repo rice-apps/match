@@ -12,9 +12,11 @@ import { useRecoilState } from 'recoil';
 import { rightDataState, leftDataState, applicationState } from '../store/atoms';
 
 import LoadingOverlay from 'react-loading-overlay';
-
+import { useLocation } from 'react-router-dom'
 const MATCH_COLUMN_NAME = "__MATCH__";
 export default function Matcher() {
+  const route = useLocation().pathname;
+
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
     { matchColumn: rightMatchColumn,
@@ -198,9 +200,9 @@ export default function Matcher() {
             <b>     </b>
             <Button type={'primary'} onClick={() => setSidebarOpen(true)}> Sorts & Filters </Button>
             <b> </b>
-            <Button href={'/covidsitters/pods'}> See Pods </Button>
+            <Button href={route + '/pods'}> See Pods </Button>
             <b> </b>
-            <Button href={'/covidsitters/settings'}> Settings</Button>
+            <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
           </span>
         </div>

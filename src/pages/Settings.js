@@ -6,8 +6,10 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { applicationState, leftDataState, rightDataState } from '../store/atoms';
 
 import ColumnSettingsPanel from '../components/settings/ColumnSettingsPanel';
+import { useLocation } from 'react-router-dom'
 
 export default function Settings() {
+  const route = useLocation().pathname.split("/")[1];
   const { user } = useRecoilValue(applicationState);
   const [leftData, setLeftData] = useRecoilState(leftDataState);
   const [rightData, setRightData] = useRecoilState(rightDataState);
@@ -17,9 +19,9 @@ export default function Settings() {
       <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>
         <span>
         <b> </b>
-        <Button type={'primary'} href={'/covidsitters'}> Back to Matching </Button>
+        <Button type={'primary'} href={'/' + route}> Back to Matching </Button>
         <b> </b>
-        <Button href={'/covidsitters/pods'}>See Pods</Button>
+        <Button href={'/' + route+'/pods'}>See Pods</Button>
         </span>
       </div>
       <div className="Main">
