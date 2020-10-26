@@ -92,10 +92,10 @@ export default function RightDataPanel(props) {
       dataIndex: "__estimated_distance__",
       ellipsis: true,
       fixed: "right",
-      fullTitle: "Distance Approximated",
+      fullTitle: "Distance Approx.",
       index: columns.length,
       key: "__estimated_distance__",
-      title: "Distance Approximated",
+      title: "Distance Approx.",
       width: 150
     }
 

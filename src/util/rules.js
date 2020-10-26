@@ -314,6 +314,20 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
     if (zipDistance != null) {
       zipDistance = zipDistance.toFixed(2) // round distance
     }
+
+    // Add lower bound
+    if (zipDistance < 5) {
+      zipDistance = "< 5";
+    }
+
+    // Upper bound
+    if (zipDistance > 150) {
+      zipDistance = "> 150";
+    }
+
+    // Add suffix
+    zipDistance = zipDistance + " mi";
+
     return {
       ...row,
       __estimated_distance__: zipDistance,
