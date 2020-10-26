@@ -30,7 +30,7 @@ export default function Home() {
            <p> </p>
            <Button type={'primary'} block={true} shape={'round'} href='/ccd'>Match for Rice CCD</Button>
            <p> </p>
-           <Button type={'primary'} block={true} shape={'round'} href='/hivesforheroes'>Match for Hivesforheroes</Button>
+           <Button type={'primary'} block={true} shape={'round'} href='/hivesforheroes'>Match for Hives For Heroes</Button>
            <p> </p>
            {/* <Button type={'primary'} block={true} disabled={true} shape={'round'} href='/general'>General (Coming Soon!)</Button> */}
           </Card>
