@@ -60,7 +60,7 @@ export default function LeftDataPanel(props) {
   function leftRowClassNameGetter(row, index) {
     // Right now just if it is not empty string or not empty list, consider it matached
     const selected = selectedRows.map(r => r.key).includes(row.key);
-    console.log("leftrow looks like:", row);
+    // console.log("leftrow looks like:", row);
     if (matchingEnabled){
       const matched = row[matchColumn.key] && row[matchColumn.key] !== "[]";
       if (selected && matched) {

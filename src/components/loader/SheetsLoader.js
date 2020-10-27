@@ -60,12 +60,12 @@ export default function SheetsLoader(props) {
                 newDataState.matchColumn = newDataState.columns[indexMatch];
       
             }
-            
-            // For now, assuming name Column is 4th
+
+            // For now, assuming name Column is 3rd
             // MIGHT HAVE TO CHANGE THIS LATER!
-            newDataState.nameColumn = newDataState.columns[3];
-            // Assuming email column is 3rd
-            newDataState.emailColumn = newDataState.columns[2];
+            newDataState.nameColumn = newDataState.columns[2];
+            // Assuming email column is 2nd
+            newDataState.emailColumn = newDataState.columns[1];
             props.onUpload(oldDataState => {
                 return {
                     ...oldDataState,

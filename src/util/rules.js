@@ -20,9 +20,11 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, rightMatchColu
   let filters = enabledRules.filter((rule) => rule.type === "filter");
 
   //DEFAULT SORTS
-  // Sort matched left rows to the top
+  // Sort rows matched to this person to the top
   if (rightMatchColumn && leftEmailColumn) { // Handle nulls
-    sorts.push({
+    // Add this sort to the beginning, so that matched people will always be at the top
+    // even if there are other sorts
+    sorts.unshift({
       type: "sort",
       enabled: true,
       by: rightMatchColumn.key,
@@ -225,8 +227,9 @@ function applySorts(rules, data, leftRow) {
     if (rule.with.type === "column" && !leftRow) {
       return data;
     }
-    let left =
-      rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value;
+    let left = sanitizeInput(
+      rule.with.type === "column" ? leftRow[rule.with.value] : rule.with.value
+    );
     if (rule.operator === "equals") {
       let newComparator = sortByMapped((e) => e[rule.by])(byMatch(left));
       comparators.push(newComparator);
