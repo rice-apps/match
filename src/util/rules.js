@@ -1,7 +1,7 @@
 import { removeFileItem } from "antd/lib/upload/utils";
 import { zipcodesToDistance } from "./zipcode/zipcodeLogic";
 
-const MAX_ZIPCODE_DISTANCE = 30.0; // in miles
+const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
@@ -290,7 +290,9 @@ function applyFilters(rules, data, leftRow) {
     } else if (rule.operator === "distance") {
       //filter by distance
       data = data.filter((a) => {
-        return zipcodesToDistance(left, a[rule.by]) <= MAX_ZIPCODE_DISTANCE;
+        let dist = zipcodesToDistance(left, a[rule.by])
+        // Check for null and make sure it is within range
+        return (dist) && (dist <= MAX_ZIPCODE_DISTANCE);
       });
     }
   }
@@ -321,15 +323,19 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
     let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
     if (zipDistance != null) {
       zipDistance = zipDistance.toFixed(2) // round distance
+    } else {
+      // Zip Code distance couldn't be calculated (invalid zip)
+      return {
+        ...row,
+        __estimated_distance__: "N/A",
+      }
     }
 
     // Add lower bound
     if (zipDistance < 5) {
       zipDistance = "< 5";
-    }
-
-    // Upper bound
-    if (zipDistance > 150) {
+    } else if (zipDistance > 150) {
+      // Upper bound
       zipDistance = "> 150";
     }
 

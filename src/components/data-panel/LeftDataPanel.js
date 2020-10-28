@@ -13,8 +13,6 @@ export default function LeftDataPanel(props) {
     matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
   const matchingEnabled = props.matchingEnabled;
 
-  console.log("left data ", data);
-
   function distanceBetween2Rows(leftrow, rightrow) {
     const zipcodeleft = leftrow.zip_code;
     const zipcoderight = rightrow.zip_code;

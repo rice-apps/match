@@ -158,12 +158,13 @@ export default function ControlPanel() {
     };
   };
 
-  const applySortDefaultSettings = () => {
+  const applyDefaultRules = () => {
     let defaultSettings = [];
     if (route === "hivesforheroes") {
       const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       defaultSettings = [{
+        // DISTANCE SORT
         type: "sort",
         enabled: true,
         operator: "distance",
@@ -172,7 +173,19 @@ export default function ControlPanel() {
           value: leftColumns[idxLeft].key,
         },
         by: rightColumns[idxRight].key,
-      }]; 
+      },
+      {
+        // DISTANCE FILTER
+        type: "filter",
+        enabled: true,
+        operator: "distance",
+        with: {
+          type: "column",
+          value: leftColumns[idxLeft].key,
+        },
+        by: rightColumns[idxRight].key,
+      }
+    ]; 
       
     } else {
         let time = rightColumns[10].key;
@@ -188,15 +201,14 @@ export default function ControlPanel() {
         ];
         
     }
-    console.log("default settings", defaultSettings);
     setRules(defaultSettings);
   };
 
   return (
     <div className="ControlPanel">
       <h2>Sort</h2>
-      <Button onClick={applySortDefaultSettings}>
-        Use Default Sorts
+      <Button onClick={applyDefaultRules}>
+        Use Default Sorts/Filters
       </Button>
       {rules.filter((r) => r.type === "sort").length > 0 ? (
         rules.map(
@@ -316,9 +328,6 @@ export default function ControlPanel() {
       <br />
 
       <h2>Filter</h2>
-      <Checkbox onChange={applySortDefaultSettings}>
-        Enable Default Filters
-      </Checkbox>
       {rules.filter((r) => r.type === "filter").length > 0 ? (
         rules.map(
           (rule, i) =>

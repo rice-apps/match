@@ -13,10 +13,10 @@ const data = require("./data.json");
  * @return distance in miles (float)
  */
 export function zipcodesToDistance(zipcode1,zipcode2){
-    let coord1 = data[zipcode1]
-    let coord2 = data[zipcode2]
+    let coord1 = data[sanitizeZip(zipcode1)]
+    let coord2 = data[sanitizeZip(zipcode2)]
     if (coord1 && coord2){
-        return coordinatesToDistance(data[zipcode1], data[zipcode2]);
+        return coordinatesToDistance(coord1, coord2);
     } else {
         return null
     }
@@ -35,7 +35,7 @@ function coordinatesToDistance(coordinate1,coordinate2){
     // TODO: Implement
     let lat1, lon1;
     [lon1, lat1] = coordinate1;
-    let lat2, lon2; 
+    let lat2, lon2;
     [lon2, lat2] = coordinate2;
     let R = 6371; // Radius of the earth in km
     let dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -58,4 +58,17 @@ function coordinatesToDistance(coordinate1,coordinate2){
  */
 function deg2rad(deg) {
     return deg * (Math.PI/180)
+}
+
+/**
+ * Takes a zipcode string and converts it to a 4/5 digit string with no leading 0s
+ * @param zipCode, a string of the zipCode to sanitize
+ */
+function sanitizeZip(zipCode) {
+    if (!zipCode) return ""; // handle undefined/null
+    zipCode = zipCode.split("-")[0];
+    if (zipCode[0] == "0") {
+        zipCode = zipCode.slice(1);
+    }
+    return zipCode;
 }
