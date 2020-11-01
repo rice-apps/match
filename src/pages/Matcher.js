@@ -3,7 +3,7 @@ import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
 
-import { Button } from 'antd';
+import { Button, Checkbox } from 'antd';
 
 import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
 import { formatData } from '../util/dataFormatter';

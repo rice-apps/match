@@ -9,51 +9,58 @@ import {zipcodesToDistance} from '../../util/zipcode/zipcodeLogic.js';
 
 export default function LeftDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn, nameColumn}, setLeftData] = useRecoilState(leftDataState);
-  const [{ rightdata, rightcolumns, selectedRows: selectedRightRows,
-    matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
+  const [{ data: rightdata, columns: rightcolumns, selectedRows: selectedRightRows,
+           matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
   const matchingEnabled = props.matchingEnabled;
-
+  
   function distanceBetween2Rows(leftrow, rightrow) {
     const zipcodeleft = leftrow.zip_code;
     const zipcoderight = rightrow.zip_code;
     if (zipcodeleft !== null && zipcoderight !== null) {
         return zipcodesToDistance(zipcodeleft, zipcoderight);
     }
-    return 0;
+    return Number.MAX_VALUE;
   }
 
   function left2RightMinDistance(leftrow) {
-    let minDist = Number.MAX_VALUE;
-    let minrightrow;
-    rightdata.forEach((rightrow) => {
-      let dis = distanceBetween2Rows(leftrow, rightrow);
-      if (dis < minDist) {
-        minDist = dis;
-        minrightrow = rightrow;
-      }
-    });
-    return minrightrow;
+    if (rightdata !== null) {
+      return Math.min.apply(null, 
+      rightdata.map(rightrow => 
+        {
+          return distanceBetween2Rows(leftrow, rightrow) !== null ? distanceBetween2Rows(leftrow, rightrow) : Number.MAX_VALUE;
+        })
+        
+    );
+    }
+    return Number.MAX_VALUE;
+    
   }
 
   // match the left column with the right column that has the smallest distance
   // and store the matching right column as a new key,value pair inside the leftrow object
-  function matchRowsByDistance() {
-    data.forEach((leftrow) => {
+  function matchRowsByDistance(oldData) {
+    return oldData.map((leftrow) => {
       let minrightrow = left2RightMinDistance(leftrow);
       leftrow = {...leftrow, matchDistanceRow:minrightrow};
+      return leftrow;
     });
   }
   
-
+  function sortLeftDataPnl(oldData) {
+    let cpy = [...oldData];
+    cpy.sort((row1, row2) => row1.matchDistanceRow > row2.matchDistanceRow);
+    return cpy;
+  }
+  
   function onSelectRow(rows) {
     setLeftData(data => {
       return {
         ...data,
         selectedRows: rows
       }
-    })
+    });
   }
-
+  
   // This determines the CSS class of all rows in this left table
   function leftRowClassNameGetter(row, index) {
     // Right now just if it is not empty string or not empty list, consider it matached
@@ -93,7 +100,7 @@ export default function LeftDataPanel(props) {
       <Table
         rowClassNameGetter={leftRowClassNameGetter}
         onSelectRow={onSelectRow}
-        data={data}
+        data={sortLeftDataPnl(matchRowsByDistance(data))}
         columns={columns}
         selectType={"radio"}
         matchColumn={matchColumn}
