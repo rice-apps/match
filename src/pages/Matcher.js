@@ -3,7 +3,7 @@ import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
 
-import { Button } from 'antd';
+import { Button, Checkbox } from 'antd';
 
 import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
 import { formatData } from '../util/dataFormatter';
@@ -204,6 +204,9 @@ export default function Matcher() {
             <b> </b>
             <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
+            {route.includes("hivesforheroes") ? 
+              <Checkbox >Sort Left</Checkbox> : null
+            }
           </span>
         </div>
         <div className="Body">
