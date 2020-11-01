@@ -7,7 +7,7 @@ export function exportCSV(assignments) {
         //                  externship2, student3
         //                  unmatched, student4
 
-    const rows = [["Externship", "Student", "Email", "Ranking", "Class", "Major",]];
+    const rows = [["Externship", "Job Id", "First Name", "Last Name", "Email", "Ranking", "Class", "Major",]];
 
     //create [externshipName, studentName] rows 
     var i;
@@ -16,7 +16,7 @@ export function exportCSV(assignments) {
         var s;
         for (s = 0; s < externship.matched.length; s++) {
             var student = externship.matched[s];
-            rows.push([externship.companyName, student.getFullName(), student.getEmail(), 
+            rows.push([externship.companyName, externship.jobId,  student.getFirstName(), student.getLastName(), student.getEmail(),
                 externship.getStudentRank(student), student.getYear(), student.getMajor()]);
         }
     }
@@ -53,7 +53,7 @@ export function exportExternshipsCSV(unmatchedExternships) {
 
 export function exportUnmatchedStudentsCSV(unmatchedStudents) {    
 
-    const rows = [["Student", "Externship", "Email", "Ranking", "Class", "Major",]];
+    const rows = [["First Name", "Last Name", "Externship", "Job Id", "Email", "Ranking", "Class", "Major",]];
 
     //add [unmatched, studentName] rows
     var u;
@@ -64,7 +64,7 @@ export function exportUnmatchedStudentsCSV(unmatchedStudents) {
         for (s = 0; s < externships.length; s++) {
             var externship = externships[s];
             var student = unmatchedStudents[u];
-            rows.push([student.getFullName(), externship.companyName, student.getEmail(), 
+            rows.push([student.getFirstName(), student.getLastName(), externship.companyName, externship.jobId, student.getEmail(),
                 externship.getStudentRank(student), student.getYear(), student.getMajor()]);
         }
         

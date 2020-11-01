@@ -157,6 +157,12 @@ class Student {
     this.assignedExternship = null;
   }
 
+  getFirstName() {
+    return this.firstName || "<No First Name>"
+  }
+  getLastName() {
+    return this.lastName || "<No Last Name>"
+  }
   getFullName() {
     /*
        Returns the string of the full name of the student
