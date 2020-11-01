@@ -47,6 +47,7 @@ export const leftDataState = atom({
         emailColumn: null,
         spreadsheetId: null,
         refreshing: false,
+        shouldSortLeft: false,
     }, // default value (aka initial value)
     persistence_UNSTABLE: {
         type: "persist"

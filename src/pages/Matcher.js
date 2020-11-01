@@ -30,6 +30,7 @@ export default function Matcher() {
       spreadsheetId: leftSpreadsheetId,
       emailColumn: leftEmailColumn,
       refreshing: leftRefreshing,
+      shouldSortLeft: shouldSortLeft,
     }, setLeftData] = useRecoilState(leftDataState);
 
   var windowWidth = window.innerWidth;
@@ -205,7 +206,17 @@ export default function Matcher() {
             <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
             {route.includes("hivesforheroes") ? 
-              <Checkbox >Sort Left</Checkbox> : null
+              <Checkbox style={{ marginLeft: '50px' }} defaultChecked={shouldSortLeft} onChange = {(e) => 
+                // Set refreshing to be true
+                  setLeftData(leftDataState => {
+                  return {
+                    ...leftDataState,
+                    shouldSortLeft: e.target.checked, // use checkbox status to update state
+                  }
+                })
+              }
+              >
+              Sort Left By Closest Match</Checkbox> : null
             }
           </span>
         </div>
