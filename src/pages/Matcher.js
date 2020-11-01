@@ -204,6 +204,9 @@ export default function Matcher() {
             <b> </b>
             <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
+            {route.includes("hivesforheroes") ? 
+              <Checkbox >Sort Left</Checkbox> : null
+            }
           </span>
         </div>
         <div className="Body">

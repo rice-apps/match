@@ -10,20 +10,28 @@ import { applicationState } from '../../store/atoms';
 
 import { useLocation } from 'react-router-dom';
 
+// COVIDSITTERS
 let DEFAULT_HCW_SPREADSHEET_ID = "1dQZYVvQ8siwCkfAyWKvMXDunXBp4EU1IBTurCPpo5i4";
 let DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCHxM";
+
+// HIVESFORHEROES
+let DEFAULT_NEWBEE_SPREADSHEET_ID = "1hiapWZBcL2mLhMeCjJIan_G37gFcQe-d8nT57mwKfXE";
+let DEFAULT_MENTOR_SPREADSHEET_ID = "1Sm0jsq0_7fhpsSgUHAbHyIGfERaGLDAp8_mitdrXCvs";
+        
 const MATCH_COLUMN_NAME = "MATCH";
 
 export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.    
-    let defaultSpreadsheetId = props.allowManualSort ? DEFAULT_HCW_SPREADSHEET_ID : DEFAULT_STUDENT_SPREADSHEET_ID
+    let defaultSpreadsheetId = "";
     const route = useLocation().pathname.split("/")[1];
-    //sheetIDs when route is to hivesforheroes
     if (route === "hivesforheroes") {
-        DEFAULT_HCW_SPREADSHEET_ID = "1Sm0jsq0_7fhpsSgUHAbHyIGfERaGLDAp8_mitdrXCvs";
-        DEFAULT_STUDENT_SPREADSHEET_ID = "1hiapWZBcL2mLhMeCjJIan_G37gFcQe-d8nT57mwKfXE";
+        // HivesForHeroes (left : right)
+        defaultSpreadsheetId = props.allowManualSort ? DEFAULT_NEWBEE_SPREADSHEET_ID : DEFAULT_MENTOR_SPREADSHEET_ID;
+    } else {
+        // CovidSitters (left : right)
         defaultSpreadsheetId = props.allowManualSort ? DEFAULT_HCW_SPREADSHEET_ID : DEFAULT_STUDENT_SPREADSHEET_ID;
     }
+
     const [spreadsheetId, setSpreadsheetId] = useState(defaultSpreadsheetId)
 
     const { user } = useRecoilValue(applicationState);
