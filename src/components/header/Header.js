@@ -43,7 +43,6 @@ export default function Header() {
             handleClientLoad(authenticationCallback);
         } else { 
             // Not already loaded; create event listener
-            console.log("creating event listener for google-loaded")
             window.addEventListener("google-loaded", () => handleClientLoad(authenticationCallback));
         }
     }, []);

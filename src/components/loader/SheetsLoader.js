@@ -50,7 +50,7 @@ export default function SheetsLoader(props) {
             newDataState.spreadsheetId = spreadsheetId;
             // For now, assuming name Column is last
             // MIGHT HAVE TO CHANGE THIS LATER!
-            console.log(newDataState.columns);
+            // console.log(newDataState.columns);
 
             const indexMatch = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
             if (indexMatch === -1) {

@@ -6,10 +6,9 @@ import './Loader.css';
 
 export default function CSVFileUploader(props) {
     function onFileLoaded(data) {
-        console.log(data);
+        // console.log(data);
         var newDataState = formatData(data, props.allowManualSort);
         newDataState.selectedRows = [];
-        console.log(newDataState);
         props.onUpload(newDataState);
     }
 

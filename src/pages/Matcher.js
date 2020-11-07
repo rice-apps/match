@@ -51,7 +51,7 @@ export default function Matcher() {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
-      console.log(newDataState)
+      // console.log(newDataState)
       setLeftData(oldLeftData => {
         let newState = {
           ...oldLeftData,
@@ -77,7 +77,7 @@ export default function Matcher() {
     var range = response.result;
     if (range.values.length > 0) {
       var newDataState = formatData(range.values, true);
-      console.log(newDataState);
+      // console.log(newDataState);
       setRightData(oldRightData => {
         let newState = {
           ...oldRightData,
@@ -91,7 +91,7 @@ export default function Matcher() {
           ),
           refreshing: false,
         }
-        console.log(newState);
+        // console.log(newState);
         return newState;
       })
     } else {

@@ -108,9 +108,6 @@ export function getStudentsAndExternships(data) {
     //Extract values from map
     var studentList = Object.values(studentMap);
     var externshipList = Object.values(externshipMap);
-
-    console.log("STUDENTS:", studentList);
-    console.log("EXTERNSHIPS:", externshipList);
     
     //Return lists in object
     return {students:studentList,externships:externshipList};

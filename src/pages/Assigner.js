@@ -199,7 +199,7 @@ export default function Assigner() {
     //TODO: Make it be like "yo data is legit", green check more, and add assignmentRequst button. 
     //TODO: Also maybe preview data? like name of file or something
     var sheetsLink = "https://docs.google.com/spreadsheets/d/" + spreadsheetId;
-    console.log(sheetsLink);
+    // console.log(sheetsLink);
     return(<Card title = "Ready to Match!" style = {cardStyle}>
       <p> Your data has been validated, and we are ready to make matches.</p>            
       <p> When you press the button below, the four output files will be added to the spreadsheet in four seperate tabs.</p>
