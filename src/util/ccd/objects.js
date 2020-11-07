@@ -148,6 +148,8 @@ class Student {
     email,
     firstName = null, //OPTIONAL
     lastName = null, //OPTIONAL
+    year = null, // OPTIONAL
+    major = null, // OPTIONAL
     applications = [], //OPTIONAL
   ) {
     this.email = email
@@ -155,6 +157,8 @@ class Student {
     this.lastName = lastName;
     this.applications = applications;
     this.assignedExternship = null;
+    this.year = year;
+    this.major = major;
   }
 
   getFirstName() {

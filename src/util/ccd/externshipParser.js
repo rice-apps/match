@@ -14,7 +14,9 @@ var columnNames = {
     jobId: "job_id",
     postingId: "posting_id",
     ranking: "ranking",
-    slotCount: "number_of_externs"
+    slotCount: "number_of_externs",
+    year: "class",
+    major: "major"
 };
 
 function extractStudent(row) {
@@ -27,8 +29,10 @@ function extractStudent(row) {
          //Get information about student
          var first = row[columnNames.first];
          var last = row[columnNames.last];
+         var year = row[columnNames.year];
+         var major = row[columnNames.major];
          //Create student object
-         student = new Student(email,first,last);
+         student = new Student(email,first,last,year,major);
     }
     return student
 }
