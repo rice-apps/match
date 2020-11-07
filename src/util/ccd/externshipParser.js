@@ -4,7 +4,7 @@ import {Externship, Student} from "./objects"
         A dictionaring mapping key variables to column names
         This is useful for when/if the CCD changes the column headers.
         The key represent the variable the code access while the value
-            represents the column name (all lower case, spaces replaced with '_')
+        represents the column name (all lower case, spaces replaced with '_')
 */
 var columnNames = {
     email: "applicant_email",
@@ -66,6 +66,20 @@ export function getStudentsAndExternships(data) {
         }
     */
 
+    // Sort Data To Put Applicants in Increasing Order Of Ranking
+    data = data.slice().sort((row1, row2) => {
+        // First by externship name
+        let extern1 = row1[columnNames.externshipName];
+        let extern2 = row2[columnNames.externshipName];
+        if (extern1 != extern2) {
+            return extern1 > extern2 ? 1 : -1;
+        }
+        // Next by rank
+        let rank1 = parseInt(row1[columnNames.ranking]);
+        let rank2 = parseInt(row2[columnNames.ranking]);
+        return rank1 - rank2;
+    })
+
     //Create mappings to prevent duplicates
     var studentMap = {}; //email -> studentObject
     var externshipMap = {}; //externshipName -> externshipObject
@@ -94,6 +108,9 @@ export function getStudentsAndExternships(data) {
     //Extract values from map
     var studentList = Object.values(studentMap);
     var externshipList = Object.values(externshipMap);
+
+    console.log("STUDENTS:", studentList);
+    console.log("EXTERNSHIPS:", externshipList);
     
     //Return lists in object
     return {students:studentList,externships:externshipList};
