@@ -1,3 +1,7 @@
+//Imports
+var mimemessage = require('mimemessage');
+
+
 // Client ID and API key from the Developer Console
 var CLIENT_ID = process.env.REACT_APP_GAPI_CLIENT_ID;
 var API_KEY = process.env.REACT_APP_GAPI_API_KEY;
@@ -7,11 +11,11 @@ if (!CLIENT_ID || !API_KEY) {
 }
 
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4","https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+var SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/gmail.send';
 
 
 /**************************************** AUTHENTICATION ****************************************/
@@ -226,3 +230,35 @@ gapi.client.sheets.spreadsheets.batchUpdate({
   console.log(`${findReplaceResponse.occurrencesChanged} replacements made.`);
 });
 */
+
+
+/**************************************** GMAIL ****************************************/
+
+export function composeAndSendEmail(sender, to, subject, body){
+    var email = composeEmail(sender, to, subject, body)
+    sendEmail(CLIENT_ID, email)
+}
+
+export function composeEmail(sender, to, subject, body){
+    //Create mime message
+    var msg = mimemessage.factory({
+        contentType: 'text/plain',
+        body:body
+    })
+    msg['to'] = to
+    msg['from'] = sender
+    msg['subject'] = subject
+    //Encode it
+    var encodedMsg = new Buffer(msg.toString(),'base64');
+    return {"raw": encodedMsg}
+}
+
+export function sendEmail(service, email) {
+    return window.gapi.client.gmail.users.messages.send({
+        'userId': 'me',
+        'resource': email
+      }).then(() => console.log("ayy succes my guy"), (response) => {
+        alert('Error: ' + response.result.error.message);
+    });
+}
+

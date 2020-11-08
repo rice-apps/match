@@ -1,5 +1,6 @@
 import React from 'react';
 import Home from './pages/Home';
+import EmailTest from './pages/EmailTest'
 import Matcher from './pages/Matcher';
 import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
@@ -42,6 +43,7 @@ function App() {
         <Header />
         <div className="Content">
           <Switch>
+            <Route path="/emailTest" component = {EmailTest} />
             <Route path="/help" component={Help} />
             <Route path="/privacy" component={Privacy} />
             <Route path="/ccd" component={Assigner}/>
