@@ -236,10 +236,17 @@ gapi.client.sheets.spreadsheets.batchUpdate({
 
 export function composeAndSendEmail(sender, to, subject, body){
     var email = composeEmail(sender, to, subject, body)
+    // var email = {'raw': 
+    //     `From: ${sender}\r\n` + 
+    //     `To: ${to}\r\n` +
+    //     `Subject: ${subject}\r\n\r\n` +
+    //     body
+    // }
     sendEmail(CLIENT_ID, email)
 }
 
 export function composeEmail(sender, to, subject, body){
+    console.log("Composing email...")
     //Create mime message
     var msg = mimemessage.factory({
         contentType: 'text/plain',
@@ -250,15 +257,18 @@ export function composeEmail(sender, to, subject, body){
     msg['subject'] = subject
     //Encode it
     var encodedMsg = new Buffer(msg.toString(),'base64');
+    console.log("Email composed!")
     return {"raw": encodedMsg}
 }
 
-export function sendEmail(service, email) {
-    return window.gapi.client.gmail.users.messages.send({
+export function sendEmail(email) {
+    console.log("Sending...")
+    window.gapi.client.gmail.users.messages.send({
         'userId': 'me',
-        'resource': email
-      }).then(() => console.log("ayy succes my guy"), (response) => {
-        alert('Error: ' + response.result.error.message);
-    });
+        'resource': email,
+        'auth': window.gapi.auth2.getAuthInstance()
+    }).then(() => console.log("Success sent an email!"), 
+              (response) => alert('Error: ' + response.result.error.message)
+    );
 }
 
