@@ -61,7 +61,6 @@ export const rightDataState = atom({
         data: [],
         columns: [],
         selectedRows: [],
-        matchColumn: null,
         nameColumn: null,
         emailColumn: null,
         spreadsheetId: null,

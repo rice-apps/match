@@ -36,7 +36,7 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && rightMatchColumn && leftMatchColumn;
+  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && leftMatchColumn;
 
   function setSidebarOpen(open) {
     setAppState({
@@ -99,9 +99,12 @@ export default function Matcher() {
     }
   }
 
-
-  // These functions actually match and unmatch
-  function writeToGoogleSheets(left,right){
+  /**
+   * Write a match to the left google sheet
+   * @param left row of person on left to match
+   * @param right row of person on right to match
+   */
+  function writeToLeftGoogleSheet(left,right){
      // Stringify both left and right before writing to Google Sheets
      let leftValueString = JSON.stringify(left.value);
      let rightValueString = JSON.stringify(right.value);
@@ -125,22 +128,6 @@ export default function Matcher() {
          console.log("Done writing to left!");
          // This refreshes the data in this app once the spreadsheet is written to
          getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
-       });
-     }
- 
-     // If the right data is from Google Sheets, write to it
-     if (rightSpreadsheetId) {
-       // Set refreshing to be true
-       setRightData(rightDataState => {
-         return {
-           ...rightDataState,
-           refreshing: true,
-         }
-       });
-       modifySpreadsheetDataSingleCell(rightSpreadsheetId, right.columnIndex, right.rowIndex, rightValueString, () => {
-         console.log("Done writing to right!");
-         // This refreshes the data in this app once the spreadsheet is written to
-         getSpreadsheetData(rightSpreadsheetId, onRightSpreadsheetLoaded);
        });
      }
   }
@@ -171,7 +158,7 @@ export default function Matcher() {
     left.value.push(right.entryId);
     right.value.push(left.entryId);
     //Write to google sheets
-    writeToGoogleSheets(left,right)
+    writeToLeftGoogleSheet(left,right)
   }
 
   function unmatch(row) {
@@ -186,13 +173,13 @@ export default function Matcher() {
     left.value.splice(rightInLeftIndex, 1)
     right.value.splice(leftInRightIndex, 1)
     //Write to google sheets
-    writeToGoogleSheets(left,right)
+    writeToLeftGoogleSheet(left,right)
   }
 
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
-          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that each Google sheet has a column named \"MATCH\" and a name column as defined in settings.": ""} </p>
+          <p style = {{color:'red'}}> {!matchingEnabled && leftSpreadsheetId && rightSpreadsheetId? "Matching Disabled. Ensure that the left Google sheet has a column named \"MATCH\" and each sheet has a name column as defined in settings.": ""} </p>
         </div>
       <div>
         <div style = {{width:"100%", padding:5, backgroundColor:'#f7f7f7'}}>

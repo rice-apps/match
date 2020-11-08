@@ -6,8 +6,7 @@ const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-
-export function applyRules(rules, data, leftRow, leftEmailColumn, rightMatchColumn) {
+export function applyRules(rules, data, leftRow, leftEmailColumn) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
 
@@ -19,35 +18,35 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, rightMatchColu
   // Get a list of the 'filter' rules
   let filters = enabledRules.filter((rule) => rule.type === "filter");
 
-  //DEFAULT SORTS
   // Sort rows matched to this person to the top
-  if (rightMatchColumn && leftEmailColumn) { // Handle nulls
-    // Add this sort to the beginning, so that matched people will always be at the top
-    // even if there are other sorts
-    sorts.unshift({
-      type: "sort",
-      enabled: true,
-      by: rightMatchColumn.key,
-      operator: "contains",
-      with: {
-        type: "column",
-        value: leftEmailColumn.key,
-      },
-    });
-  }
-  //Sort unmatched people up (to sort matched people to bottom)
-  if (rightMatchColumn && leftEmailColumn) { // Handle nulls
-    sorts.push({
-      type: "sort",
-      enabled: true,
-      by: rightMatchColumn.key,
-      operator: "equals",
-      with: {
-        type: "constant",
-        value: undefined,
-      },
-    });
-  }
+  // TODO: implement w/o right match column
+  // if (leftMatchColumn && leftEmailColumn) { // Handle nulls
+  //   // Add this sort to the beginning, so that matched people will always be at the top
+  //   // even if there are other sorts
+  //   sorts.unshift({
+  //     type: "sort",
+  //     enabled: true,
+  //     by: rightMatchColumn.key,
+  //     operator: "contains",
+  //     with: {
+  //       type: "column",
+  //       value: leftEmailColumn.key,
+  //     },
+  //   });
+  // }
+  // //Sort unmatched people up (to sort matched people to bottom)
+  // if (rightMatchColumn && leftEmailColumn) { // Handle nulls
+  //   sorts.push({
+  //     type: "sort",
+  //     enabled: true,
+  //     by: rightMatchColumn.key,
+  //     operator: "equals",
+  //     with: {
+  //       type: "constant",
+  //       value: undefined,
+  //     },
+  //   });
+  // }
 
   // Filter the data
   let filtered = applyFilters(filters, copiedData, leftRow);

@@ -10,9 +10,8 @@ import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
 
 
 export default function RightDataPanel(props) {
-  const [{ data, columns, selectedRows: selectedRightRows,
-    matchColumn: rightMatchColumn, nameColumn: rightNameColumn}, setRightData] = useRecoilState(rightDataState);
-  const { selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn} = useRecoilValue(leftDataState);
+  const [{ data, columns, selectedRows: selectedRightRows, nameColumn: rightNameColumn, emailColumn: rightEmailColumn}, setRightData] = useRecoilState(rightDataState);
+  const { data: leftData, selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn} = useRecoilValue(leftDataState);
 
   const matchingEnabled = props.matchingEnabled;
 
@@ -30,13 +29,17 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, rightMatchColumn);
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn);
 
-
-  // Takes in the left and right rows and determines if they're matched together
-
+  /**
+   * Finds the email of the person that a right person is matched to (or returns null if none found)
+   * @param rightRow the row of the person on the right
+   */
   function getRightMatch(rightRow){
-    let rightMatches = rightRow[rightMatchColumn.key];
+    // let rightMatches = rightRow[rightMatchColumn.key];
+    let rightMatches = leftData
+      .filter(row => row[leftMatchColumn.key].contains(rightRow[rightEmailColumn.key]))
+      .map(row => row[leftMatchColumn.key]);
     // If right matches is null, just return null.
     if (rightMatches) {
       return JSON.parse(rightMatches)[0];
@@ -69,7 +72,7 @@ export default function RightDataPanel(props) {
       }
 
       // Right now just if it is not empty string or not empty list, consider it matached
-      if (row[rightMatchColumn.key] && row[rightMatchColumn.key] !== "[]") {
+      if (isGloballyMatched(row)) {
         return "matched-row"
       }
     }
@@ -121,7 +124,6 @@ export default function RightDataPanel(props) {
         data={sortedData}
         columns={addDistanceColumnIfNecessary(columns)}
         selectType={"checkbox"}
-        matchColumn={rightMatchColumn}
       />
 
       {/* This just renders in the selected rows */}
