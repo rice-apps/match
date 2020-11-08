@@ -235,14 +235,9 @@ gapi.client.sheets.spreadsheets.batchUpdate({
 /**************************************** GMAIL ****************************************/
 
 export function composeAndSendEmail(sender, to, subject, body){
-    var email = composeEmail(sender, to, subject, body)
-    // var email = {'raw': 
-    //     `From: ${sender}\r\n` + 
-    //     `To: ${to}\r\n` +
-    //     `Subject: ${subject}\r\n\r\n` +
-    //     body
-    // }
-    sendEmail(CLIENT_ID, email)
+    console.log(`Composing and sending email...\nFrom: ${sender}\nTo: ${to}\nSubject:${subject}\nBody:${body}`)
+    //var email = composeEmail(sender, to, subject, body)
+    //sendEmail(CLIENT_ID, email)
 }
 
 export function composeEmail(sender, to, subject, body){
