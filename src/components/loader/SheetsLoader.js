@@ -47,13 +47,43 @@ export default function SheetsLoader(props) {
         getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded, props.tabname);
     }
     
+    function addFullNameCol(data) {
+        let colNames = data[0];
+        let firstNameIdx = colNames.indexOf("First Name");
+        let lastNameIdx = colNames.indexOf("Last Name");
+        let fullNameIdx = colNames.indexOf("Full Name");
+        if (fullNameIdx === -1) {
+            colNames.splice(2, 0, "Full Name");
+            data = data.map((row, idx) => {
+                if (idx > 0){
+                    let fullName = formatFullName(row[firstNameIdx], row[lastNameIdx]);
+                    row.splice(2, 0, fullName);
+                }
+                return row;
+            });
+            data[0] = colNames;
+        }
+        return data;
+        
+    }
 
+    function formatFullName(firstName, lastName) {
+        let firstNameFormat = firstName.trim().toLowerCase();
+        let lastNameFormat = lastName.trim().toLowerCase();
+        if (firstNameFormat.length > 0) {
+            firstNameFormat = firstNameFormat[0].toUpperCase() + firstNameFormat.substring(1, firstNameFormat.length);
+        }
+        if (lastNameFormat.length > 0) {
+            lastNameFormat = lastNameFormat[0].toUpperCase() + lastNameFormat.substring(1, lastNameFormat.length);
+        }     
+        return firstNameFormat + " " + lastNameFormat;
+    }
 
     function onSpreadsheetLoaded(response) {
         console.log("OnSpreadsheetLoaded start")
         var range = response.result;
         if (range.values.length > 0) {
-            var newDataState = formatData(range.values, props.allowManualSort);
+            var newDataState = formatData(addFullNameCol(range.values), props.allowManualSort);
             newDataState.selectedRows = [];
             newDataState.spreadsheetId = spreadsheetId;
             // For now, assuming name Column is last
