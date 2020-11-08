@@ -97,3 +97,16 @@ export const rulesState = atom({
     }
 });
 
+// Tells us about the rules currently in use
+export const emailClientState = atom({
+    key: 'emailClient',
+    default: {
+        major: null,
+        minors: null,
+        showClient: false,
+    },
+    persistence_UNSTABLE: {
+        type: "persist"
+    }
+});
+
