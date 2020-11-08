@@ -41,8 +41,13 @@ export default function RightDataPanel(props) {
   function getRightMatch(rightRow){
     // let rightMatches = rightRow[rightMatchColumn.key];
     let rightMatches = leftData
-      .filter(row => row[leftMatchColumn.key].contains(rightRow[rightEmailColumn.key]))
-      .map(row => row[leftMatchColumn.key]);
+      .filter(row => {
+        console.log("LEFT ROW", row);
+        console.log("MATCH COLOMN", leftMatchColumn);
+        let leftMatch = row[leftMatchColumn.key];
+        if (!leftMatch) return false;
+        return leftMatch.includes(rightRow[rightEmailColumn.key])
+      }).map(row => row[leftEmailColumn.key]);
     // If right matches is null, just return null.
     if (rightMatches) {
       return JSON.parse(rightMatches)[0];
