@@ -31,11 +31,11 @@ export default function Pods() {
     const { data: rightData, nameColumn: rightNameColumn, emailColumn: rightEmailColumn } = useRecoilValue(rightDataState);
 
     function generateEmail(hcw, students) {
-        const lineBreak = "%0D%0A";
+        const lineBreak = "\n";
         let addresses = students.map((student) => student.email).join(', ');
         let subject = "HTX CovidTutors: Meet Your Match!";
         let body = 
-            "Dear " + hcw.name + " and " + students.name + 
+            "Dear " + hcw.name + " and " + students.name + "," +
             lineBreak + lineBreak +"We hope this email finds you all well during these difficult and unprecedented times. We want to first thank you, Dr." + hcw.name + ", for being on the front lines of patient care and despite the challenges you face. We are happy to help you and your family in any way we can, and we thank you for trusting us. We also thank you " + students.name + " for volunteering your time to help out. Your efforts are greatly appreciated and do not go unnoticed." +
             lineBreak + lineBreak + "We have paired you two based on your tutoring needs and availability. Attached to this email is contact information for both the healthcare worker and the student." +
             lineBreak + lineBreak + "Healthcare worker:" +
