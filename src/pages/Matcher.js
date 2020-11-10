@@ -25,7 +25,8 @@ export default function Matcher() {
       refreshing: rightRefreshing,
     }, setRightData] = useRecoilState(rightDataState);
   const [
-    { selectedRows: selectedLeftRows,
+    { data: leftData,
+      selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
       spreadsheetId: leftSpreadsheetId,
       emailColumn: leftEmailColumn,
@@ -45,7 +46,6 @@ export default function Matcher() {
       sidebarOpen: open
     });
   }
-
 
   // This basically refreshes the data in memory, see where this is used.
   function onLeftSpreadsheetLoaded(response) {
@@ -73,46 +73,16 @@ export default function Matcher() {
     }
   }
 
-  // This basically refreshes the data in memory, see where this is used.
-  function onRightSpreadsheetLoaded(response) {
-    var range = response.result;
-    if (range.values.length > 0) {
-      var newDataState = formatData(range.values, true);
-      // console.log(newDataState);
-      setRightData(oldRightData => {
-        let newState = {
-          ...oldRightData,
-          // Only updating the state and refreshing
-          // NOTE: If you override the old columns, then you get rid of previous settings
-          data: newDataState.data,
-          // Update selected selected rows with new data
-          selectedRows: oldRightData.selectedRows.map(row =>
-            // Get the updated row from the new state
-            newDataState.data[row.key]
-          ),
-          refreshing: false,
-        }
-        // console.log(newState);
-        return newState;
-      })
-    } else {
-      alert('No data found.');
-    }
-  }
-
   /**
    * Write a match to the left google sheet
-   * @param left row of person on left to match
-   * @param right row of person on right to match
+   * @param leftInfo the matching info of the person on left to match (value, rowIndex, columnIndex, entryId)
    */
-  function writeToLeftGoogleSheet(left,right){
+  function writeToLeftGoogleSheet(leftInfo){
      // Stringify both left and right before writing to Google Sheets
-     let leftValueString = JSON.stringify(left.value);
-     let rightValueString = JSON.stringify(right.value);
+     let leftValueString = JSON.stringify(leftInfo.value);
  
      // Save an empty list [] as a blank cell
      if (leftValueString === "[]") leftValueString = "";
-     if (rightValueString === "[]") rightValueString = "";
  
      // If the left data is from Google Sheets, write to it
      if (leftSpreadsheetId) {
@@ -124,8 +94,7 @@ export default function Matcher() {
            refreshing: true,
          }
        })
- 
-       modifySpreadsheetDataSingleCell(leftSpreadsheetId, left.columnIndex, left.rowIndex, leftValueString, () => {
+       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftInfo.columnIndex, leftInfo.rowIndex, leftValueString, () => {
          console.log("Done writing to left!");
          // This refreshes the data in this app once the spreadsheet is written to
          getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
@@ -133,48 +102,79 @@ export default function Matcher() {
      }
   }
 
-  function getLeftRightInfo(row){
+  /**
+   * Get the info about the selected left column that is needed to match/unmatch
+   */
+  function getSelectedLeftInfo(){
     return {
-      left: {
-        value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
-        rowIndex: parseInt(selectedLeftRows[0].key) + 2,
-        columnIndex: leftMatchColumn.index + 1,
-        entryId: selectedLeftRows[0][leftEmailColumn.key]
-      },
-      right:{
-        value: row[rightMatchColumn.key] ? JSON.parse(row[rightMatchColumn.key]) : [],
-        rowIndex: parseInt(row.key) + 2,
-        columnIndex: rightMatchColumn.index + 1,
-        entryId: row[rightEmailColumn.key]
-      }
+      value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
+      rowIndex: parseInt(selectedLeftRows[0].key) + 2,
+      columnIndex: leftMatchColumn.index,
+      entryId: selectedLeftRows[0][leftEmailColumn.key]
     }
   }
 
+  /**
+   * Match a right row to the selected row on the left
+   * @param row a right row
+   */
   function match(row) {
     //Get info
-    let info = getLeftRightInfo(row);
-    let left = info.left;
-    let right = info.right;
+    let leftInfo = getSelectedLeftInfo(row);
+    let rightEmail = row[rightEmailColumn.key];
     //Match logic
-    left.value.push(right.entryId);
-    right.value.push(left.entryId);
+    leftInfo.value.push(rightEmail);
     //Write to google sheets
-    writeToLeftGoogleSheet(left,right)
+    writeToLeftGoogleSheet(leftInfo)
   }
 
+  /**
+   * Unmatch a right row with the selected row on the left
+   * @param row the row on the right
+   */
   function unmatch(row) {
     //Get info
-    let info = getLeftRightInfo(row);
-    let left = info.left;
-    let right = info.right;
+    let leftInfo = getSelectedLeftInfo(row);
+    let rightEmail = row[rightEmailColumn.key];
     //Get Cross indecies
-    let leftInRightIndex = right.value.map(list => list[0]).indexOf(left.rowIndex);
-    let rightInLeftIndex = left.value.map(list => list[0]).indexOf(right.rowIndex);
+    let rightInLeftIndex = leftInfo.value.map(list => list[0]).indexOf(rightEmail);
     //Unmatch logic
-    left.value.splice(rightInLeftIndex, 1)
-    right.value.splice(leftInRightIndex, 1)
+    leftInfo.value.splice(rightInLeftIndex, 1)
     //Write to google sheets
-    writeToLeftGoogleSheet(left,right)
+    writeToLeftGoogleSheet(leftInfo)
+  }
+
+  /**
+   * Finds the email of the person that a right person is matched to (or returns null if none found)
+   * @param rightRow the row of the person on the right
+   */
+  function getRightMatch(rightRow){
+    // let rightMatches = rightRow[rightMatchColumn.key];
+    let rightMatches = leftData
+      .filter(row => {
+        let leftMatch = row[leftMatchColumn.key];
+        return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
+      }).map(row => row[leftEmailColumn.key]);
+    // If right matches is null, just return null.
+    if (rightMatches) {
+      return rightMatches[0];
+    } else {
+      return null;
+    }
+  }
+
+   /**
+   * Checks who the person on the right is matched to
+   * @param leftRow 
+   */
+  function getLeftMatch(leftRow){
+    let leftMatches = leftRow[leftMatchColumn.key];
+    // If right matches is null, just return null.
+    if (leftMatches) {
+      return JSON.parse(leftMatches)[0];
+    } else {
+      return null;
+    }
   }
 
   return (
@@ -223,7 +223,9 @@ export default function Matcher() {
                 <RightDataPanel
                   matchingEnabled = {matchingEnabled}
                   match = {match}
-                  unmatch = {unmatch}/>
+                  unmatch = {unmatch}
+                  getLeftMatch = {getLeftMatch}
+                  getRightMatch = {getRightMatch}/>
               </SplitPane>
             </div>
           </LoadingOverlay>

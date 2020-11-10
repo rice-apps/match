@@ -35,49 +35,13 @@ export default function RightDataPanel(props) {
   const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn);
 
   /**
-   * Finds the email of the person that a right person is matched to (or returns null if none found)
-   * @param rightRow the row of the person on the right
-   */
-  function getRightMatch(rightRow){
-    // let rightMatches = rightRow[rightMatchColumn.key];
-    let rightMatches = leftData
-      .filter(row => {
-        console.log("LEFT ROW", row);
-        console.log("MATCH COLOMN", leftMatchColumn);
-        let leftMatch = row[leftMatchColumn.key];
-        if (!leftMatch) return false;
-        return leftMatch.includes(rightRow[rightEmailColumn.key])
-      }).map(row => row[leftEmailColumn.key]);
-    // If right matches is null, just return null.
-    if (rightMatches) {
-      return JSON.parse(rightMatches)[0];
-    } else {
-      return null;
-    }
-  }
-
-   /**
-   * Checks who the person on the right is matched to
-   * @param leftRow 
-   */
-  function getLeftMatch(leftRow){
-    let leftMatches = leftRow[leftMatchColumn.key];
-    // If right matches is null, just return null.
-    if (leftMatches) {
-      return JSON.parse(leftMatches)[0];
-    } else {
-      return null;
-    }
-  }
-
-  /**
    * Checks if two rows are matched to each other
    * @param rightRow the right row
    * @param leftRow the left row
    */
   function isLocallyMatched(rightRow, leftRow) {
     // Read Right Match
-    let rightMatch = getRightMatch(rightRow);
+    let rightMatch = props.getRightMatch(rightRow);
     let leftEmail = leftRow[leftEmailColumn.key];
     return (rightMatch && leftRow) && (rightMatch == leftEmail)
   }
@@ -87,7 +51,7 @@ export default function RightDataPanel(props) {
    * @param rightRow the row on the right to check
    */
   function isGloballyMatched(rightRow){
-    let rightMatch = getRightMatch(rightRow);
+    let rightMatch = props.getRightMatch(rightRow);
     return rightMatch;
   }
 
@@ -96,7 +60,7 @@ export default function RightDataPanel(props) {
    * @param leftRow the row on the right to check
    */
   function isGloballyMatchedLeft(leftRow){
-    let leftMatch = getLeftMatch(leftRow);
+    let leftMatch = props.getLeftMatch(leftRow);
     return leftMatch;
   }
 
@@ -187,7 +151,7 @@ export default function RightDataPanel(props) {
               if (isHivesForHeroes()) {
                 if (isGloballyMatchedLeft(selectedLeftRows[0])) {
                   //Disabled "Already Matched"
-                  let rightEmail = getLeftMatch(selectedLeftRows[0]);
+                  let rightEmail = props.getLeftMatch(selectedLeftRows[0]);
                   let tooltip = "NewBEE already matched to "+rightEmail+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
                 }
@@ -195,7 +159,7 @@ export default function RightDataPanel(props) {
                 // CovidSitters/others
                 if(isGloballyMatched(row)) {
                   //Disabled "Already Matched"
-                  let leftEmail = getRightMatch(row);
+                  let leftEmail = props.getRightMatch(row);
                   let tooltip = name+" is already matched to "+leftEmail+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
                 }

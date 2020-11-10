@@ -47,12 +47,16 @@ export default function SheetsLoader(props) {
         getSpreadsheetData(spreadsheetId, onSpreadsheetLoaded, props.tabname);
     }
     
+    /**
+     * Creates a full name column if the data only has a first name and last name column
+     * @param data the original data
+     */
     function addFullNameCol(data) {
         let colNames = data[0];
         let firstNameIdx = colNames.indexOf("First Name");
         let lastNameIdx = colNames.indexOf("Last Name");
         let fullNameIdx = colNames.indexOf("Full Name");
-        if (fullNameIdx === -1) {
+        if (fullNameIdx === -1 && firstNameIdx > -1 && lastNameIdx > -1) {
             colNames.splice(2, 0, "Full Name");
             data = data.map((row, idx) => {
                 if (idx > 0){
