@@ -7,6 +7,7 @@ import {Button, Tooltip} from "antd";
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { rightDataState, leftDataState, rulesState } from '../../store/atoms';
+import { useLocation } from 'react-router-dom';
 
 
 export default function RightDataPanel(props) {
@@ -16,6 +17,8 @@ export default function RightDataPanel(props) {
   const matchingEnabled = props.matchingEnabled;
 
   const rules = useRecoilValue(rulesState);
+
+  const route = useLocation().pathname.split("/")[1];
 
   function onSelectRow(rows) {
     setRightData(data => {
@@ -32,31 +35,35 @@ export default function RightDataPanel(props) {
   const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn);
 
   /**
-   * Finds the email of the person that a right person is matched to (or returns null if none found)
-   * @param rightRow the row of the person on the right
+   * Checks if two rows are matched to each other
+   * @param rightRow the right row
+   * @param leftRow the left row
    */
-  function getRightMatch(rightRow){
-    // let rightMatches = rightRow[rightMatchColumn.key];
-    let rightMatches = leftData
-      .filter(row => row[leftMatchColumn.key].contains(rightRow[rightEmailColumn.key]))
-      .map(row => row[leftMatchColumn.key]);
-    // If right matches is null, just return null.
-    if (rightMatches) {
-      return JSON.parse(rightMatches)[0];
-    } else {
-      return null;
-    }
-  }
   function isLocallyMatched(rightRow, leftRow) {
     // Read Right Match
-    let rightMatch = getRightMatch(rightRow);
+    let rightMatch = props.getRightMatch(rightRow);
     let leftEmail = leftRow[leftEmailColumn.key];
     return (rightMatch && leftRow) && (rightMatch == leftEmail)
   }
+
+  /**
+   * Checks if a person on the right is matched to anyone on the left
+   * @param rightRow the row on the right to check
+   */
   function isGloballyMatched(rightRow){
-    let rightMatch = getRightMatch(rightRow);
+    let rightMatch = props.getRightMatch(rightRow);
     return rightMatch;
   }
+
+    /**
+   * Checks if a person on the left is matched to anyone on the right
+   * @param leftRow the row on the right to check
+   */
+  function isGloballyMatchedLeft(leftRow){
+    let leftMatch = props.getLeftMatch(leftRow);
+    return leftMatch;
+  }
+
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
 
@@ -105,6 +112,10 @@ export default function RightDataPanel(props) {
     return columns.concat([distanceColumn]);
   }
 
+  function isHivesForHeroes() {
+    return route == "hivesforheroes";
+  }
+
   return (
     <div className="DataPanel">
 
@@ -135,15 +146,26 @@ export default function RightDataPanel(props) {
               if (isLocallyMatched(row, selectedLeftRows[0])) {
                 //Unmatch
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
-              } else if(isGloballyMatched(row)) {
-                //Disabled "Already Matched"
-                let leftEmail = getRightMatch(row);
-                let tooltip = name+" is already matched to "+leftEmail+"!";
-                return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
-              } else {
-                //Match
-                return <Button onClick = {() => props.match(row)}>{"Match!"}</Button>;
               }
+              // HivesForHeroes (newbees (left) can be matched to multiple people on right)
+              if (isHivesForHeroes()) {
+                if (isGloballyMatchedLeft(selectedLeftRows[0])) {
+                  //Disabled "Already Matched"
+                  let rightEmail = props.getLeftMatch(selectedLeftRows[0]);
+                  let tooltip = "NewBEE already matched to "+rightEmail+"!";
+                  return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
+                }
+              } else {
+                // CovidSitters/others
+                if(isGloballyMatched(row)) {
+                  //Disabled "Already Matched"
+                  let leftEmail = props.getRightMatch(row);
+                  let tooltip = name+" is already matched to "+leftEmail+"!";
+                  return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
+                }
+              }
+              //Match
+              return <Button onClick = {() => props.match(row)}>{"Match!"}</Button>;
             }
           }
           return (<div key={i}>
