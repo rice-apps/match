@@ -33,7 +33,8 @@ export default function RightDataPanel(props) {
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
   const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, 
-                                rightEmailColumn, props.rightMatchedToSpecificLeft, props.rightMatchedToAnyLeft);
+                                rightEmailColumn, props.rightMatchedToSpecificLeft, props.rightMatchedToAnyLeft,
+                                route.includes("hivesforheroes"));
 
 
   // This determines the CSS class of all rows in this right table

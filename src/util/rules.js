@@ -6,7 +6,7 @@ const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColumn, rightEmailColumn, isLocallyMatched, isGloballyMatched) {
+export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColumn, rightEmailColumn, isLocallyMatched, isGloballyMatched, isHivesForHeroes) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
 
@@ -18,38 +18,6 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
   // Get a list of the 'filter' rules
   let filters = enabledRules.filter((rule) => rule.type === "filter");
 
-  // 1st SORT: Sort rows matched to this person to the top
-  // TODO: implement w/o right match column
-  if (leftMatchColumn && leftEmailColumn && rightEmailColumn) { // Handle nulls
-    // Add this sort to the beginning, so that matched people will always be at the top
-    // even if there are other sorts
-    // sorts.unshift({
-    //   type: "sort",
-    //   enabled: true,
-    //   by: rightEmailColumn.key,
-    //   operator: "overlap",
-    //   with: {
-    //     type: "column",
-    //     value: leftMatchColumn.key,
-    //   },
-    // });
-  // }
-  // 2nd SORT: Sort unmatched people up (to sort matched people to bottom)
-  // Think about using isGloballyMatched
-  // if (rightMatchColumn && leftEmailColumn) { // Handle nulls
-  //   sorts.push({
-  //     type: "sort",
-  //     enabled: true,
-  //     by: rightMatchColumn.key,
-  //     operator: "equals",
-  //     with: {
-  //       type: "constant",
-  //       value: undefined,
-  //     },
-  //   });
-  // }
-  }
-
   // Filter the data
   let filtered = applyFilters(filters, copiedData, leftRow);
   // Sort the data
@@ -58,49 +26,22 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
   // Add distance data to right if used in sort/filter
   filtered_and_sorted = showDistanceData(filtered_and_sorted, sorts, filters, leftRow);
 
-  filtered_and_sorted.sort((r1, r2) => {
-    if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
+  if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
+    filtered_and_sorted.sort((r1, r2) => {
       // Matched to selected person on left: sort up
       if (isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) return 0;
       if (isLocallyMatched(r1, leftRow)) return -1;
       if (isLocallyMatched(r2, leftRow)) return 1;
 
+      // If we're on hivesforheroes, stop here. We don't need to sort matched mentors down
+      if (isHivesForHeroes) return 0;
+
       // Already matched to someone else: sort down
       if (isGloballyMatched(r1) == isGloballyMatched(r2)) return 0;
       if (isGloballyMatched(r1)) return 1;
       if (isGloballyMatched(r2)) return -1;
-      
-        //   if (isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
-        //   return -1;
-        // } else if (!isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
-        //   return 1;
-        // } else if (!isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
-        //     if (isGloballyMatched(r1) && !isGloballyMatched(r2)) {
-        //     return 1;
-        //   } else if (!isGloballyMatched(r1) && isGloballyMatched(r2)) {
-        //     return -1;
-        //   }
-        //   } else {
-        //     return 0;
-        //   }
-        // } else {
-        //   return 0;
-        // }
-    }
-  });
-
-  // filtered_and_sorted.sort((r1, r2) => {
-  //   if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
-  //     if (isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
-  //       return -1;
-  //     } else if (!isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
-  //       return 1;
-  //     } else {
-  //       return 0;
-  //     }
-  //   }
-  // });
-
+    });
+  }
   return filtered_and_sorted;
 }
 
