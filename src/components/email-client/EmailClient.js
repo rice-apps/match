@@ -5,6 +5,7 @@ import "./EmailClient.css"
 
 import {useRecoilState} from 'recoil';
 import {emailClientState} from '../../store/atoms';
+import Pods from "../../pages/Pods";
 
 /**
  * Email client:
