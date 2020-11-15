@@ -4,9 +4,6 @@ import { useRecoilValue, useRecoilState, setRecoilValue} from 'recoil';
 import { leftDataState, rightDataState, emailClientState} from '../store/atoms';
 import { Card, Row, Col,Button } from "antd";
 import { EmailUI } from "../components/email-client/EmailClient";
-import { composeAndSendEmail } from "../util/gapi.js";
-
-//composeAndSendEmail(to, subject, body)
 
 // SAMPLE PODS DATA STRUCTURE:
 // let pods = [{
@@ -91,7 +88,7 @@ export default function Pods() {
     }
     console.log(showClient,major,minors)
     if (showClient){
-        return <EmailUI/>
+        return <EmailUI body="body" subject="subject" recipients={["adz2@rice.edu"]}/>
     } else {
         return (
             <div>
