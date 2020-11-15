@@ -30,6 +30,8 @@ export default function Pods() {
     const route = useLocation().pathname.split("/")[1];
     const { data: leftData, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn } = useRecoilValue(leftDataState);
     const { data: rightData, nameColumn: rightNameColumn, emailColumn: rightEmailColumn } = useRecoilValue(rightDataState);
+    let name1 = route === "hivesforheroes" ? "Newbee:" : "Healthcare Worker:";
+    let name2 = route === "hivesforheroes" ? "Mentor:" : "Volunteers:";
 
     function generateEmail(hcw, students) {
         const lineBreak = "%0D%0A";
@@ -122,8 +124,8 @@ export default function Pods() {
                             return (
                                 <Col key={j} span={6}>
                                     <Card title={"Pod #" + pod.key} size="small" >
-                                        <p><b>Healthcare Worker:</b> {hcw.name} {hcw.email}</p>
-                                        <p><b>Volunteers:</b></p>
+                                        <p><b>{name1}</b> {hcw.name} {hcw.email}</p>
+                                        <p><b>{name2}</b></p>
                                         <ul>
                                             {
                                                 students.map((student, k) => {
