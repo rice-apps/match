@@ -109,7 +109,7 @@ export default function Matcher() {
     return {
       value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
       rowIndex: parseInt(selectedLeftRows[0].key) + 2,
-      columnIndex: leftMatchColumn.index,
+      columnIndex: leftMatchColumn.index + 1,
       entryId: selectedLeftRows[0][leftEmailColumn.key]
     }
   }
