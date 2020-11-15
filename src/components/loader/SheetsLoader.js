@@ -57,11 +57,16 @@ export default function SheetsLoader(props) {
         let lastNameIdx = colNames.indexOf("Last Name");
         let fullNameIdx = colNames.indexOf("Full Name");
         if (fullNameIdx === -1 && firstNameIdx > -1 && lastNameIdx > -1) {
-            colNames.splice(2, 0, "Full Name");
+            colNames.push("Full Name");
             data = data.map((row, idx) => {
                 if (idx > 0){
                     let fullName = formatFullName(row[firstNameIdx], row[lastNameIdx]);
-                    row.splice(2, 0, fullName);
+                    // Add empty strings until we get to the last column slot
+                    while (row.length < colNames.length - 1) {
+                        row.push("");
+                    }
+                    // Add the full name in the last spot. It needs to go here to avoid changing column indices
+                    row.push(fullName);
                 }
                 return row;
             });
@@ -90,24 +95,18 @@ export default function SheetsLoader(props) {
             var newDataState = formatData(addFullNameCol(range.values), props.allowManualSort);
             newDataState.selectedRows = [];
             newDataState.spreadsheetId = spreadsheetId;
-            // For now, assuming name Column is last
-            // MIGHT HAVE TO CHANGE THIS LATER!
-            // console.log(newDataState.columns);
 
-            const indexMatch = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
-            if (indexMatch === -1) {
-                //createColumn(MATCH_COLUMN_NAME, newDataState.columns.length)
-                newDataState.matchColumn = null;
-            } else {
-                newDataState.matchColumn = newDataState.columns[indexMatch];
-      
-            }
-
-            // For now, assuming name Column is 3rd
-            // MIGHT HAVE TO CHANGE THIS LATER!
-            newDataState.nameColumn = newDataState.columns[2];
-            // Assuming email column is 2nd
-            newDataState.emailColumn = newDataState.columns[1];
+            // First look for columns with the appropriate name
+            let matchColumnIndex = findIndexOfColumnWithName(MATCH_COLUMN_NAME, newDataState.columns)
+            let nameColumnIndex = findIndexOfColumnWithName("Full Name", newDataState.columns);
+            let emailColumnIndex = findIndexOfColumnWithName("Email", newDataState.columns);
+            
+            // Now check if we found the columns and handle the possibility of not finding them
+            newDataState.matchColumn = matchColumnIndex > -1 ? newDataState.columns[matchColumnIndex] : null;
+            // Assume name column is 3rd if we don't find it
+            newDataState.nameColumn = nameColumnIndex > -1 ? newDataState.columns[nameColumnIndex] : newDataState.columns[2];
+            // Assuming email column is 2nd if we don't find it
+            newDataState.emailColumn = emailColumnIndex > -1 ? newDataState.columns[emailColumnIndex] : newDataState.columns[1];
             props.onUpload(oldDataState => {
                 return {
                     ...oldDataState,
