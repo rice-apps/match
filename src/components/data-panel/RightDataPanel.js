@@ -32,7 +32,7 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, rightEmailColumn);
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, rightEmailColumn, isLocallyMatched, isGloballyMatched);
 
   /**
    * Checks if two rows are matched to each other
