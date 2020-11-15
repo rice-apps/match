@@ -150,11 +150,7 @@ export default function Matcher() {
    */
   function getRightMatch(rightRow){
     // let rightMatches = rightRow[rightMatchColumn.key];
-    let rightMatches = leftData
-      .filter(row => {
-        let leftMatch = row[leftMatchColumn.key];
-        return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
-      }).map(row => row[leftEmailColumn.key]);
+    let rightMatches = getEachLeftMatchedByRight(rightRow);
     // If right matches is null, just return null.
     if (rightMatches) {
       return rightMatches[0];
@@ -189,6 +185,14 @@ export default function Matcher() {
     } else {
       return null;
     }
+  }
+
+  function getEachLeftMatchedByRight(rightRow) {
+    return leftData
+    .filter(row => {
+      let leftMatch = row[leftMatchColumn.key];
+      return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
+    }).map(row => row[leftEmailColumn.key]);
   }
 
   return (
@@ -241,6 +245,7 @@ export default function Matcher() {
                   getLeftMatch = {getFirstRightMatchedByLeft}
                   getRightMatch = {getRightMatch}
                   getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+                  getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
                   />
               </SplitPane>
             </div>

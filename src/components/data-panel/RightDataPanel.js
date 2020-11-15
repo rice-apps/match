@@ -55,19 +55,6 @@ export default function RightDataPanel(props) {
     return rightMatch;
   }
 
-    /**
-   * Checks if a person on the left is matched to anyone on the right
-   * @param leftRow the row on the right to check
-   */
-  function leftMatchedToAnyRight(leftRow){
-    let leftMatch = props.getLeftMatch(leftRow);
-    return leftMatch;
-  }
-
-  function getLeftMatchedToCountRight(leftRow) {
-
-  }
-
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
 
@@ -151,23 +138,27 @@ export default function RightDataPanel(props) {
                 //Unmatch
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               }
+
               // HivesForHeroes (newbees (left) can be matched to multiple people on right)
               if (isHivesForHeroes()) {
                 const rightRows = props.getEachRightMatchedByLeft(selectedLeftRows[0]);
-                if (rightRows && rightRows.length === 1) {
-                  // mentor matched to 1 newbee, can match 2 more
-                  let tooltip = "NewBEE already matched to 1 mentor: "+rightRows.join(', ');
-                  return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
-                }
-                else if (rightRows && rightRows.length === 2) {
-                  // mentor matched to 2 newbees, can match 1 more
-                  let tooltip = "NewBEE already matched to 2 mentors: "+rightRows.join(', ');
-                  return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
-                }
-                else if (rightRows && rightRows.length > 2) {
-                  // mentor cannot be matched to more newbees
-                  let tooltip = "NewBEE already matched to 3 (MAX) mentors: "+rightRows.join(', ')+"!";
+                const leftRows = props.getEachLeftMatchedByRight(row);
+                // NewBEE can only match to a single mentor
+                if (rightRows && rightRows.length > 0) {
+                  let tooltip = "NewBEE already matched to: "+ rightRows.join(', ')+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
+                }
+
+                if (leftRows && leftRows.length > 0) {
+                  // mentor matched to (< 3 newbees, still allow further matching)
+                  if (leftRows.length < 3) {
+                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
+                    return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
+                  } else {
+                    // mentor matched to (>= 3 newbees, no more matching allowed)
+                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
+                    return <Tooltip color = {'red'} title={tooltip}><Button disabled = {true} onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
+                  }  
                 }
               } else {
                 // CovidSitters/others
