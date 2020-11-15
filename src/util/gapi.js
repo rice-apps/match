@@ -238,34 +238,32 @@ export function composeAndSendEmail(to, subject, body){
     let user = window.gapi.auth2.getAuthInstance().currentUser.get();
     let sender = user.tt.getEmail();
     console.log(`Composing and sending email...\nFrom: ${sender}\nTo: ${to}\nSubject: ${subject}\nBody: ${body}`)
-    var email = composeEmail(sender, to, subject, body)
+    var email = makeBody(to, sender, subject, body)
+    console.log("Email composed!",email)
     sendEmail(email)
 }
 
-function composeEmail(sender, to, subject, body){
-    console.log("Composing email...")
-    //Create mime message
-    var msg = mimemessage.factory({
-        contentType: 'text/plain',
-        body:body
-    })
-    msg['to'] = to
-    msg['from'] = sender
-    msg['subject'] = subject
-    //Encode it
-    var encodedMsg = new Buffer(msg.toString(),'base64');
-    console.log("Email composed!")
-    return {"raw": encodedMsg}
+function makeBody(to, from, subject, message) {
+    var str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
+        "MIME-Version: 1.0\n",
+        "Content-Transfer-Encoding: 7bit\n",
+        "to: ", to, "\n",
+        "from: ", from, "\n",
+        "subject: ", subject, "\n\n",
+        message
+    ].join('');
+    var encodedMail = new Buffer(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
+        return encodedMail;
 }
 
 function sendEmail(email) {
     console.log("Sending...")
     window.gapi.client.gmail.users.messages.send({
-        'userId': 'me',
-        'resource': email,
-        'auth': window.gapi.auth2.getAuthInstance()
-    }).then(() => console.log("Success sent an email!"), 
-              (response) => alert('Error: ' + response.result.error.message)
-    );
+        "userId": 'me',
+        "resource": {
+            "raw":email
+        },
+        "auth": window.gapi.auth2.getAuthInstance()
+    }).then(()=>console.log("done!"));
 }
 
