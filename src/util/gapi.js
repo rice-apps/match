@@ -238,22 +238,21 @@ export function composeAndSendEmail(to, subject, body){
     let user = window.gapi.auth2.getAuthInstance().currentUser.get();
     let sender = user.tt.getEmail();
     console.log(`Composing and sending email...\nFrom: ${sender}\nTo: ${to}\nSubject: ${subject}\nBody: ${body}`)
-    var email = makeBody(to, sender, subject, body)
+    var email = composeEmail(sender, to, subject, body)
     console.log("Email composed!",email)
     sendEmail(email)
 }
 
-function makeBody(to, from, subject, message) {
-    var str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
-        "MIME-Version: 1.0\n",
-        "Content-Transfer-Encoding: 7bit\n",
-        "to: ", to, "\n",
-        "from: ", from, "\n",
-        "subject: ", subject, "\n\n",
-        message
-    ].join('');
-    var encodedMail = new Buffer(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
-        return encodedMail;
+function composeEmail(sender, to, subject, body){
+    return btoa(
+        "Content-Type:  text/plain; charset=\"UTF-8\"\n" +
+        "Content-length: 5000\n" +
+        "Content-Transfer-Encoding: message/rfc2822\n" +
+        `to: ${to}\n` +
+        `from: \"test\" <${sender}>\n` +
+        `subject:${subject}\n\n` +
+        body
+    ).replace(/\+/g, '-').replace(/\//g, '_');
 }
 
 function sendEmail(email) {
@@ -261,14 +260,11 @@ function sendEmail(email) {
     let sendRequest = window.gapi.client.gmail.users.messages.send({
         "userId": 'me',
         "resource": {
-            "raw":email
+            raw: email
         },
-        "auth": window.gapi.auth2.getAuthInstance()
     }, (e, res) => {
         console.log(res.data);
-        console.log('Prediction:', res.data);
     });
     sendRequest.execute(()=>console.log("lol"));
-    console.log("message sent!");
 }
 
