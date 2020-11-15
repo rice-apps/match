@@ -6,7 +6,7 @@ const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 /* This is the main entrypoint for applying rules.
 All other functions/declarations in this file are helpers
 for this 'apply' function. */
-export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColumn, rightEmailColumn) {
+export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColumn, rightEmailColumn, isLocallyMatched, isGloballyMatched) {
   // First copy the data b/c its read only
   let copiedData = data.slice();
 
@@ -57,6 +57,47 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
 
   // Add distance data to right if used in sort/filter
   filtered_and_sorted = showDistanceData(filtered_and_sorted, sorts, filters, leftRow);
+
+  filtered_and_sorted.sort((r1, r2) => {
+    if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
+      if (isGloballyMatched(r1) && !isGloballyMatched(r2)) {
+        return 1;
+      } else if (!isGloballyMatched(r1) && isGloballyMatched(r2)) {
+        return -1;
+      } else {
+        return 0;
+      }
+      
+        //   if (isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
+        //   return -1;
+        // } else if (!isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
+        //   return 1;
+        // } else if (!isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
+        //     if (isGloballyMatched(r1) && !isGloballyMatched(r2)) {
+        //     return 1;
+        //   } else if (!isGloballyMatched(r1) && isGloballyMatched(r2)) {
+        //     return -1;
+        //   }
+        //   } else {
+        //     return 0;
+        //   }
+        // } else {
+        //   return 0;
+        // }
+    }
+  });
+
+  filtered_and_sorted.sort((r1, r2) => {
+    if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
+      if (isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
+        return -1;
+      } else if (!isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  });
 
   return filtered_and_sorted;
 }
