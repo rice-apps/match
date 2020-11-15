@@ -16,31 +16,25 @@ export function formatData(data, allowManualSort) {
         let columnTitle = column.length > MAX_COLUMN_TITLE_LENGTH ? column.slice(0, MAX_COLUMN_TITLE_LENGTH) + "..." : column
 
         // If this is the right side and there are rules, don't allow manual sort
-        if (!allowManualSort) {
-            return {
-                index: columnIndex,
-                fixed: false,
-                key: key,
-                width: 150,
-                dataIndex: key,
-                title: columnTitle,
-                fullTitle: column,
-                ellipsis: true,
-            };
-        } else {
-            return {
-                index: columnIndex,
-                fixed: false,
-                key: key,
-                width: 150,
-                dataIndex: key,
-                title: columnTitle,
-                fullTitle: column,
-                ellipsis: true,
+        let result = {
+            index: columnIndex,
+            fixed: false,
+            key: key,
+            width: columnIndex == 0 ? 100 : 150, // Make 0th column less wide
+            dataIndex: key,
+            title: columnTitle,
+            fullTitle: column,
+            ellipsis: true,
+            hidden: columnIndex >= 4, // Only show first 4 columns
+        }
+        if (allowManualSort) {
+            result = {
+                ...result,
                 sorter: (a, b) => a[key] > b[key],
                 sortDirections: ['descend', 'ascend'],
-            };
+            }
         }
+        return result;
     });
 
     // Excluding column header row, map all rows into formatted object

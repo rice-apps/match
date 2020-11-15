@@ -107,6 +107,10 @@ export default function SheetsLoader(props) {
             newDataState.nameColumn = nameColumnIndex > -1 ? newDataState.columns[nameColumnIndex] : newDataState.columns[2];
             // Assuming email column is 2nd if we don't find it
             newDataState.emailColumn = emailColumnIndex > -1 ? newDataState.columns[emailColumnIndex] : newDataState.columns[1];
+            
+            // Unhide the match column
+            if (newDataState.matchColumn) newDataState.matchColumn.hidden = false;
+            
             props.onUpload(oldDataState => {
                 return {
                     ...oldDataState,
