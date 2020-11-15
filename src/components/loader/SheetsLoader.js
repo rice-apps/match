@@ -63,6 +63,7 @@ export default function SheetsLoader(props) {
                     let fullName = formatFullName(row[firstNameIdx], row[lastNameIdx]);
                     // Add empty strings until we get to the last column slot
                     while (row.length < colNames.length - 1) {
+                        row.push("");
                     }
                     // Add the full name in the last spot. It needs to go here to avoid changing column indices
                     row.push(fullName);
