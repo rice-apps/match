@@ -167,11 +167,25 @@ export default function Matcher() {
    * Checks who the person on the right is matched to
    * @param leftRow 
    */
-  function getLeftMatch(leftRow){
+  function getFirstRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
     if (leftMatches) {
       return JSON.parse(leftMatches)[0];
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Gets everyone on the right that the left is matched to
+   * @param leftRow
+   */
+  function getEachRightMatchedByLeft(leftRow){
+    let leftMatches = leftRow[leftMatchColumn.key];
+    // If right matches is null, just return null.
+    if (leftMatches) {
+      return JSON.parse(leftMatches);
     } else {
       return null;
     }
@@ -224,8 +238,10 @@ export default function Matcher() {
                   matchingEnabled = {matchingEnabled}
                   match = {match}
                   unmatch = {unmatch}
-                  getLeftMatch = {getLeftMatch}
-                  getRightMatch = {getRightMatch}/>
+                  getLeftMatch = {getFirstRightMatchedByLeft}
+                  getRightMatch = {getRightMatch}
+                  getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+                  />
               </SplitPane>
             </div>
           </LoadingOverlay>
