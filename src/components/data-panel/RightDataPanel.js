@@ -32,28 +32,9 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, rightEmailColumn, isLocallyMatched, isGloballyMatched);
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, 
+                                rightEmailColumn, props.rightMatchedToSpecificLeft, props.rightMatchedToAnyLeft);
 
-  /**
-   * Checks if two rows are matched to each other
-   * @param rightRow the right row
-   * @param leftRow the left row
-   */
-  function rightMatchedToSpecificLeft(rightRow, leftRow) {
-    // Read Right Match
-    let rightMatch = props.getRightMatch(rightRow);
-    let leftEmail = leftRow[leftEmailColumn.key];
-    return (rightMatch && leftRow) && (rightMatch == leftEmail)
-  }
-
-  /**
-   * Checks if a person on the right is matched to anyone on the left
-   * @param rightRow the row on the right to check
-   */
-  function rightMatchedToAnyLeft(rightRow){
-    let rightMatch = props.getRightMatch(rightRow);
-    return rightMatch;
-  }
 
   // This determines the CSS class of all rows in this right table
   function rightRowClassNameGetter(row, index) {
@@ -70,7 +51,7 @@ export default function RightDataPanel(props) {
       }
 
       // Right now just if it is not empty string or not empty list, consider it matached
-      if (rightMatchedToAnyLeft(row)) {
+      if (props.rightMatchedToAnyLeft(row)) {
         return "matched-row"
       }
     }
@@ -134,7 +115,7 @@ export default function RightDataPanel(props) {
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
           function generateButton() {
             if (matchingEnabled) {
-              if (rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
+              if (props.rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
                 //Unmatch
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               }
@@ -162,7 +143,7 @@ export default function RightDataPanel(props) {
                 }
               } else {
                 // CovidSitters/others
-                if(rightMatchedToAnyLeft(row)) {
+                if(props.rightMatchedToAnyLeft(row)) {
                   //Disabled "Already Matched"
                   let leftEmail = props.getRightMatch(row);
                   let tooltip = name+" is already matched to "+leftEmail+"!";

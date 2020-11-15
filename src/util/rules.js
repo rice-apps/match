@@ -60,31 +60,15 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
 
   filtered_and_sorted.sort((r1, r2) => {
     if (leftRow && leftMatchColumn && leftEmailColumn && rightEmailColumn) {
-      if (isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
-        return 0;
-      }
+      // Matched to selected person on left: sort up
+      if (isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) return 0;
+      if (isLocallyMatched(r1, leftRow)) return -1;
+      if (isLocallyMatched(r2, leftRow)) return 1;
 
-      if (isLocallyMatched(r1, leftRow)) {
-        return -1;
-      }
-
-      if (isLocallyMatched(r2, leftRow)) {
-        return 1;
-      }
-
-      //   return -1;
-      // } else if (!isLocallyMatched(r1, leftRow) && isLocallyMatched(r2, leftRow)) {
-      //   return 1;
-      // }
-
-
-      if (isGloballyMatched(r1) && !isGloballyMatched(r2)) {
-        return 1;
-      } else if (!isGloballyMatched(r1) && isGloballyMatched(r2)) {
-        return -1;
-      } else {
-        return 0;
-      }
+      // Already matched to someone else: sort down
+      if (isGloballyMatched(r1) == isGloballyMatched(r2)) return 0;
+      if (isGloballyMatched(r1)) return 1;
+      if (isGloballyMatched(r2)) return -1;
       
         //   if (isLocallyMatched(r1, leftRow) && !isLocallyMatched(r2, leftRow)) {
         //   return -1;

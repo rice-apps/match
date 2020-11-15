@@ -137,7 +137,7 @@ export default function Matcher() {
     let leftInfo = getSelectedLeftInfo(row);
     let rightEmail = row[rightEmailColumn.key];
     //Get Cross indecies
-    let rightInLeftIndex = leftInfo.value.map(list => list[0]).indexOf(rightEmail);
+    let rightInLeftIndex = leftInfo.value.indexOf(rightEmail);
     //Unmatch logic
     leftInfo.value.splice(rightInLeftIndex, 1)
     //Write to google sheets
@@ -187,12 +187,37 @@ export default function Matcher() {
     }
   }
 
+  /**
+   * Gets a list of each of the left emails that are matched to a given person on the right
+   * @param rightRow the row on the right to check for matches to
+   */
   function getEachLeftMatchedByRight(rightRow) {
     return leftData
     .filter(row => {
       let leftMatch = row[leftMatchColumn.key];
-      return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
+      return leftMatch && rightRow[rightEmailColumn.key] && leftMatch.includes(rightRow[rightEmailColumn.key])
     }).map(row => row[leftEmailColumn.key]);
+  }
+
+  /**
+   * Checks if two rows are matched to each other
+   * @param rightRow the right row
+   * @param leftRow the left row
+   */
+  function rightMatchedToSpecificLeft(rightRow, leftRow) {
+    // Read Right Match
+    let rightMatches = getEachRightMatchedByLeft(leftRow);
+    let rightEmail = rightRow[rightEmailColumn.key];
+    return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
+  }
+
+  /**
+   * Checks if a person on the right is matched to anyone on the left
+   * @param rightRow the row on the right to check
+   */
+  function rightMatchedToAnyLeft(rightRow){
+    let rightMatch = getEachLeftMatchedByRight(rightRow);
+    return rightMatch.length > 0;
   }
 
   return (
@@ -246,6 +271,8 @@ export default function Matcher() {
                   getRightMatch = {getRightMatch}
                   getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
                   getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
+                  rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
+                  rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
                   />
               </SplitPane>
             </div>
