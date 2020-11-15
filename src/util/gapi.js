@@ -258,12 +258,17 @@ function makeBody(to, from, subject, message) {
 
 function sendEmail(email) {
     console.log("Sending...")
-    window.gapi.client.gmail.users.messages.send({
+    let sendRequest = window.gapi.client.gmail.users.messages.send({
         "userId": 'me',
         "resource": {
             "raw":email
         },
         "auth": window.gapi.auth2.getAuthInstance()
-    }).then(()=>console.log("done!"));
+    }, (e, res) => {
+        console.log(res.data);
+        console.log('Prediction:', res.data);
+    });
+    sendRequest.execute(()=>console.log("lol"));
+    console.log("message sent!");
 }
 
