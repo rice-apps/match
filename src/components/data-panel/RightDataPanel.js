@@ -39,7 +39,7 @@ export default function RightDataPanel(props) {
    * @param rightRow the right row
    * @param leftRow the left row
    */
-  function isLocallyMatched(rightRow, leftRow) {
+  function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
     let rightMatch = props.getRightMatch(rightRow);
     let leftEmail = leftRow[leftEmailColumn.key];
@@ -50,18 +50,9 @@ export default function RightDataPanel(props) {
    * Checks if a person on the right is matched to anyone on the left
    * @param rightRow the row on the right to check
    */
-  function isGloballyMatched(rightRow){
+  function rightMatchedToAnyLeft(rightRow){
     let rightMatch = props.getRightMatch(rightRow);
     return rightMatch;
-  }
-
-    /**
-   * Checks if a person on the left is matched to anyone on the right
-   * @param leftRow the row on the right to check
-   */
-  function isGloballyMatchedLeft(leftRow){
-    let leftMatch = props.getLeftMatch(leftRow);
-    return leftMatch;
   }
 
   // This determines the CSS class of all rows in this right table
@@ -79,7 +70,7 @@ export default function RightDataPanel(props) {
       }
 
       // Right now just if it is not empty string or not empty list, consider it matached
-      if (isGloballyMatched(row)) {
+      if (rightMatchedToAnyLeft(row)) {
         return "matched-row"
       }
     }
@@ -143,21 +134,35 @@ export default function RightDataPanel(props) {
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
           function generateButton() {
             if (matchingEnabled) {
-              if (isLocallyMatched(row, selectedLeftRows[0])) {
+              if (rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
                 //Unmatch
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               }
+
               // HivesForHeroes (newbees (left) can be matched to multiple people on right)
               if (isHivesForHeroes()) {
-                if (isGloballyMatchedLeft(selectedLeftRows[0])) {
-                  //Disabled "Already Matched"
-                  let rightEmail = props.getLeftMatch(selectedLeftRows[0]);
-                  let tooltip = "NewBEE already matched to "+rightEmail+"!";
+                const rightRows = props.getEachRightMatchedByLeft(selectedLeftRows[0]);
+                const leftRows = props.getEachLeftMatchedByRight(row);
+                // NewBEE can only match to a single mentor
+                if (rightRows && rightRows.length > 0) {
+                  let tooltip = "NewBEE already matched to: "+ rightRows.join(', ')+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
+                }
+
+                if (leftRows && leftRows.length > 0) {
+                  // mentor matched to (< 3 newbees, still allow further matching)
+                  if (leftRows.length < 3) {
+                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
+                    return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
+                  } else {
+                    // mentor matched to (>= 3 newbees, no more matching allowed)
+                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
+                    return <Tooltip color = {'red'} title={tooltip}><Button disabled = {true} onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
+                  }  
                 }
               } else {
                 // CovidSitters/others
-                if(isGloballyMatched(row)) {
+                if(rightMatchedToAnyLeft(row)) {
                   //Disabled "Already Matched"
                   let leftEmail = props.getRightMatch(row);
                   let tooltip = name+" is already matched to "+leftEmail+"!";

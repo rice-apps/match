@@ -150,11 +150,7 @@ export default function Matcher() {
    */
   function getRightMatch(rightRow){
     // let rightMatches = rightRow[rightMatchColumn.key];
-    let rightMatches = leftData
-      .filter(row => {
-        let leftMatch = row[leftMatchColumn.key];
-        return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
-      }).map(row => row[leftEmailColumn.key]);
+    let rightMatches = getEachLeftMatchedByRight(rightRow);
     // If right matches is null, just return null.
     if (rightMatches) {
       return rightMatches[0];
@@ -167,7 +163,7 @@ export default function Matcher() {
    * Checks who the person on the right is matched to
    * @param leftRow 
    */
-  function getLeftMatch(leftRow){
+  function getFirstRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
     if (leftMatches) {
@@ -175,6 +171,28 @@ export default function Matcher() {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Gets everyone on the right that the left is matched to
+   * @param leftRow
+   */
+  function getEachRightMatchedByLeft(leftRow){
+    let leftMatches = leftRow[leftMatchColumn.key];
+    // If right matches is null, just return null.
+    if (leftMatches) {
+      return JSON.parse(leftMatches);
+    } else {
+      return null;
+    }
+  }
+
+  function getEachLeftMatchedByRight(rightRow) {
+    return leftData
+    .filter(row => {
+      let leftMatch = row[leftMatchColumn.key];
+      return leftMatch && leftMatch.includes(rightRow[rightEmailColumn.key])
+    }).map(row => row[leftEmailColumn.key]);
   }
 
   return (
@@ -224,8 +242,11 @@ export default function Matcher() {
                   matchingEnabled = {matchingEnabled}
                   match = {match}
                   unmatch = {unmatch}
-                  getLeftMatch = {getLeftMatch}
-                  getRightMatch = {getRightMatch}/>
+                  getLeftMatch = {getFirstRightMatchedByLeft}
+                  getRightMatch = {getRightMatch}
+                  getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+                  getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
+                  />
               </SplitPane>
             </div>
           </LoadingOverlay>
