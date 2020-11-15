@@ -48,6 +48,7 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
   //     },
   //   });
   // }
+  }
 
   // Filter the data
   let filtered = applyFilters(filters, copiedData, leftRow);
