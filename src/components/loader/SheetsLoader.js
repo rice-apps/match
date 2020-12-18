@@ -21,7 +21,7 @@ let DEFAULT_MENTOR_SPREADSHEET_ID = "1Sm0jsq0_7fhpsSgUHAbHyIGfERaGLDAp8_mitdrXCv
 let LIVE_NEWBEE_SPREADSHEET_ID = "17maAlF5tembV5IdXew-kbmnWReVn1IPXpXbL3hDq69Q";
 let LIVE_MENTOR_SPREADSHEET_ID = "18iPzwxmvO5yHj09e5qDwHlriQAh2jc6kocQFRLdP0wc";
 
-let liveUsers = ["hivesforheroeshq@gmail.com","adz2@rice.edu"]
+let liveUsers = ["hivesforheroeshq@gmail.com"]
 
 const MATCH_COLUMN_NAME = "MATCH";
 
