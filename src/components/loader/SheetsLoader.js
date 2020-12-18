@@ -21,7 +21,7 @@ let DEFAULT_MENTOR_SPREADSHEET_ID = "1Sm0jsq0_7fhpsSgUHAbHyIGfERaGLDAp8_mitdrXCv
 let LIVE_NEWBEE_SPREADSHEET_ID = "17maAlF5tembV5IdXew-kbmnWReVn1IPXpXbL3hDq69Q";
 let LIVE_MENTOR_SPREADSHEET_ID = "18iPzwxmvO5yHj09e5qDwHlriQAh2jc6kocQFRLdP0wc";
 
-let liveUsers = ["hivesforheroeshq@gmail.com"]
+let liveUsers = ["hivesforheroeshq@gmail.com","adz2@rice.edu"]
 
 const MATCH_COLUMN_NAME = "MATCH";
 
@@ -33,7 +33,7 @@ export default function SheetsLoader(props) {
     const route = useLocation().pathname.split("/")[1];
     if (route === "hivesforheroes") {
         // HivesForHeroes (left : right)
-        let useLive = liveUsers.includes(user.email )
+        let useLive = user && liveUsers.includes(user.email)
         defaultSpreadsheetId = props.allowManualSort 
                                 ? (useLive ? LIVE_NEWBEE_SPREADSHEET_ID : DEFAULT_NEWBEE_SPREADSHEET_ID) 
                                 : (useLive ? LIVE_MENTOR_SPREADSHEET_ID : DEFAULT_MENTOR_SPREADSHEET_ID);
