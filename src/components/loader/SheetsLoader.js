@@ -17,24 +17,32 @@ let DEFAULT_STUDENT_SPREADSHEET_ID = "1C_eSI2aEe9Z2Lb2nMgyYMrdgEAnux67ywKuaP0wCH
 // HIVESFORHEROES
 let DEFAULT_NEWBEE_SPREADSHEET_ID = "1hiapWZBcL2mLhMeCjJIan_G37gFcQe-d8nT57mwKfXE";
 let DEFAULT_MENTOR_SPREADSHEET_ID = "1Sm0jsq0_7fhpsSgUHAbHyIGfERaGLDAp8_mitdrXCvs";
-        
+
+let LIVE_NEWBEE_SPREADSHEET_ID = "17maAlF5tembV5IdXew-kbmnWReVn1IPXpXbL3hDq69Q";
+let LIVE_MENTOR_SPREADSHEET_ID = "18iPzwxmvO5yHj09e5qDwHlriQAh2jc6kocQFRLdP0wc";
+
+let liveUsers = ["hivesforheroeshq@gmail.com"]
+
 const MATCH_COLUMN_NAME = "MATCH";
 
 export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.    
+    const { user } = useRecoilValue(applicationState);
+
     let defaultSpreadsheetId = "";
     const route = useLocation().pathname.split("/")[1];
     if (route === "hivesforheroes") {
         // HivesForHeroes (left : right)
-        defaultSpreadsheetId = props.allowManualSort ? DEFAULT_NEWBEE_SPREADSHEET_ID : DEFAULT_MENTOR_SPREADSHEET_ID;
+        let useLive = liveUsers.includes(user.email )
+        defaultSpreadsheetId = props.allowManualSort 
+                                ? (useLive ? LIVE_NEWBEE_SPREADSHEET_ID : DEFAULT_NEWBEE_SPREADSHEET_ID) 
+                                : (useLive ? LIVE_MENTOR_SPREADSHEET_ID : DEFAULT_MENTOR_SPREADSHEET_ID);
     } else {
         // CovidSitters (left : right)
         defaultSpreadsheetId = props.allowManualSort ? DEFAULT_HCW_SPREADSHEET_ID : DEFAULT_STUDENT_SPREADSHEET_ID;
     }
 
     const [spreadsheetId, setSpreadsheetId] = useState(defaultSpreadsheetId)
-
-    const { user } = useRecoilValue(applicationState);
 
     function loadGoogleSheet() {
         console.log("Loading google sheet")
