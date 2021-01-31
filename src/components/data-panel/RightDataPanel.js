@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 export default function RightDataPanel(props) {
   const [{ data, columns, selectedRows: selectedRightRows, nameColumn: rightNameColumn, emailColumn: rightEmailColumn}, setRightData] = useRecoilState(rightDataState);
   const { data: leftData, selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn} = useRecoilValue(leftDataState);
+  const selectedLeftRow = selectedLeftRows.length > 0 ? selectedLeftRows[0] : null;
 
   const matchingEnabled = props.matchingEnabled;
 
@@ -43,7 +44,6 @@ export default function RightDataPanel(props) {
     // If the right row matches the selected left row, it is "selected-matched-row"
     // Be careful to make sure selectedLeftRow AND selectedLeftRow[leftMatchColumn.key] are non-NULL
     // Otherwise, this will explode
-    const selectedLeftRow = selectedLeftRows[0];
 
     if (matchingEnabled) {
       if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
@@ -58,17 +58,21 @@ export default function RightDataPanel(props) {
     }
 
     // Check if selected
-    if (selectedRightRows.map(r => r.key).includes(row.key)) {
+    // if (selectedRightRows.map(r => r.key).includes(row.key) && !(selectedLeftRow)) {
+    //   window.alert("Please select a left row to continue.")
+    // }
+
+    if (selectedRightRows.map(r => r.key).includes(row.key)){
       return "selected-row"
     }
 
     // Otherwise, just leave unmatched
     return "unmatched-row"
-
-  }
+    }
+  
 
   function addDistanceColumnIfNecessary(columns) {
-    if (selectedLeftRows.length == 0) return columns; // no one is selected
+    if (selectedLeftRow == null) return columns; // no one is selected
     if (!isAnyEnabledDistanceRule(rules)) return columns; // no enabled distance rule
 
     const distanceColumn = {
@@ -114,16 +118,17 @@ export default function RightDataPanel(props) {
       <div className="SelectionDisplay">
         {selectedRightRows.map((row, i) => {
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
+
           function generateButton() {
             if (matchingEnabled) {
-              if (props.rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
+              if (props.rightMatchedToSpecificLeft(row, selectedLeftRow)) {
                 //Unmatch
                 return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
               }
 
               // HivesForHeroes (newbees (left) can be matched to multiple people on right)
               if (isHivesForHeroes()) {
-                const rightRows = props.getEachRightMatchedByLeft(selectedLeftRows[0]);
+                const rightRows = props.getEachRightMatchedByLeft(selectedLeftRow);
                 const leftRows = props.getEachLeftMatchedByRight(row);
                 // NewBEE can only match to a single mentor
                 if (rightRows && rightRows.length > 0) {
@@ -158,7 +163,7 @@ export default function RightDataPanel(props) {
           return (<div key={i}>
             <FormattedCard
               title={name}
-              extra={generateButton()}
+              extra={selectedLeftRow && generateButton()}
               key={i}
               style={{ width: 300 }}
               row={row}
