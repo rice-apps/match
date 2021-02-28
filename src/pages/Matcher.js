@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
@@ -220,6 +220,92 @@ export default function Matcher() {
     return rightMatch.length > 0;
   }
 
+  function logInSalesforce(){
+    console.log("logging into sales force...")
+    window.location = '/auth/login';
+  }
+
+  function loginBody(){
+    return (
+       <div className="Body"> 
+        <div className="slds-modal slds-fade-in-open">
+         <div className="slds-modal__container">
+           <div className="slds-box slds-theme--shade">
+             <p className="slds-text-heading--medium slds-m-bottom--medium">Welcome, please log in with your Salesforce account:</p>
+             <div className="slds-align--absolute-center">
+               <button onClick={logInSalesforce} className="slds-button slds-button--brand">
+                 <svg aria-hidden="true" className="slds-button__icon--stateful slds-button__icon--left">
+                   <use xlinkHref="/assets/icons/utility-sprite/svg/symbols.svg#salesforce1"></use>
+                 </svg>
+                 Log in
+               </button>
+            </div>
+           </div>
+         </div>
+       </div>
+      </div>
+    );
+  }
+
+  function dataBody(){
+    return  <div className="Body">
+    {/* This is the loading screen */}
+    <LoadingOverlay
+      active={rightRefreshing || leftRefreshing}
+      spinner
+      text='Syncing...'
+    >
+      <div style={{ height: "90vh", width: "100vw" }}>
+        {/* Split plane to allow panel resizing */}
+        <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
+          <LeftDataPanel
+            matchingEnabled = {matchingEnabled}
+          />
+          <RightDataPanel
+            matchingEnabled = {matchingEnabled}
+            match = {match}
+            unmatch = {unmatch}
+            getLeftMatch = {getFirstRightMatchedByLeft}
+            getRightMatch = {getRightMatch}
+            getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+            getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
+            rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
+            rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
+            />
+        </SplitPane>
+      </div>
+    </LoadingOverlay>
+  </div>
+  }
+
+  function checkIfLoggedIn(){
+    const that = this;
+    fetch('/auth/whoami', {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+        console.log("RECEIVED RESPONSE",response);
+        if (response.ok) {
+          response.json().then(function(json) {
+            setAppState(prev => {
+              return {...prev, sfUser: json}
+            })
+          });
+        } else if (response.status !== 401) { // Ignore 'unauthorized' responses before logging in
+          console.error('Failed to retrieve logged user.', JSON.stringify(response));
+        } else {
+          console.error('Unauthorized', JSON.stringify(response));
+        }
+      });
+  }
+
+  //Check if logged in on component "mounting".
+  useEffect(checkIfLoggedIn, []);
+
+  console.log("APP STATE USER IS:",appState.sfUser);
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
@@ -250,35 +336,8 @@ export default function Matcher() {
             }
           </span>
         </div>
-        <div className="Body">
-          {/* This is the loading screen */}
-          <LoadingOverlay
-            active={rightRefreshing || leftRefreshing}
-            spinner
-            text='Syncing...'
-          >
-            <div style={{ height: "90vh", width: "100vw" }}>
-              {/* Split plane to allow panel resizing */}
-              <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-                <LeftDataPanel
-                  matchingEnabled = {matchingEnabled}
-                />
-                <RightDataPanel
-                  matchingEnabled = {matchingEnabled}
-                  match = {match}
-                  unmatch = {unmatch}
-                  getLeftMatch = {getFirstRightMatchedByLeft}
-                  getRightMatch = {getRightMatch}
-                  getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
-                  getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
-                  rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
-                  rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
-                  />
-              </SplitPane>
-            </div>
-          </LoadingOverlay>
-        </div>
-
+        {/* BODY */}
+        {appState.sfUser == null ? loginBody() : dataBody()}
       </div>
     </div>
   );

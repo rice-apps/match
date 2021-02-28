@@ -25,6 +25,7 @@ export function getAtomByKey(key) {
 // Generic app global state
 export const applicationState = atom({
     key: 'application',
+    sfUser: null,
     default: {
         user: null,
         sidebarOpen: false,
