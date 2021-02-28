@@ -260,9 +260,11 @@ export default function Matcher() {
         <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
           <LeftDataPanel
             matchingEnabled = {matchingEnabled}
+            salesforceEnabled = {true}
           />
           <RightDataPanel
             matchingEnabled = {matchingEnabled}
+            salesforceEnabled = {true}
             match = {match}
             unmatch = {unmatch}
             getLeftMatch = {getFirstRightMatchedByLeft}
