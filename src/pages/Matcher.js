@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
+import {loadSalesforceData} from '../util/salesforceInterface';
 
 import { Button, Checkbox } from 'antd';
 
@@ -49,9 +50,9 @@ export default function Matcher() {
 
   // This basically refreshes the data in memory, see where this is used.
   function onLeftSpreadsheetLoaded(response) {
-    var range = response.result;
-    if (range.values.length > 0) {
-      var newDataState = formatData(range.values, true);
+    var values = response.result;
+    if (values.length > 0) {
+      var newDataState = formatData(values, true);
       // console.log(newDataState)
       setLeftData(oldLeftData => {
         let newState = {
@@ -248,36 +249,47 @@ export default function Matcher() {
   }
 
   function dataBody(){
-    return  <div className="Body">
-    {/* This is the loading screen */}
-    <LoadingOverlay
-      active={rightRefreshing || leftRefreshing}
-      spinner
-      text='Syncing...'
-    >
-      <div style={{ height: "90vh", width: "100vw" }}>
-        {/* Split plane to allow panel resizing */}
-        <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-          <LeftDataPanel
-            matchingEnabled = {matchingEnabled}
-            salesforceEnabled = {true}
-          />
-          <RightDataPanel
-            matchingEnabled = {matchingEnabled}
-            salesforceEnabled = {true}
-            match = {match}
-            unmatch = {unmatch}
-            getLeftMatch = {getFirstRightMatchedByLeft}
-            getRightMatch = {getRightMatch}
-            getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
-            getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
-            rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
-            rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
+    //MAKE SURE DATA IS UPLOADED
+    //if data is not loaded
+      //load data
+      if (!leftRefreshing && leftData.length == 0)
+        loadSalesforceData(setLeftData, "Newbee")
+        
+    // IF REFRESHING 
+    const refreshing = false;
+    if (refreshing)
+      return <p> loading ... </p>
+    else
+      return  <div className="Body">
+      {/* This is the loading screen */}
+      <LoadingOverlay
+        active={rightRefreshing || leftRefreshing}
+        spinner
+        text='Syncing...'
+      >
+        <div style={{ height: "90vh", width: "100vw" }}>
+          {/* Split plane to allow panel resizing */}
+          <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
+            <LeftDataPanel
+              matchingEnabled = {matchingEnabled}
+              salesforceEnabled = {true}
             />
-        </SplitPane>
-      </div>
-    </LoadingOverlay>
-  </div>
+            <RightDataPanel
+              matchingEnabled = {matchingEnabled}
+              salesforceEnabled = {true}
+              match = {match}
+              unmatch = {unmatch}
+              getLeftMatch = {getFirstRightMatchedByLeft}
+              getRightMatch = {getRightMatch}
+              getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+              getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
+              rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
+              rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
+              />
+          </SplitPane>
+        </div>
+      </LoadingOverlay>
+    </div>
   }
 
   function checkIfLoggedIn(){

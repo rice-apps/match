@@ -1,8 +1,6 @@
 import React from 'react';
-import SheetsLoader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
-import { getLeftData } from "../../util/salesforceInterface";
 import { useRecoilState } from 'recoil';
 import { leftDataState, rightDataState } from '../../store/atoms';
 import {zipcodesToDistance} from '../../util/zipcode/zipcodeLogic.js';
@@ -110,8 +108,8 @@ export default function LeftDataPanel(props) {
     return "unmatched-row"
   }
 
-  if(data.length === 0)
-    setLeftData(getLeftData())
+  // if(data.length === 0)
+  //   setLeftData(getNewbees())
 
   return (
     <div className="DataPanel">
