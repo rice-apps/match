@@ -1,7 +1,13 @@
 import { formatData } from './dataFormatter';
 
 
-const setLoadingTrue = oldDataState => {
+/** SetState lambdas **/
+
+/**
+ * Sets the data state to "loading true"
+ * @param {*} oldDataState 
+ */
+const loadingLambda = oldDataState => {
     return {
         ...oldDataState,
         refreshing: true // show data is loading
@@ -9,50 +15,65 @@ const setLoadingTrue = oldDataState => {
 }
 
 /**
+ * Returns a lambda that can be passed to a setstate function
+ * to update the call. Also set's refreshing flag to false.
  * 
- * @param {Function} setLeft glorified setstate for newbees
- * @param {Function} setRight glorified setstate for mentors
+ * @param {*} newDataState 
  */
-export function loadSalesforceData(setLeft, setRight){
-    console.log("loadSalesforceData called!")
-    setLeft(setLoadingTrue)
-    setRight(setLoadingTrue)
-    getSalesforceData(setLeft, setRight)
+function generateDataLambda(newDataState){
+    return oldDataState => {
+        return {
+            ...oldDataState,
+            ...newDataState,
+            refreshing: false
+        }
+    }
 }
 
-/* Get both */
-function getSalesforceData(setLeft, setRight){
+/**
+ * Populates newbee and mentor data (left and right) 
+ * using setNewbees and setMentors
+ * 
+ * @param {Function} setNewbees setState function for newbees
+ * @param {Function} setMentors setState function for mentors
+ */
+export function loadSalesforceData(setNewbees, setMentors){
+    console.log("loadSalesforceData called!")
+    setLeft(loadingLambda)
+    setRight(loadingLambda)
+    getSalesforceData(setNewbees, setMentors)
+}
 
+/**
+ * Make API request to /contacts and hand data off to onLoaded callback function.
+ * 
+ * @param {Function} setNewbees setState function for newbees
+ * @param {Function} setMentors setState function for mentors
+ */
+function getSalesforceData(setNewbees, setMentors){
+    //TODO: Actually make the API request
+    //Mock data return.
     onSalesforceLoaded({
         "newBees":[['Email Address','Last Name','First Name','Zip Code'],
         [new Date(), 'leebron@rice.edu','baby Leebron','David','77005']],
 
         "mentors":[['Timestamp','Email Address','Last Name','First Name','Zip Code'],
         [new Date(), 'leebron@rice.edu','MENTOR LEEEBRONNN','David','77005']]
-    },setLeft, setRight)
+    },setNewbees, setMentors)
 }
 
-// /* Get data from backend */
-// function getNewbees(onUpload){
-//     console.log("getNewbees called!")
-//     onSalesforceLoaded({result:[
-//         ['Timestamp','Email Address','Last Name','First Name','Zip Code'],
-//         [new Date(), 'leebron@rice.edu','Leebron','David','77005']
-//     ]},onUpload)
-// }
-
-// /* Get data from backend */
-// function getMentors(onUpload){
-//     console.log("getMentors called!")
-//     onSalesforceLoaded({result:[
-//         ['Timestamp','Email Address','Last Name','First Name','Zip Code'],
-//         [new Date(), 'mentor@rice.edu','JAMES','David','77005']
-//     ]},onUpload)
-// }
-
-function onSalesforceLoaded(response, setLeft, setRight) {
+/**
+ * Take in the API response and call the setNewbees and setMentors f
+ * function to populate the data
+ * @param {Object} response the object recieved from the API request
+ * @param {Function} setNewbees setState function for newbees
+ * @param {Function} setMentors setState function for mentors
+ */
+function onSalesforceLoaded(response, setNewbees, setMentors) {
+    //TODO: This is very non-functional at the moment. Needs to be formatted correctly.
     console.log("onSalesforceLoaded called!")
     const values = response.result;
+    //TODO: Do a process like this but with "newbees" and "mentors"
     if (values.length > 0) {
         const allowManualSort = true
         var newDataState = formatData(values, allowManualSort);
@@ -73,6 +94,7 @@ function onSalesforceLoaded(response, setLeft, setRight) {
         // // Unhide the match column
         // if (newDataState.matchColumn) newDataState.matchColumn.hidden = false;
         
+        //USE setNewbess, setMentors, and generateDataLambda
         onUpload(oldDataState => {
             return {
                 ...oldDataState,
