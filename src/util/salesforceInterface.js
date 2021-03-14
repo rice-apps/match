@@ -20,7 +20,7 @@ export function loadSalesforceData(setNewbees, setMentors){
  * @param {Function} setMentors setState function for mentors
  */
 function getSalesforceData(setNewbees,setMentors){
-    fetch('/contacts/', { method: 'GET' })
+    fetch('/leftRightData/', { method: 'GET' })
     .then(response => response.json())
     .then(responseJson => onSalesforceLoaded(responseJson, setNewbees, setMentors))
     .catch(error => console.log('FETCH ERROR:', error)) //to catch the errors if any
