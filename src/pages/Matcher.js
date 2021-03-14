@@ -20,7 +20,8 @@ export default function Matcher() {
 
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
-    { matchColumn: rightMatchColumn,
+    { data: rightData,
+      matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
       emailColumn: rightEmailColumn,
       refreshing: rightRefreshing,
@@ -251,10 +252,9 @@ export default function Matcher() {
   function dataBody(){
     //MAKE SURE DATA IS UPLOADED
     //if data is not loaded
-      //load data
-      if (!leftRefreshing && leftData.length == 0)
-        loadSalesforceData(setLeftData, "Newbee")
-        
+    //load data
+    if ((!leftRefreshing && !rightRefreshing) && (leftData.length  == 0 ||rightData.length == 0)) 
+      loadSalesforceData(setLeftData, setRightData);
     // IF REFRESHING 
     const refreshing = false;
     if (refreshing)
