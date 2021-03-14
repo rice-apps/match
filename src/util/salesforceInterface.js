@@ -1,4 +1,4 @@
-import { formatData } from './dataFormatter';
+import {formatData} from './dataFormatter';
 
 /**
  * Populates newbee and mentor data (left and right) 
@@ -8,9 +8,8 @@ import { formatData } from './dataFormatter';
  * @param {Function} setMentors setState function for mentors
  */
 export function loadSalesforceData(setNewbees, setMentors){
-    console.log("loadSalesforceData called!")
-    setNewbees(setRefreshTrue)
-    setMentors(setRefreshTrue)
+    setNewbees(setRefreshing(true))
+    setMentors(setRefreshing(true))
     getSalesforceData(setNewbees, setMentors)
 }
 
@@ -23,10 +22,7 @@ export function loadSalesforceData(setNewbees, setMentors){
 function getSalesforceData(setNewbees,setMentors){
     fetch('/contacts/', { method: 'GET' })
     .then(response => response.json())
-    .then((responseJson) => {
-      console.log('responseJson', responseJson);
-      onSalesforceLoaded(responseJson, setNewbees, setMentors)
-    })
+    .then(responseJson => onSalesforceLoaded(responseJson, setNewbees, setMentors))
     .catch(error => console.log('FETCH ERROR:', error)) //to catch the errors if any
 }
 
@@ -56,7 +52,6 @@ function postData(data, setFunction, allowManualSort){
         //Initialize data structure.
         var newDataState = formatData(data, allowManualSort);
         newDataState.selectedRows = [];
-
         //Set the data state.
         setFunction(setData(newDataState))
         //Indicate success.
@@ -66,16 +61,19 @@ function postData(data, setFunction, allowManualSort){
     return false;
 }
 
-/** SetState lambdas **/
-
+/** SetState lambda generator **/
 /**
- * Sets the data state to "loading true"
- * @param {*} oldDataState 
+ * Returns a lmabs that will set the refresh value to whatever
+ * specified.
+ * 
+ * @param {boolean} refreshValue 
  */
-const setRefreshTrue = oldDataState => {
-    return {
-        ...oldDataState,
-        refreshing: true // show data is loading
+function setRefreshing(refreshValue){
+    return oldDataState => {
+        return {
+            ...oldDataState,
+            refreshing: refreshValue
+        }
     }
 }
 
