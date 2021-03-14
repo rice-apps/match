@@ -250,17 +250,12 @@ export default function Matcher() {
   }
 
   function dataBody(){
-    //MAKE SURE DATA IS UPLOADED
-    //if data is not loaded
-    //load data
+    //Load data if unloaded.
     if ((!leftRefreshing && !rightRefreshing) && (leftData.length  == 0 ||rightData.length == 0)) 
       loadSalesforceData(setLeftData, setRightData);
-    // IF REFRESHING 
-    const refreshing = false;
-    if (refreshing)
-      return <p> loading ... </p>
-    else
-      return  <div className="Body">
+
+    //Return visual component.
+    return  <div className="Body">
       {/* This is the loading screen */}
       <LoadingOverlay
         active={rightRefreshing || leftRefreshing}
