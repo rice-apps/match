@@ -1,6 +1,52 @@
 import {formatData} from './dataFormatter';
 
 
+/** POST DATA **/
+/**
+ * 
+ * @param {*} newbeeID 
+ * @param {*} mentorID 
+ * @param {*} setNewbees 
+ * @param {*} setMentors 
+ */
+export function postUnmatch(newbeeID, mentorID, setNewbees, setMentors){
+    return;
+}
+
+/**
+ * 
+ * @param {*} newbeeID 
+ * @param {*} mentorID 
+ * @param {*} setNewbees 
+ * @param {*} setMentors 
+ */
+export function postMatch(newbeeID, mentorID, setNewbees, setMentors){
+    console.log(`Matching: ${newbeeID} with ${mentorID}`);
+    //Set refreshing true.
+    setNewbees(setRefreshing(true));
+    setMentors(setRefreshing(true));
+    //Make API request
+    fetch('/match', { method: 'POST', parameters:{newbee:newbeeID, mentor: mentorID }})
+        .then(response => {
+         const status = response.status
+         if (status == 200) {
+            //Match successfully made :)
+            //Update local data (and set refreshing to false):
+
+         } else {
+             //Something went wrong :(
+             //Refresh local data (and set refreshing to false):
+             //Indicate somehoe that data was out of sync
+             loadSalesforceData(setNewbees, setMentors);
+             console.log("Error fetching data")
+         } 
+        })
+        .catch(error => console.log('FETCH ERROR:', error)); //to catch the errors if any
+
+    return;
+}
+
+/** GET DATA **/
 /**
  * Populates newbee and mentor data (left and right) 
  * using setNewbees and setMentors
@@ -44,28 +90,54 @@ function onSalesforceLoaded(response, setNewbees, setMentors) {
 /**
  * Takes in data, formats it, and sets it using the passed setState function.
  * 
- * @param {*} data The arary of arrays storing the data (first row is column names)
+ * @param {*} data The array of arrays storing the data (first row is column names)
  * @param {*} setFunction The set state function to use
  * @param {*} allowManualSort Whether or not to allowManualSort (true if left side)
  */
 function postData(data, setFunction, allowManualSort){
     if (data.length > 1) {
         //Initialize data structure.
-        var newDataState = formatData(data, allowManualSort);
+        let newDataState = formatData(data, allowManualSort);
+        let columns = newDataState.columns
         newDataState.selectedRows = [];
-        //Sepcify email column
-        newDataState.emailColumn = null;
+
+        //Specify email column
+        newDataState.emailColumn = getColumn(columns, 'email');
 
         //Specify match column
-        newDataState.matchColumn = null;
+        newDataState.matchColumn = getColumn(columns, 'mentor_id');
         
+        //Specify id column
+        newDataState.idColumn = getColumn(columns, 'salesforce_id');
+
+        console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
+
         //Set the data state.
         setFunction(setData(newDataState));
+
         //Indicate success.
         return true;
     } 
     //Indicate failure.
     return false;
+}
+
+/**
+ * Returns the entry with a specified key value.
+ * 
+ * @param {Array} columns
+ * @param {string} keyValue 
+ * @return {Object} column with specified key
+ */
+function getColumn(columns, keyValue) {
+    const col = columns.findIndex((obj) => {
+        return obj.key === keyValue
+    });
+
+    if(col < 0)
+        return null;
+    return columns[col];
+
 }
 
 /** 
@@ -101,13 +173,4 @@ function setData(newDataState){
             refreshing: false
         }
     }
-}
-
-
-export function unmatchAPI(newbeeID, mentorID){
-    return;
-}
-
-export function matchAPI(newbeeID, mentorID){
-    return;
 }

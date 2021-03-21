@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
-import {loadSalesforceData} from '../util/salesforceInterface';
+import {loadSalesforceData, postUnmatch, postMatch} from '../util/salesforceInterface';
 
 import { Button, Checkbox } from 'antd';
 
@@ -21,6 +21,7 @@ export default function Matcher() {
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
     { data: rightData,
+      idColumn: rightIdColumn,
       matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
       emailColumn: rightEmailColumn,
@@ -30,6 +31,7 @@ export default function Matcher() {
     { data: leftData,
       selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
+      idColumn: leftIdColumn,
       spreadsheetId: leftSpreadsheetId,
       emailColumn: leftEmailColumn,
       refreshing: leftRefreshing,
@@ -40,8 +42,8 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = rightEmailColumn && leftEmailColumn && leftMatchColumn;
-  console.log("matchingEnabled:",rightEmailColumn, leftEmailColumn, leftMatchColumn)
+  var matchingEnabled = rightIdColumn && leftIdColumn && leftMatchColumn;
+  console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({
@@ -113,7 +115,7 @@ export default function Matcher() {
       value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
       rowIndex: parseInt(selectedLeftRows[0].key) + 2,
       columnIndex: leftMatchColumn.index + 1,
-      entryId: selectedLeftRows[0][leftEmailColumn.key]
+      entryId: selectedLeftRows[0][leftIdColumn.key]
     }
   }
 
@@ -122,13 +124,10 @@ export default function Matcher() {
    * @param row a right row
    */
   function match(row) {
-    //Get info
-    let leftInfo = getSelectedLeftInfo(row);
-    let rightEmail = row[rightEmailColumn.key];
-    //Match logic
-    leftInfo.value.push(rightEmail);
-    //Write to google sheets
-    writeToLeftGoogleSheet(leftInfo)
+    const leftInfo = getSelectedLeftInfo(row);
+    const mentorId = row.mentorId;
+    const newbeeId = leftInfo.entryId; 
+    postMatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
   /**
@@ -136,15 +135,10 @@ export default function Matcher() {
    * @param row the row on the right
    */
   function unmatch(row) {
-    //Get info
-    let leftInfo = getSelectedLeftInfo(row);
-    let rightEmail = row[rightEmailColumn.key];
-    //Get Cross indecies
-    let rightInLeftIndex = leftInfo.value.indexOf(rightEmail);
-    //Unmatch logic
-    leftInfo.value.splice(rightInLeftIndex, 1)
-    //Write to google sheets
-    writeToLeftGoogleSheet(leftInfo)
+    const leftInfo = getSelectedLeftInfo(row);
+    const mentorId = row.mentorId;
+    const newbeeId = leftInfo.entryId; 
+    postUnmatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
   /**
@@ -198,8 +192,8 @@ export default function Matcher() {
     return leftData
     .filter(row => {
       let leftMatch = row[leftMatchColumn.key];
-      return leftMatch && rightRow[rightEmailColumn.key] && leftMatch.includes(rightRow[rightEmailColumn.key])
-    }).map(row => row[leftEmailColumn.key]);
+      return leftMatch && rightRow[rightIdColumn.key] && leftMatch.includes(rightRow[rightIdColumn.key])
+    }).map(row => row[leftIdColumn.key]);
   }
 
   /**
@@ -209,8 +203,9 @@ export default function Matcher() {
    */
   function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
+    console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
-    let rightEmail = rightRow[rightEmailColumn.key];
+    let rightEmail = rightRow[rightIdColumn.key];
     return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
   }
 
