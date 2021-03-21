@@ -115,6 +115,7 @@ export default function RightDataPanel(props) {
         {selectedRightRows.map((row, i) => {
           let name = rightNameColumn ? row[rightNameColumn.key] : "Right Card";
           function generateButton() {
+            console.log("BUTTON GENERATE? ::",matchingEnabled)
             if (matchingEnabled) {
               if (props.rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
                 //Unmatch

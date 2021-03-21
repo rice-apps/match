@@ -40,7 +40,8 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && leftMatchColumn;
+  var matchingEnabled = rightEmailColumn && leftEmailColumn && leftMatchColumn;
+  console.log("matchingEnabled:",rightEmailColumn, leftEmailColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({

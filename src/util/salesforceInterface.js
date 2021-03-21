@@ -1,5 +1,6 @@
 import {formatData} from './dataFormatter';
 
+
 /**
  * Populates newbee and mentor data (left and right) 
  * using setNewbees and setMentors
@@ -52,6 +53,12 @@ function postData(data, setFunction, allowManualSort){
         //Initialize data structure.
         var newDataState = formatData(data, allowManualSort);
         newDataState.selectedRows = [];
+        //Sepcify email column
+        newDataState.emailColumn = null;
+
+        //Specify match column
+        newDataState.matchColumn = null;
+        
         //Set the data state.
         setFunction(setData(newDataState));
         //Indicate success.
@@ -94,4 +101,13 @@ function setData(newDataState){
             refreshing: false
         }
     }
+}
+
+
+export function unmatchAPI(newbeeID, mentorID){
+    return;
+}
+
+export function matchAPI(newbeeID, mentorID){
+    return;
 }
