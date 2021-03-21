@@ -8,9 +8,9 @@ import {formatData} from './dataFormatter';
  * @param {Function} setMentors setState function for mentors
  */
 export function loadSalesforceData(setNewbees, setMentors){
-    setNewbees(setRefreshing(true))
-    setMentors(setRefreshing(true))
-    getSalesforceData(setNewbees, setMentors)
+    setNewbees(setRefreshing(true));
+    setMentors(setRefreshing(true));
+    getSalesforceData(setNewbees, setMentors);
 }
 
 /**
@@ -19,11 +19,11 @@ export function loadSalesforceData(setNewbees, setMentors){
  * @param {Function} setNewbees setState function for newbees
  * @param {Function} setMentors setState function for mentors
  */
-function getSalesforceData(setNewbees,setMentors){
+function getSalesforceData(setNewbees,setMentors) {
     fetch('/leftRightData/', { method: 'GET' })
     .then(response => response.json())
     .then(responseJson => onSalesforceLoaded(responseJson, setNewbees, setMentors))
-    .catch(error => console.log('FETCH ERROR:', error)) //to catch the errors if any
+    .catch(error => console.log('FETCH ERROR:', error)); //to catch the errors if any
 }
 
 /**
@@ -35,9 +35,9 @@ function getSalesforceData(setNewbees,setMentors){
  */
 function onSalesforceLoaded(response, setNewbees, setMentors) {
     if (!postData(response.newBees,setNewbees,true)) 
-        alert("No newBee data!")
+        alert("No newBee data!");
     if (!postData(response.mentors,setMentors,false))
-        alert("No mentor data!")
+        alert("No mentor data!");
 }
 
 /**
@@ -48,12 +48,12 @@ function onSalesforceLoaded(response, setNewbees, setMentors) {
  * @param {*} allowManualSort Whether or not to allowManualSort (true if left side)
  */
 function postData(data, setFunction, allowManualSort){
-    if (data.length > 1){
+    if (data.length > 1) {
         //Initialize data structure.
         var newDataState = formatData(data, allowManualSort);
         newDataState.selectedRows = [];
         //Set the data state.
-        setFunction(setData(newDataState))
+        setFunction(setData(newDataState));
         //Indicate success.
         return true;
     } 
@@ -61,7 +61,10 @@ function postData(data, setFunction, allowManualSort){
     return false;
 }
 
-/** SetState lambda generator **/
+/** 
+ * SetState Lambda Generators 
+ **/
+
 /**
  * Returns a lmabs that will set the refresh value to whatever
  * specified.
