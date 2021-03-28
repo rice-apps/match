@@ -43,7 +43,7 @@ export default function Matcher() {
 
   //Disable matching variables & function
   var matchingEnabled = rightIdColumn && leftIdColumn && leftMatchColumn;
-  console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
+  //console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({
@@ -125,7 +125,7 @@ export default function Matcher() {
    */
   function match(row) {
     const leftInfo = getSelectedLeftInfo(row);
-    const mentorId = row.mentorId;
+    const mentorId = row[rightIdColumn.key];
     const newbeeId = leftInfo.entryId; 
     postMatch(newbeeId, mentorId, setLeftData, setRightData);
   }
@@ -178,7 +178,7 @@ export default function Matcher() {
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
     if (leftMatches) {
-      return JSON.parse(leftMatches);
+      return [leftMatches];
     } else {
       return null;
     }
@@ -203,7 +203,7 @@ export default function Matcher() {
    */
   function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
-    console.log("left row", leftRow);
+    //console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
     let rightEmail = rightRow[rightIdColumn.key];
     return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
@@ -292,7 +292,7 @@ export default function Matcher() {
                 'Content-Type': 'application/json',
             }
         }).then(function(response) {
-        console.log("RECEIVED RESPONSE",response);
+        //console.log("RECEIVED RESPONSE",response);
         if (response.ok) {
           response.json().then(function(json) {
             setAppState(prev => {
@@ -310,7 +310,7 @@ export default function Matcher() {
   //Check if logged in on component "mounting".
   useEffect(checkIfLoggedIn, []);
 
-  console.log("APP STATE USER IS:",appState.sfUser);
+  //console.log("APP STATE USER IS:",appState.sfUser);
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>

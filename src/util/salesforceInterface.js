@@ -1,6 +1,5 @@
 import {formatData} from './dataFormatter';
 
-
 /** POST DATA **/
 /**
  * 
@@ -20,26 +19,36 @@ export function postUnmatch(newbeeID, mentorID, setNewbees, setMentors){
  * @param {*} setNewbees 
  * @param {*} setMentors 
  */
-export function postMatch(newbeeID, mentorID, setNewbees, setMentors){
+export function postMatch(newbeeID, mentorID, setNewbees, setMentors) {
     console.log(`Matching: ${newbeeID} with ${mentorID}`);
     //Set refreshing true.
     setNewbees(setRefreshing(true));
     setMentors(setRefreshing(true));
     //Make API request
-    fetch('/match', { method: 'POST', parameters:{newbee:newbeeID, mentor: mentorID }})
+    // http://localhost:3030/match?newbee=0030r00000enrFSAAY&mentor=0030r00000eQbuJAAS
+    fetch(`/match?newbee=${newbeeID}&mentor=${mentorID}`, { method: 'POST'})
         .then(response => {
-         const status = response.status
-         if (status == 200) {
-            //Match successfully made :)
-            //Update local data (and set refreshing to false):
-
-         } else {
-             //Something went wrong :(
-             //Refresh local data (and set refreshing to false):
-             //Indicate somehoe that data was out of sync
-             loadSalesforceData(setNewbees, setMentors);
-             console.log("Error fetching data")
-         } 
+            const status = response.status;
+            if (status == 200) {
+                //Match successfully made :)
+                //Update local data 
+                setMentorOfNewbee(newbeeID,mentorID,setNewbees);
+                //Set refreshing to false
+                setNewbees(setRefreshing(false));
+                setMentors(setRefreshing(false));
+            } 
+            else {
+                //Alert status error.
+                //Something went wrong :(
+                //Indicate somehow that data was out of sync
+                console.log("Error fetching data.");
+                if (status == 406)
+                    alert("Error code:"+status+"! Data out of sync. Refershing local data.");
+                else
+                    alert("Error code:"+status+"! Refreshing local data.");
+                //Refresh local data (and set refreshing to false):
+                loadSalesforceData(setNewbees, setMentors);
+            } 
         })
         .catch(error => console.log('FETCH ERROR:', error)); //to catch the errors if any
 
@@ -110,7 +119,7 @@ function postData(data, setFunction, allowManualSort){
         //Specify id column
         newDataState.idColumn = getColumn(columns, 'salesforce_id');
 
-        console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
+        //console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
 
         //Set the data state.
         setFunction(setData(newDataState));
@@ -120,6 +129,30 @@ function postData(data, setFunction, allowManualSort){
     } 
     //Indicate failure.
     return false;
+}
+
+/**
+ * Sets the local newbee column's id to the speicifed newMentorID
+ * @param {*} newbeeID 
+ * @param {*} newMentorID 
+ */
+function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
+    setNewbees(oldDataState => {
+        //Extract column names.
+        const idCol = oldDataState.idColumn.key;
+        const mentorCol = oldDataState.matchColumn.key;
+        //Deep copy of data state.
+        let newDataState = JSON.parse(JSON.stringify(oldDataState));
+        console.log("State started as",newDataState);
+        //Find column to mutate.
+        newDataState.data.forEach(row => {
+            if (row[idCol] === newbeeID) 
+                //Mutate said column to newMentorID
+                row[mentorCol] = newMentorID;
+        });
+        console.log("State finished as",newDataState);
+        return newDataState;
+    });
 }
 
 /**

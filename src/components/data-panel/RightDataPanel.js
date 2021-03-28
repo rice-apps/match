@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 
 export default function RightDataPanel(props) {
-  const [{ data, columns, selectedRows: selectedRightRows, nameColumn: rightNameColumn, emailColumn: rightEmailColumn}, setRightData] = useRecoilState(rightDataState);
+  const [{ data, columns, selectedRows: selectedRightRows, nameColumn: rightNameColumn, idColumn: rightIdColumn, emailColumn: rightEmailColumn}, setRightData] = useRecoilState(rightDataState);
   const { data: leftData, selectedRows: selectedLeftRows, matchColumn: leftMatchColumn, nameColumn: leftNameColumn, emailColumn: leftEmailColumn} = useRecoilValue(leftDataState);
 
   const matchingEnabled = props.matchingEnabled;
@@ -47,7 +47,7 @@ export default function RightDataPanel(props) {
 
     if (matchingEnabled) {
       if (selectedLeftRow && selectedLeftRow[leftMatchColumn.key] &&
-        selectedLeftRow[leftMatchColumn.key].includes(row[rightNameColumn.key])) {
+        selectedLeftRow[leftMatchColumn.key].includes(row[rightIdColumn.key])) {
         return "selected-matched-row-right"
       }
 
@@ -128,7 +128,7 @@ export default function RightDataPanel(props) {
                 const leftRows = props.getEachLeftMatchedByRight(row);
                 // NewBEE can only match to a single mentor
                 if (rightRows && rightRows.length > 0) {
-                  let tooltip = "NewBEE already matched to: "+ rightRows.join(', ')+"!";
+                  let tooltip = "Newbee already matched to: "+ rightRows.join(', ')+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
                 }
 
