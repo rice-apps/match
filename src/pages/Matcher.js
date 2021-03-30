@@ -112,7 +112,7 @@ export default function Matcher() {
    */
   function getSelectedLeftInfo(){
     return {
-      value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
+      value: selectedLeftRows[0][leftMatchColumn.key]? [selectedLeftRows[0][leftMatchColumn.key]] : [],
       rowIndex: parseInt(selectedLeftRows[0].key) + 2,
       columnIndex: leftMatchColumn.index + 1,
       entryId: selectedLeftRows[0][leftIdColumn.key]
@@ -136,7 +136,7 @@ export default function Matcher() {
    */
   function unmatch(row) {
     const leftInfo = getSelectedLeftInfo(row);
-    const mentorId = row.mentorId;
+    const mentorId = row[rightIdColumn.key];
     const newbeeId = leftInfo.entryId; 
     postUnmatch(newbeeId, mentorId, setLeftData, setRightData);
   }
