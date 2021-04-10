@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RightDataPanel from '../components/data-panel/RightDataPanel';
 import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
+import {loadSalesforceData, postUnmatch, postMatch} from '../util/salesforceInterface';
 
 import { Button, Checkbox } from 'antd';
 
@@ -19,7 +20,9 @@ export default function Matcher() {
 
   const [appState, setAppState] = useRecoilState(applicationState);
   const [
-    { matchColumn: rightMatchColumn,
+    { data: rightData,
+      idColumn: rightIdColumn,
+      matchColumn: rightMatchColumn,
       spreadsheetId: rightSpreadsheetId,
       emailColumn: rightEmailColumn,
       refreshing: rightRefreshing,
@@ -28,6 +31,7 @@ export default function Matcher() {
     { data: leftData,
       selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
+      idColumn: leftIdColumn,
       spreadsheetId: leftSpreadsheetId,
       emailColumn: leftEmailColumn,
       refreshing: leftRefreshing,
@@ -38,7 +42,8 @@ export default function Matcher() {
   var defaultPaneSize = Math.round(windowWidth / 2);
 
   //Disable matching variables & function
-  var matchingEnabled = leftSpreadsheetId && rightSpreadsheetId && rightEmailColumn && leftEmailColumn && leftMatchColumn;
+  var matchingEnabled = rightIdColumn && leftIdColumn && leftMatchColumn;
+  //console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({
@@ -49,9 +54,9 @@ export default function Matcher() {
 
   // This basically refreshes the data in memory, see where this is used.
   function onLeftSpreadsheetLoaded(response) {
-    var range = response.result;
-    if (range.values.length > 0) {
-      var newDataState = formatData(range.values, true);
+    var values = response.result;
+    if (values.length > 0) {
+      var newDataState = formatData(values, true);
       // console.log(newDataState)
       setLeftData(oldLeftData => {
         let newState = {
@@ -107,10 +112,10 @@ export default function Matcher() {
    */
   function getSelectedLeftInfo(){
     return {
-      value: selectedLeftRows[0][leftMatchColumn.key]? JSON.parse(selectedLeftRows[0][leftMatchColumn.key]) : [],
+      value: selectedLeftRows[0][leftMatchColumn.key]? [selectedLeftRows[0][leftMatchColumn.key]] : [],
       rowIndex: parseInt(selectedLeftRows[0].key) + 2,
       columnIndex: leftMatchColumn.index + 1,
-      entryId: selectedLeftRows[0][leftEmailColumn.key]
+      entryId: selectedLeftRows[0][leftIdColumn.key]
     }
   }
 
@@ -119,13 +124,10 @@ export default function Matcher() {
    * @param row a right row
    */
   function match(row) {
-    //Get info
-    let leftInfo = getSelectedLeftInfo(row);
-    let rightEmail = row[rightEmailColumn.key];
-    //Match logic
-    leftInfo.value.push(rightEmail);
-    //Write to google sheets
-    writeToLeftGoogleSheet(leftInfo)
+    const leftInfo = getSelectedLeftInfo(row);
+    const mentorId = row[rightIdColumn.key];
+    const newbeeId = leftInfo.entryId; 
+    postMatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
   /**
@@ -133,15 +135,10 @@ export default function Matcher() {
    * @param row the row on the right
    */
   function unmatch(row) {
-    //Get info
-    let leftInfo = getSelectedLeftInfo(row);
-    let rightEmail = row[rightEmailColumn.key];
-    //Get Cross indecies
-    let rightInLeftIndex = leftInfo.value.indexOf(rightEmail);
-    //Unmatch logic
-    leftInfo.value.splice(rightInLeftIndex, 1)
-    //Write to google sheets
-    writeToLeftGoogleSheet(leftInfo)
+    const leftInfo = getSelectedLeftInfo(row);
+    const mentorId = row[rightIdColumn.key];
+    const newbeeId = leftInfo.entryId; 
+    postUnmatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
   /**
@@ -181,7 +178,7 @@ export default function Matcher() {
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
     if (leftMatches) {
-      return JSON.parse(leftMatches);
+      return [leftMatches];
     } else {
       return null;
     }
@@ -195,8 +192,8 @@ export default function Matcher() {
     return leftData
     .filter(row => {
       let leftMatch = row[leftMatchColumn.key];
-      return leftMatch && rightRow[rightEmailColumn.key] && leftMatch.includes(rightRow[rightEmailColumn.key])
-    }).map(row => row[leftEmailColumn.key]);
+      return leftMatch && rightRow[rightIdColumn.key] && leftMatch.includes(rightRow[rightIdColumn.key])
+    }).map(row => row[leftIdColumn.key]);
   }
 
   /**
@@ -206,8 +203,9 @@ export default function Matcher() {
    */
   function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
+    //console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
-    let rightEmail = rightRow[rightEmailColumn.key];
+    let rightEmail = rightRow[rightIdColumn.key];
     return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
   }
 
@@ -220,6 +218,99 @@ export default function Matcher() {
     return rightMatch.length > 0;
   }
 
+  function logInSalesforce(){
+    console.log("logging into sales force...")
+    window.location = '/auth/login';
+  }
+
+  function loginBody(){
+    return (
+       <div className="Body"> 
+        <div className="slds-modal slds-fade-in-open">
+         <div className="slds-modal__container">
+           <div className="slds-box slds-theme--shade">
+             <p className="slds-text-heading--medium slds-m-bottom--medium">Welcome, please log in with your Salesforce account:</p>
+             <div className="slds-align--absolute-center">
+               <button onClick={logInSalesforce} className="slds-button slds-button--brand">
+                 <svg aria-hidden="true" className="slds-button__icon--stateful slds-button__icon--left">
+                   <use xlinkHref="/assets/icons/utility-sprite/svg/symbols.svg#salesforce1"></use>
+                 </svg>
+                 Log in
+               </button>
+            </div>
+           </div>
+         </div>
+       </div>
+      </div>
+    );
+  }
+
+  function dataBody(){
+    //Load data if unloaded.
+    if ((!leftRefreshing && !rightRefreshing) && (leftData.length  == 0 ||rightData.length == 0)) 
+      loadSalesforceData(setLeftData, setRightData);
+
+    //Return visual component.
+    return  <div className="Body">
+      {/* This is the loading screen */}
+      <LoadingOverlay
+        active={rightRefreshing || leftRefreshing}
+        spinner
+        text='Syncing...'
+      >
+        <div style={{ height: "90vh", width: "100vw" }}>
+          {/* Split plane to allow panel resizing */}
+          <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
+            <LeftDataPanel
+              matchingEnabled = {matchingEnabled}
+              salesforceEnabled = {true}
+            />
+            <RightDataPanel
+              matchingEnabled = {matchingEnabled}
+              salesforceEnabled = {true}
+              match = {match}
+              unmatch = {unmatch}
+              getLeftMatch = {getFirstRightMatchedByLeft}
+              getRightMatch = {getRightMatch}
+              getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+              getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
+              rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
+              rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
+              />
+          </SplitPane>
+        </div>
+      </LoadingOverlay>
+    </div>
+  }
+
+  function checkIfLoggedIn(){
+    const that = this;
+    fetch('/auth/whoami', {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+        //console.log("RECEIVED RESPONSE",response);
+        if (response.ok) {
+          response.json().then(function(json) {
+            setAppState(prev => {
+              return {...prev, sfUser: json}
+            })
+          });
+        } else if (response.status !== 401) { // Ignore 'unauthorized' responses before logging in
+          console.error('Failed to retrieve logged user.', JSON.stringify(response));
+        } else {
+          console.error('Unauthorized', JSON.stringify(response));
+        }
+      });
+  }
+
+  //Check if logged in on component "mounting".
+  useEffect(checkIfLoggedIn, []);
+
+  //console.log("APP STATE USER IS:",appState.sfUser);
   return (
     <div>
       <div style = {{marginLeft:10, marginBottom:10}}>
@@ -250,35 +341,8 @@ export default function Matcher() {
             }
           </span>
         </div>
-        <div className="Body">
-          {/* This is the loading screen */}
-          <LoadingOverlay
-            active={rightRefreshing || leftRefreshing}
-            spinner
-            text='Syncing...'
-          >
-            <div style={{ height: "90vh", width: "100vw" }}>
-              {/* Split plane to allow panel resizing */}
-              <SplitPane split="vertical" minSize={400} defaultSize={defaultPaneSize} style={{ overflow: 'auto' }}>
-                <LeftDataPanel
-                  matchingEnabled = {matchingEnabled}
-                />
-                <RightDataPanel
-                  matchingEnabled = {matchingEnabled}
-                  match = {match}
-                  unmatch = {unmatch}
-                  getLeftMatch = {getFirstRightMatchedByLeft}
-                  getRightMatch = {getRightMatch}
-                  getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
-                  getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
-                  rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
-                  rightMatchedToAnyLeft = {rightMatchedToAnyLeft}
-                  />
-              </SplitPane>
-            </div>
-          </LoadingOverlay>
-        </div>
-
+        {/* BODY */}
+        {appState.sfUser == null ? loginBody() : dataBody()}
       </div>
     </div>
   );
