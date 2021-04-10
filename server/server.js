@@ -51,7 +51,6 @@ app.use(
 		resave: true,
 		saveUninitialized: true,
 		rolling: true,
-		domain: '.' + process.env.appDomain,
 	})
 );
 
