@@ -91,14 +91,13 @@ export default function RightDataPanel(props) {
 
   return (
     <div className="DataPanel">
+      <h5>Mentors</h5>
 
       {/* Loader to accept csv input */}
       {data.length === 0 && <Loader
         onUpload={setRightData}
         allowManualSort={false}
       />}
-      <br />
-
 
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
