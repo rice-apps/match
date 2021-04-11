@@ -149,11 +149,10 @@ export default function Matcher() {
     // let rightMatches = rightRow[rightMatchColumn.key];
     let rightMatches = getEachLeftMatchedByRight(rightRow);
     // If right matches is null, just return null.
-    if (rightMatches) {
+    if (rightMatches)
       return rightMatches[0];
-    } else {
+    else
       return null;
-    }
   }
 
    /**
@@ -163,11 +162,10 @@ export default function Matcher() {
   function getFirstRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
-    if (leftMatches) {
+    if (leftMatches)
       return JSON.parse(leftMatches)[0];
-    } else {
+    else
       return null;
-    }
   }
 
   /**
@@ -177,11 +175,10 @@ export default function Matcher() {
   function getEachRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
-    if (leftMatches) {
+    if (leftMatches)
       return [leftMatches];
-    } else {
+    else
       return null;
-    }
   }
 
   /**
@@ -205,8 +202,8 @@ export default function Matcher() {
     // Read Right Match
     //console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
-    let rightEmail = rightRow[rightIdColumn.key];
-    return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
+    let rightId = rightRow[rightIdColumn.key];
+    return (rightMatches && leftRow) && (rightMatches.includes(rightId))
   }
 
   /**
