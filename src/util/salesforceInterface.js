@@ -167,6 +167,10 @@ function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
                 //Mutate said column to newMentorID
                 row[mentorCol] = newMentorID;
         });
+        // Update the selected row (ASSUMES ONLY ONE NEWBEE CAN BE PICKED)
+        if (newDataState.selectedRows)
+            newDataState.selectedRows[0][mentorCol] = newMentorID;
+    
         console.log("State finished as",newDataState);
         return newDataState;
     });
