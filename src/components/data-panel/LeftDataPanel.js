@@ -113,10 +113,8 @@ export default function LeftDataPanel(props) {
 
   return (
     <div className="DataPanel">
-
+      <h5>NewBees</h5>
       {/* Data Loader */}
-      
-
 
       {/* The actual table for this panel. Note that it's "radio" selection type.
         This means you can select only one row from this table. */}

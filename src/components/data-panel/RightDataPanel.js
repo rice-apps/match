@@ -91,14 +91,13 @@ export default function RightDataPanel(props) {
 
   return (
     <div className="DataPanel">
+      <h5>Mentors</h5>
 
       {/* Loader to accept csv input */}
       {data.length === 0 && <Loader
         onUpload={setRightData}
         allowManualSort={false}
       />}
-      <br />
-
 
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
@@ -119,30 +118,29 @@ export default function RightDataPanel(props) {
             if (matchingEnabled) {
               if (props.rightMatchedToSpecificLeft(row, selectedLeftRows[0])) {
                 //Unmatch
-                return <Button onClick = {() => props.unmatch(row)}danger={true}>{"Unmatch!"}</Button>;
+                return <Button onClick = {() => props.unmatch(row)} danger={true}>{"Unmatch!"}</Button>;
               }
 
               // HivesForHeroes (newbees (left) can be matched to multiple people on right)
               if (isHivesForHeroes()) {
                 const rightRows = props.getEachRightMatchedByLeft(selectedLeftRows[0]);
                 const leftRows = props.getEachLeftMatchedByRight(row);
-                // NewBEE can only match to a single mentor
+
+                //Check if NewBee si already matched.
                 if (rightRows && rightRows.length > 0) {
-                  let tooltip = "Newbee already matched to: "+ rightRows.join(', ')+"!";
+                  let tooltip = "NewBee already matched to: "+ rightRows.join(', ')+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
                 }
 
+                //Check if mentor is matched to multiple people.
                 if (leftRows && leftRows.length > 0) {
-                  // mentor matched to (< 3 newbees, still allow further matching)
-                  if (leftRows.length < 3) {
-                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
-                    return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
-                  } else {
-                    // mentor matched to (>= 3 newbees, no more matching allowed)
-                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
-                    return <Tooltip color = {'red'} title={tooltip}><Button disabled = {true} onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
-                  }  
+                  let tooltip = "Mentor already matched to " + leftRows.length + " NewBees: " + leftRows.join(', ');
+                  let soft_warning = leftRows.length < 3; //Soft warning on less than 3.
+                  return <Tooltip color = {soft_warning ? 'gold' : 'red'} title={tooltip}>
+                    <Button onClick = {() => props.match(row)}>{soft_warning ? "Match!" : "Extra Match!"}</Button>
+                  </Tooltip>;
                 }
+
               } else {
                 // CovidSitters/others
                 if(props.rightMatchedToAnyLeft(row)) {
@@ -163,8 +161,7 @@ export default function RightDataPanel(props) {
               key={i}
               style={{ width: 300 }}
               row={row}
-            >
-            </FormattedCard>
+            />
           </div>)
         })}
       </div>
