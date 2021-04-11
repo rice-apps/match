@@ -1,5 +1,5 @@
 import { removeFileItem } from "antd/lib/upload/utils";
-import { zipcodesToDistance } from "./zipcode/zipcodeLogic";
+import { zipcodesToDistance, coordinatesToDistance } from "./zipcode/zipcodeLogic"; //CHANGE THIS TO COORDINATE TO DISTANCE
 
 const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 
@@ -45,18 +45,20 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
   return filtered_and_sorted;
 }
 
-function commaSeparatedToList(str) {
-  /* Inputs: a string of comma seperated values
-     Output: an array of strings
-  */
+/**
+ * Inputs: a string of comma seperated values
+ * Output: an array of strings
+ */
+function commaSeparatedToList(str) {  
   if (typeof str == "string") return str.split(", ");
   return [];
 }
 
+/**
+ * Inputs: two lists of elements
+ * Outputs: (intger) number of elements shared in common between A and B
+ */
 function countOverlaps(listA, listB) {
-  /*  Inputs: two lists of elements
-      Outputs: (intger) number of elements shared in common between A and B
-  */
   return listA
     .map((val) => listB.includes(val)) // Check if each value in B is in A
     .reduce((a, b) => a + b); // Sum up the overlapping elements
@@ -66,8 +68,11 @@ function countOverlaps(listA, listB) {
 // I am just too lazy to write it rn. Ping Johnny if this is too hard to work with.
 // // See https://css-tricks.com/level-up-your-sort-game/ for explanation on how sorting is done
 
+/**
+ * Inputs: two lists of elements
+ * Outputs: -1, 0, or 1 to indicate if A is before, equal to, or after B
+ */
 const byOverlaps = (value) => (a, b) => {
-  //TODO: Adam Zawierucha implement
   //Handle Nulls
   if (!a && !b) {
     return 0;

@@ -135,6 +135,8 @@ function postData(data, setFunction, allowManualSort){
         newDataState.matchColumn = getColumn(columns, 'mentor_id');
         //Specify id column
         newDataState.idColumn = getColumn(columns, 'salesforce_id');
+        //Speciy coordainte column
+        newDataState.coordColumn = getColumn(columns, 'coordinate');
         //console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
         //Set the data state.
         setFunction(setData(newDataState));
@@ -164,6 +166,10 @@ function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
                 //Mutate said column to newMentorID
                 row[mentorCol] = newMentorID;
         });
+        // Update the selected row (ASSUMES ONLY ONE NEWBEE CAN BE PICKED)
+        if (newDataState.selectedRows)
+            newDataState.selectedRows[0][mentorCol] = newMentorID;
+    
         console.log("State finished as",newDataState);
         return newDataState;
     });
@@ -184,7 +190,6 @@ function getColumn(columns, keyValue) {
     if(col < 0)
         return null;
     return columns[col];
-
 }
 
 /** 
