@@ -135,12 +135,12 @@ export default function RightDataPanel(props) {
                 if (leftRows && leftRows.length > 0) {
                   // mentor matched to (< 3 newbees, still allow further matching)
                   if (leftRows.length < 3) {
-                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
+                    let tooltip = "Mentor already matched to " + leftRows.length + " NewBees: " + leftRows.join(', ');
                     return <Tooltip color = {'gold'} title={tooltip}><Button onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
                   } else {
                     // mentor matched to (>= 3 newbees, no more matching allowed)
-                    let tooltip = "Mentor already matched to " + leftRows.length + " mentors: " + leftRows.join(', ');
-                    return <Tooltip color = {'red'} title={tooltip}><Button disabled = {true} onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
+                    let tooltip = "Mentor already matched to " + leftRows.length + " NewBees: " + leftRows.join(', ');
+                    return <Tooltip color = {'red'} title={tooltip}><Button disabled = {false} onClick = {() => props.match(row)}>{"Match!"}</Button></Tooltip>;
                   }  
                 }
               } else {
