@@ -128,6 +128,7 @@ function postData(data, setFunction, allowManualSort){
         //Initialize data structure.
         let newDataState = formatData(data, allowManualSort);
         let columns = newDataState.columns
+        console.log("columns", columns);
         newDataState.selectedRows = [];
         //Specify email column
         newDataState.emailColumn = getColumn(columns, 'email');
@@ -135,6 +136,8 @@ function postData(data, setFunction, allowManualSort){
         newDataState.matchColumn = getColumn(columns, 'mentor_id');
         //Specify id column
         newDataState.idColumn = getColumn(columns, 'salesforce_id');
+        //Name
+        newDataState.nameColumn = getColumn(columns, 'name');
         //console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
         //Set the data state.
         setFunction(setData(newDataState));
