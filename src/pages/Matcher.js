@@ -259,8 +259,6 @@ export default function Matcher() {
             <b>     </b>
             <Button type={'primary'} onClick={() => setSidebarOpen(true)}> Sorts & Filters </Button>
             <b> </b>
-            <Button href={route + '/pods'}> See Pods </Button>
-            <b> </b>
             <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
             {route.includes("hivesforheroes") ? 
