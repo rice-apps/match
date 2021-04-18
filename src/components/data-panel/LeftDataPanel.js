@@ -3,7 +3,7 @@ import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { useRecoilState } from 'recoil';
 import { leftDataState, rightDataState } from '../../store/atoms';
-import {zipcodesToDistance} from '../../util/zipcode/zipcodeLogic.js';
+import {coordinatesToDistance} from '../../util/zipcode/zipcodeLogic.js';
 
 export default function LeftDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn, nameColumn, shouldSortLeft}, setLeftData] = useRecoilState(leftDataState);
@@ -41,10 +41,12 @@ export default function LeftDataPanel(props) {
    * @param rightrow the row from the right side of the second person
    */
   function distanceBetween2Rows(leftrow, rightrow) {
-    const zipcodeleft = leftrow.zip_code;
-    const zipcoderight = rightrow.zip_code;
-    if (zipcodeleft !== null && zipcoderight !== null) {
-        return zipcodesToDistance(zipcodeleft, zipcoderight);
+    const coordinateleft = leftrow.coordinate;
+    const coordinateright = rightrow.coordinate;
+
+    if (coordinateleft !== null && coordinateright !== null) {
+
+        return coordinatesToDistance(coordinateleft, coordinateright);
     }
 
           return Number.MAX_VALUE;
