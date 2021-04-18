@@ -6,9 +6,6 @@ import {loadSalesforceData, postUnmatch, postMatch} from '../util/salesforceInte
 
 import { Button, Checkbox } from 'antd';
 
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
-import { formatData } from '../util/dataFormatter';
-
 import { useRecoilState } from 'recoil';
 import { rightDataState, leftDataState, applicationState } from '../store/atoms';
 

@@ -9,7 +9,6 @@ export default function LeftDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn, nameColumn, shouldSortLeft}, setLeftData] = useRecoilState(leftDataState);
   const [{ data: rightdata}] = useRecoilState(rightDataState);
   const matchingEnabled = props.matchingEnabled;
-  const salesforceEnabled = props.salesforceEnabled;
 
   const sortedData = sortLeftDataPnl(calcEachMinDistance(data));
   
