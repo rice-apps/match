@@ -46,7 +46,8 @@ export default function LeftDataPanel(props) {
     if (zipcodeleft !== null && zipcoderight !== null) {
         return zipcodesToDistance(zipcodeleft, zipcoderight);
     }
-    return Number.MAX_VALUE;
+
+          return Number.MAX_VALUE;
   }
 
   /**

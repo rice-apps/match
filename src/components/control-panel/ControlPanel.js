@@ -63,8 +63,10 @@ export default function ControlPanel() {
   const handleOpChange = (value, i) => {
     // update with by: zip code column, and value: zip code column
     if (value === "distance") {
-      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      // const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      // const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxLeft = leftColumns.findIndex(element => element.key === ("coordinate"));
+      const idxRight = rightColumns.findIndex(element => element.key === ("coordinate"));
       if (idxLeft !== -1 && idxRight !== -1) {
         const newRules = replaceItemAtIndex(rules, i, {
           ...rules[i],
@@ -161,8 +163,14 @@ export default function ControlPanel() {
   const applyDefaultRules = () => {
     let defaultSettings = [];
     if (route === "hivesforheroes") {
-      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxLeft = leftColumns.findIndex(element => element.key === "coordinate");
+      const idxRight = rightColumns.findIndex(element => element.key === "coordinate");
+      console.log("idxLeft");
+      console.log(idxLeft);
+      console.log("idxRight");
+      console.log(idxRight);
+      // const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      // const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       defaultSettings = [{
         // DISTANCE SORT
         type: "sort",

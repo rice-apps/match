@@ -1,5 +1,5 @@
 import { removeFileItem } from "antd/lib/upload/utils";
-import { zipcodesToDistance, coordinatesToDistance } from "./zipcode/zipcodeLogic"; //CHANGE THIS TO COORDINATE TO DISTANCE
+import {coordinatesToDistance } from "./zipcode/zipcodeLogic"; //CHANGE THIS TO COORDINATE TO DISTANCE
 
 const MAX_ZIPCODE_DISTANCE = 50.0; // in miles
 
@@ -50,8 +50,13 @@ export function applyRules(rules, data, leftRow, leftEmailColumn, leftMatchColum
  * Output: an array of strings
  */
 function commaSeparatedToList(str) {  
-  if (typeof str == "string") return str.split(", ");
+  if (typeof str == "string") 
+    return str.split(", ");
   return [];
+}
+
+function parseCoordinate(str) {  
+    return commaSeparatedToList(str).map(s => parseFloat(s));
 }
 
 /**
@@ -74,13 +79,12 @@ function countOverlaps(listA, listB) {
  */
 const byOverlaps = (value) => (a, b) => {
   //Handle Nulls
-  if (!a && !b) {
+  if (!a && !b)
     return 0;
-  } else if (!a) {
+  if (!a)
     return 1;
-  } else if (!b) {
+  if (!b)
     return -1;
-  }
 
   //Create lists from strings
   const leftList = commaSeparatedToList(value);
@@ -92,13 +96,11 @@ const byOverlaps = (value) => (a, b) => {
   const bCount = countOverlaps(leftList, bList);
 
   //Compare overlap counts
-  if (aCount > bCount) {
+  if (aCount > bCount)
     return -1;
-  } else if (aCount < bCount) {
+  if (aCount < bCount)
     return 1;
-  } else {
-    return 0;
-  }
+  return 0;
 };
 
 // Sanitize values input by users
@@ -121,15 +123,13 @@ const sortByMapped = (map) => (compareFn) => (a, b) => {
 };
 
 const byMatch = (value) => (a, b) => {
-  if (a === value && b === value) {
+  if (a === value && b === value)
     return 0;
-  } else if (a === value) {
+  if (a === value)
     return -1;
-  } else if (b === value) {
+  if (b === value)
     return 1;
-  } else {
-    return 0;
-  }
+  return 0;
 };
 
 const byContains = (value) => (a, b) => {
@@ -137,56 +137,57 @@ const byContains = (value) => (a, b) => {
   if (!a) a = "";
   if (!b) b = "";
 
-  if (a.includes(value) && b.includes(value)) {
+  if (a.includes(value) && b.includes(value))
     return 0;
-  } else if (a.includes(value)) {
+  if (a.includes(value))
     return -1;
-  } else if (b.includes(value)) {
+  if (b.includes(value)) 
     return 1;
-  } else {
-    return 0;
-  }
+  return 0;
 };
 const byGEQ = (value) => (a, b) => {
-  if (a >= value && b >= value) {
+  if (a >= value && b >= value) 
     return 0;
-  } else if (a >= value) {
+  if (a >= value)
     return -1;
-  } else if (b >= value) {
+  if (b >= value)
     return 1;
-  } else {
-    return 0;
-  }
+  return 0;
 };
+
 const byLEQ = (value) => (a, b) => {
-  if (a <= value && b <= value) {
+  if (a <= value && b <= value)
     return 0;
-  } else if (a <= value) {
+  if (a <= value)
     return -1;
-  } else if (b <= value) {
+  if (b <= value)
     return 1;
-  } else {
-    return 0;
-  }
+  return 0;
 };
 
 const byDistance = (value) => (a, b) => {
-  let dist2a = zipcodesToDistance(value, a);
-  let dist2b = zipcodesToDistance(value, b);
-  if (dist2a === dist2b) {
+  console.log('Comparing', value, 'with', a, 'and', b); //Does this print!?
+  let vCoord = parseCoordinate(value);  
+  let aCoord = parseCoordinate(a);
+  let bCoord = parseCoordinate(b);
+  // if ([lat0, lon0, lat1, lon1, lat2, lon2].contains(null)) {
+  //   console.log("contains null :(");
+  //   return -1;
+  // }
+
+  let dist2a = coordinatesToDistance(vCoord, aCoord);
+  let dist2b = coordinatesToDistance(vCoord, bCoord);
+
+  if (dist2a === dist2b)
     return 0;
-  }
-  if (dist2a === null) {
-    return 1;
-  }
-  if (dist2b === null) {
+  // if (dist2a === null)
+  //   return 1;
+  // if (dist2b === null)
+  //   return -1;
+  if (dist2a < dist2b)
     return -1;
-  }
-  if (dist2a < dist2b) {
-    return -1;
-  }
   return 1;
-};
+}
 
 const sortByFlattened = (fns) => (a, b) =>
   fns.reduce((acc, fn) => acc || fn(a, b), 0);
@@ -212,7 +213,7 @@ function applySorts(rules, data, leftRow) {
   let comparators = [];
   for (var i = 0; i < rules.length; i++) {
     let rule = rules[i];
-
+    console.log(`Rule ${i}: ${rule.operator}`);
     // If we are filtering by column, and the left row is not selected, don't sort
     if (rule.with.type === "column" && !leftRow) {
       return data;
@@ -280,7 +281,9 @@ function applyFilters(rules, data, leftRow) {
     } else if (rule.operator === "distance") {
       //filter by distance
       data = data.filter((a) => {
-        let dist = zipcodesToDistance(left, a[rule.by])
+        // let dist = 0;
+        let dist = coordinatesToDistance(parseCoordinate(left), parseCoordinate(a[rule.by]));
+        // let dist = zipcodesToDistance(left, a[rule.by])
         // Check for null and make sure it is within range
         return (dist) && (dist <= MAX_ZIPCODE_DISTANCE);
       });
@@ -310,7 +313,8 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
  
   const leftZip = leftRow[zipCodeRule.with.value];
   return filtered_and_sorted.map(row => {
-    let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
+    let zipDistance = coordinatesToDistance(parseCoordinate(leftZip), parseCoordinate(row[zipCodeRule.by]));
+    //let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
     if (zipDistance != null) {
       zipDistance = zipDistance.toFixed(2) // round distance
     } else {
