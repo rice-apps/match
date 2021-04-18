@@ -126,15 +126,19 @@ export default function RightDataPanel(props) {
                 const rightRows = props.getEachRightMatchedByLeft(selectedLeftRows[0]);
                 const leftRows = props.getEachLeftMatchedByRight(row);
 
-                //Check if NewBee si already matched.
+                //Check if NewBee is already matched.
                 if (rightRows && rightRows.length > 0) {
-                  let tooltip = "NewBee already matched to: "+ rightRows.join(', ')+"!";
+                  // Convert the salesforce ID's to names
+                  const rightRowsNames = rightRows.map(id => props.salesforceIDToName(id, "mentor"));
+                  let tooltip = "Selected NewBee (on the left) already matched to: "+ rightRowsNames.join(', ')+"!";
                   return <Tooltip color = {'red'} title={tooltip}><Button disabled={true}>{"Match!"}</Button></Tooltip>;
                 }
 
                 //Check if mentor is matched to multiple people.
                 if (leftRows && leftRows.length > 0) {
-                  let tooltip = "Mentor already matched to " + leftRows.length + " NewBees: " + leftRows.join(', ');
+                  // Convert the salesforce ID's to names
+                  const leftRowsNames = leftRows.map(id => props.salesforceIDToName(id, "newbee"));
+                  let tooltip = "Selected Mentor (on the right) already matched to " + leftRows.length + " NewBees: " + leftRowsNames.join(', ');
                   let soft_warning = leftRows.length < 3; //Soft warning on less than 3.
                   return <Tooltip color = {soft_warning ? 'gold' : 'red'} title={tooltip}>
                     <Button onClick = {() => props.match(row)}>{soft_warning ? "Match!" : "Extra Match!"}</Button>

@@ -25,7 +25,7 @@ export function formatData(data, allowManualSort) {
             title: columnTitle,
             fullTitle: column,
             ellipsis: true,
-            hidden: columnIndex >= 4, // Only show first 4 columns
+            hidden: columnIndex >= 5, // Only show first 5 columns
         }
         if (allowManualSort) {
             result = {
