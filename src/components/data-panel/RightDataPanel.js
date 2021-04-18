@@ -1,5 +1,4 @@
 import React from 'react';
-import Loader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules, isAnyEnabledDistanceRule } from '../../util/rules';
@@ -91,15 +90,6 @@ export default function RightDataPanel(props) {
 
   return (
     <div className="DataPanel">
-
-      {/* Loader to accept csv input */}
-      {data.length === 0 && <Loader
-        onUpload={setRightData}
-        allowManualSort={false}
-      />}
-      <br />
-
-
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
       <Table
