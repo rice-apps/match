@@ -43,7 +43,6 @@ export default function Matcher() {
 
   //Disable matching variables & function
   var matchingEnabled = rightIdColumn && leftIdColumn && leftMatchColumn;
-  //console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({
@@ -51,62 +50,6 @@ export default function Matcher() {
       sidebarOpen: open
     });
   }
-
-  // This basically refreshes the data in memory, see where this is used.
-  function onLeftSpreadsheetLoaded(response) {
-    var values = response.result;
-    if (values.length > 0) {
-      var newDataState = formatData(values, true);
-      // console.log(newDataState)
-      setLeftData(oldLeftData => {
-        let newState = {
-          ...oldLeftData,
-          // Only updating the state and refreshing
-          // NOTE: If you override the old columns, then you get rid of previous settings
-          data: newDataState.data,
-          // Update selected selected rows with new data
-          selectedRows: oldLeftData.selectedRows.map(row =>
-            // Get the updated row from the new state
-            newDataState.data[row.key]
-          ),
-          refreshing: false,
-        }
-        return newState;
-      })
-    } else {
-      alert('No data found.');
-    }
-  }
-
-  /**
-   * Write a match to the left google sheet
-   * @param leftInfo the matching info of the person on left to match (value, rowIndex, columnIndex, entryId)
-   */
-  function writeToLeftGoogleSheet(leftInfo){
-     // Stringify both left and right before writing to Google Sheets
-     let leftValueString = JSON.stringify(leftInfo.value);
- 
-     // Save an empty list [] as a blank cell
-     if (leftValueString === "[]") leftValueString = "";
- 
-     // If the left data is from Google Sheets, write to it
-     if (leftSpreadsheetId) {
- 
-       // Set refreshing to be true
-       setLeftData(leftDataState => {
-         return {
-           ...leftDataState,
-           refreshing: true,
-         }
-       })
-       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftInfo.columnIndex, leftInfo.rowIndex, leftValueString, () => {
-         console.log("Done writing to left!");
-         // This refreshes the data in this app once the spreadsheet is written to
-         getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
-       });
-     }
-  }
-
   /**
    * Get the info about the selected left column that is needed to match/unmatch
    */
@@ -149,11 +92,9 @@ export default function Matcher() {
     // let rightMatches = rightRow[rightMatchColumn.key];
     let rightMatches = getEachLeftMatchedByRight(rightRow);
     // If right matches is null, just return null.
-    if (rightMatches) {
+    if (rightMatches)
       return rightMatches[0];
-    } else {
-      return null;
-    }
+    return null;
   }
 
    /**
@@ -163,11 +104,9 @@ export default function Matcher() {
   function getFirstRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
-    if (leftMatches) {
+    if (leftMatches)
       return JSON.parse(leftMatches)[0];
-    } else {
-      return null;
-    }
+    return null;
   }
 
   /**
@@ -177,11 +116,9 @@ export default function Matcher() {
   function getEachRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
-    if (leftMatches) {
+    if (leftMatches)
       return [leftMatches];
-    } else {
-      return null;
-    }
+    return null;
   }
 
   /**
@@ -192,7 +129,9 @@ export default function Matcher() {
     return leftData
     .filter(row => {
       let leftMatch = row[leftMatchColumn.key];
-      return leftMatch && rightRow[rightIdColumn.key] && leftMatch.includes(rightRow[rightIdColumn.key])
+      return leftMatch && 
+             rightRow[rightIdColumn.key] && 
+             leftMatch.includes(rightRow[rightIdColumn.key]);
     }).map(row => row[leftIdColumn.key]);
   }
 
@@ -203,7 +142,6 @@ export default function Matcher() {
    */
   function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
-    //console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
     let rightEmail = rightRow[rightIdColumn.key];
     return (rightMatches && leftRow) && (rightMatches.includes(rightEmail))
@@ -213,13 +151,13 @@ export default function Matcher() {
    * Checks if a person on the right is matched to anyone on the left
    * @param rightRow the row on the right to check
    */
-  function rightMatchedToAnyLeft(rightRow){
+  function rightMatchedToAnyLeft(rightRow) {
     let rightMatch = getEachLeftMatchedByRight(rightRow);
     return rightMatch.length > 0;
   }
 
   function logInSalesforce(){
-    console.log("logging into sales force...")
+    console.log("logging into sales force...");
     window.location = '/auth/login';
   }
 
@@ -284,7 +222,6 @@ export default function Matcher() {
   }
 
   function checkIfLoggedIn(){
-    const that = this;
     fetch('/auth/whoami', {
             method: 'get',
             headers: {
