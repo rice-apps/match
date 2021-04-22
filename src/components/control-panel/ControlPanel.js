@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Select, Tooltip, Input, Checkbox, Button } from "antd";
 import { availableOperators } from "../../util/rules";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,20 +14,23 @@ function replaceItemAtIndex(arr, index, newValue) {
   return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
 }
 
-export default function ControlPanel() {
-  // // If the csv's are not uploaded, don't load panel
-  // if (leftColumns.length === 0 && rightColumns.length === 0) {
-  //     return (
-  //         <div className="ControlPanel">
-  //             Upload the csv's silly!
-  //         </div>
-  //     )
-  // }
+let didSetDefault = false;
 
+export default function ControlPanel() {
   const { columns: leftColumns } = useRecoilValue(leftDataState);
   const { columns: rightColumns } = useRecoilValue(rightDataState);
   const [rules, setRules] = useRecoilState(rulesState);
   const route = useLocation().pathname.split("/")[1];
+
+  // Apply default sorts on data load
+  useEffect(() => {
+    // Only set the default sorts once
+    if (!didSetDefault) {
+      console.log("Applying default rules");
+      applyDefaultRules();
+      didSetDefault = true;
+    }
+  }, [leftColumns]);
 
   const handleLeftChange = (value, i) => {
     let newRules;
@@ -161,22 +164,15 @@ export default function ControlPanel() {
   const applyDefaultRules = () => {
     let defaultSettings = [];
     if (route === "hivesforheroes") {
+      // Search for a "Zip Code" column
       const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      if (idxLeft === -1 || idxRight === -1) {
+        return;
+      }
       defaultSettings = [{
         // DISTANCE SORT
         type: "sort",
-        enabled: true,
-        operator: "distance",
-        with: {
-          type: "column",
-          value: leftColumns[idxLeft].key,
-        },
-        by: rightColumns[idxRight].key,
-      },
-      {
-        // DISTANCE FILTER
-        type: "filter",
         enabled: true,
         operator: "distance",
         with: {

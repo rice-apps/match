@@ -23,6 +23,7 @@ export default function Matcher() {
     { data: rightData,
       idColumn: rightIdColumn,
       matchColumn: rightMatchColumn,
+      nameColumn: rightNameColumn,
       spreadsheetId: rightSpreadsheetId,
       emailColumn: rightEmailColumn,
       refreshing: rightRefreshing,
@@ -31,6 +32,7 @@ export default function Matcher() {
     { data: leftData,
       selectedRows: selectedLeftRows,
       matchColumn: leftMatchColumn,
+      nameColumn: leftNameColumn,
       idColumn: leftIdColumn,
       spreadsheetId: leftSpreadsheetId,
       emailColumn: leftEmailColumn,
@@ -210,9 +212,33 @@ export default function Matcher() {
    * Checks if a person on the right is matched to anyone on the left
    * @param rightRow the row on the right to check
    */
-  function rightMatchedToAnyLeft(rightRow){
+  function rightMatchedToAnyLeft(rightRow) {
     let rightMatch = getEachLeftMatchedByRight(rightRow);
     return rightMatch.length > 0;
+  }
+
+  /**
+   * Convert a salesforce ID to a full name
+   * salesforceID: a string representing a contact's salesforce ID
+   * newbeeOrMentor: either "newbee" or "mentor"
+   */
+  function salesforceIDToName(salesforceID, newbeeOrMentor) {
+    let data = leftData;
+    if (newbeeOrMentor === "newbee") {
+      return leftData
+      .filter( // Find person with matching salesforceID
+        row => row[leftIdColumn.key] === salesforceID
+      ).map( // Convert ID to name
+        row => row[leftNameColumn.key]
+      )[0];
+    } else {
+      return rightData
+      .filter( // Find person with matching salesforceID
+        row => row[rightIdColumn.key] === salesforceID
+      ).map( // Convert ID to name
+        row => row[rightNameColumn.key]
+      )[0];
+    }
   }
 
   function logInSalesforce(){
@@ -270,6 +296,7 @@ export default function Matcher() {
               getLeftMatch = {getFirstRightMatchedByLeft}
               getRightMatch = {getRightMatch}
               getEachRightMatchedByLeft = {getEachRightMatchedByLeft}
+              salesforceIDToName = {salesforceIDToName}
               getEachLeftMatchedByRight = {getEachLeftMatchedByRight}
               rightMatchedToSpecificLeft = {rightMatchedToSpecificLeft}
               rightMatchedToAnyLeft = {rightMatchedToAnyLeft}

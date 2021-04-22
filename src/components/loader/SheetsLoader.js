@@ -23,7 +23,7 @@ let LIVE_MENTOR_SPREADSHEET_ID = "18iPzwxmvO5yHj09e5qDwHlriQAh2jc6kocQFRLdP0wc";
 
 let liveUsers = ["hivesforheroeshq@gmail.com"]
 
-const MATCH_COLUMN_NAME = "MATCH";
+const MATCH_COLUMN_NAME = "Salesforce id";
 
 export default function SheetsLoader(props) {
     // If allow manual sort, it must be left data panel. Default is hard-coded spreadsheet id for healthcare workers.    
@@ -100,6 +100,7 @@ export default function SheetsLoader(props) {
         console.log("OnSpreadsheetLoaded start")
         var range = response.result;
         if (range.values.length > 0) {
+            // TODO: Unhide the match column
             var newDataState = formatData(addFullNameCol(range.values), props.allowManualSort);
             newDataState.selectedRows = [];
             newDataState.spreadsheetId = spreadsheetId;
@@ -147,6 +148,7 @@ export default function SheetsLoader(props) {
     }
 
     const findIndexOfColumnWithName = (name, columns) => {
+        console.log("COLUMNS:", columns);
         const res = columns.findIndex((obj) => {
             return obj.fullTitle === name
         })
