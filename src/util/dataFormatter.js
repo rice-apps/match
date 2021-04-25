@@ -1,4 +1,5 @@
 const MAX_COLUMN_TITLE_LENGTH = 30;
+const N_COLUMNS_VISIBLE = 5;
 
 export function formatData(data, allowManualSort) {
     // Column objects come from first array in data
@@ -25,7 +26,7 @@ export function formatData(data, allowManualSort) {
             title: columnTitle,
             fullTitle: column,
             ellipsis: true,
-            hidden: columnIndex >= 4, // Only show first 4 columns
+            hidden: columnIndex >= N_COLUMNS_VISIBLE, // Only show first N columns
         }
         if (allowManualSort) {
             result = {
