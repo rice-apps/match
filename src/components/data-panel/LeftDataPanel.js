@@ -26,8 +26,6 @@ export default function LeftDataPanel(props) {
 
     // Sort by distance
     cpy.sort((row1, row2) => row1.matchDistanceRow - row2.matchDistanceRow);
-    console.log("ordering...");
-    cpy.forEach(x => console.log(x, x.matchDistanceRow));
 
     // Sort by unmatched first
     cpy.sort((row1, row2) => {
@@ -47,8 +45,6 @@ export default function LeftDataPanel(props) {
   function distanceBetween2Rows(leftrow, rightrow) {
     const coordinateleft = leftrow.coordinate[0];
     const coordinateright = rightrow.coordinate[0];
-    console.log(coordinateleft, coordinateright);
-    console.log("distanceBetween2Rows", leftrow, rightrow, coordinatesToDistance(parseCoordinate(coordinateleft), parseCoordinate(coordinateright)));
     
     if (coordinateleft !== null && coordinateright !== null)
         return coordinatesToDistance(parseCoordinate(coordinateleft), parseCoordinate(coordinateright));

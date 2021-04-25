@@ -314,7 +314,6 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
   return filtered_and_sorted.map(row => {
     const rightCoords = row.coordinate[0];
     let distance = coordinatesToDistance(parseCoordinate(leftCoords), parseCoordinate(rightCoords));
-    console.log("Aprox", leftRow, row, " -> ", distance);
     //let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
     if (distance != null) {
       distance = distance.toFixed(2) // round distance
