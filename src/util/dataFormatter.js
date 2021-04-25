@@ -1,5 +1,5 @@
 const MAX_COLUMN_TITLE_LENGTH = 30;
-const N_COLUMNS_VISIBLE = 5;
+const N_COLUMNS_VISIBLE = 4;
 
 export function formatData(data, allowManualSort) {
     // Column objects come from first array in data
