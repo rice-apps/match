@@ -42,7 +42,6 @@ app.set('port', port);
 
 console.log("Secret key: ", process.env.sessionSecretKey);
 
-
 // Enable server-side sessions
 app.use(
 	session({
@@ -55,7 +54,7 @@ app.use(
 );
 
 /**
- *  Attemps to retrieves the server session.
+ *  Attempts to retrieves the server session.
  *  If there is no session, redirects with HTTP 401 and an error message
  */
 function getSession(request, response) {
@@ -76,187 +75,10 @@ function resumeSalesforceConnection(session) {
 	});
 }
 
-// Serve simple message at root directory
-app.get('/auth', function(request, response) {
-	response.status(200).send('You have reached the Match backend!');
-	return;
-});
 
 /**
- * Login endpoint
+ * The following endpoints are for handling api requests.
  */
-app.get('/auth/login', function(request, response) {
-	console.log("GOT LOGIN REQUEST");
-	// Redirect to Salesforce login/authorization page
-	response.redirect(oauth2.getAuthorizationUrl({ scope: 'api' }));
-});
-
-/**
- * Login callback endpoint (only called by Salesforce)
- */
-app.get('/auth/callback', function(request, response) {
-	console.log("RECEIVED CALLBACK!")
-	if (!request.query.code) {
-		response.status(500).send('Failed to get authorization code from server callback.');
-		return;
-	}
-
-	// Authenticate with OAuth
-	const conn = new jsforce.Connection({
-		oauth2: oauth2,
-		version: process.env.apiVersion
-	});
-	conn.authorize(request.query.code, function(error, userInfo) {
-		if (error) {
-			console.log('Salesforce authorization error: ' + JSON.stringify(error));
-			response.status(500).json(error);
-			return;
-		}
-
-		console.log("AUTHORIZED");
-		console.log("URL: ", conn.instanceUrl);
-		console.log("TOKEN: ", conn.accessToken);
-		// Store oauth session data in server (never expose it directly to client)
-		request.session.sfdcAuth = {
-			'instanceUrl': conn.instanceUrl,
-			'accessToken': conn.accessToken
-		};
-		console.log("SAVED")
-
-		console.log("REQUEST:", request);
-		console.log("SESSION:", request.session);
-		
-		// Redirect to app main page
-		response.redirect(process.env.frontendUrl);
-	});
-});
-
-/**
- * Logout endpoint
- */
-app.get('/auth/logout', function(request, response) {
-	const session = getSession(request, response);
-	if (session == null) return;
-
-	// Revoke OAuth token
-	const conn = resumeSalesforceConnection(session);
-	conn.logout(function(error) {
-		if (error) {
-			console.error('Salesforce OAuth revoke error: ' + JSON.stringify(error));
-			response.status(500).json(error);
-			return;
-		}
-
-		// Destroy server-side session
-		session.destroy(function(error) {
-			if (error) {
-				console.error('Salesforce session destruction error: ' + JSON.stringify(error));
-			}
-		});
-
-		// Redirect to app main page
-		return response.redirect('http://localhost:3000/index.html');
-	});
-});
-
-/**
- * Endpoint for retrieving currently connected user
- */
-app.get('/auth/whoami', function(request, response) {	
-
-	console.log("Getting session");
-	const session = getSession(request, response);
-	if (session == null) {
-		console.log("No session found")
-		// console.log(response);
-		return;
-	}
-	console.log("====== Found session =======")
-	// Request session info from Salesforce
-	const conn = resumeSalesforceConnection(session);
-	conn.identity(function(error, res) {
-		response.send(res);
-	});
-});
-
-/**
- * Endpoint for performing a SOQL query on Salesforce
- */
-app.get('/api/query', function(request, response) {
-	const session = getSession(request, response);
-	if (session == null) {
-		return;
-	}
-
-	const query = request.query.q;
-	if (!query) {
-		response.status(400).send('Missing query parameter.');
-		return;
-	}
-
-	const conn = resumeSalesforceConnection(session);
-	conn.query(query, function(error, result) {
-		if (error) {
-			console.error('Salesforce data API error: ' + JSON.stringify(error));
-			response.status(500).json(error);
-			return;
-		} else {
-			response.send(result);
-			return;
-		}
-	});
-});
-
-/**
- * Endpoint for querying all salesforce contact records
- * 
-*/
-app.get('/api/contacts', function(request, response) {
-	console.log("Received contacts request")
-	const session = getSession(request, response);
-	if (session == null) {
-		return;
-	}
-
-	const conn = resumeSalesforceConnection(session);
-	conn.query(CONTACT_QUERY, function(error, result) {
-		if (error) {
-			console.error('Salesforce data API error: ' + JSON.stringify(error));
-			response.status(500).json(error);
-			return;
-		} else {
-			response.send({
-				"contacts": result.records
-			});
-			return;
-		}
-	});
-});
-
-/*
- * Endpoint for querying all salesforce relationship records.
- */
-app.get('/api/relationships', function(request, response) {
-	console.log("Received relationships request")
-	const session = getSession(request, response);
-	if (session == null) {
-		return;
-	}
-
-	const conn = resumeSalesforceConnection(session);
-	conn.query(RELATIONSHIP_QUERY, function(error, result) {
-		if (error) {
-			console.error('Salesforce data API error: ' + JSON.stringify(error));
-			response.status(500).json(error);
-			return;
-		} else {
-			response.send({
-				"relationships" :result.records
-			});
-			return;
-		}
-	});
-});
 
 /**
  * Endpoint for retrieving all left and right data from salesforce
@@ -275,15 +97,12 @@ app.get('/api/relationships', function(request, response) {
  *		],
  *	}
 */
- app.get('/api/leftRightData', function(request, response) {
+app.get('/api/leftRightData', function(request, response) {
 	console.log("Received contacts & relationship request")
 	const session = getSession(request, response);
 	if (session == null) {
 		return;
 	}
-
-	// TODO: use (npo02__MembershipJoinDate__c ?) to access created date
-
 	const conn = resumeSalesforceConnection(session);
 	conn.query(CONTACT_QUERY, function(error, result) {
 		if (error) {
@@ -315,19 +134,24 @@ app.get('/api/relationships', function(request, response) {
 							newBee.mentorId = mentorId
 					})
 
-					// Construct result table
-					var newBeeTable = [["Timestamp", "Email", "Name", "Zip Code", "Salesforce Id", "NewBee/Mentor", "Mentor ID"]]
-					var mentorTable = [["Timestamp", "Email", "Name", "Zip Code", "Salesforce Id", "NewBee/Mentor"]]
+					// Construct result table (start with the column names)
+					var newBeeTable = [["Timestamp", "Email", "Name", "City, State", "Coordinate", "Salesforce Id", "NewBee/Mentor", "Mentor ID"]]
+					var mentorTable = [["Timestamp", "Email", "Name", "City, State", "Coordinate", "Salesforce Id", "NewBee/Mentor"]]
 
 					// Fill out the result table
 					allContacts.forEach(contact => {
+						let state = contact.MailingAddress.state || "N/A";
+						let city  = contact.MailingAddress.city  || "N/A";
+						let city_state = city + ", " + state;
 						if (contact.RecordTypeId === RECORD_TYPE_ID.newBee) {
 							// Process NewBee
-							newBeeTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, contact.MailingAddress.postalCode, contact.Id, 
+							newBeeTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
+								[contact.MailingAddress.latitude + ", " + contact.MailingAddress.longitude], contact.Id, 
 								"NewBee", contact.mentorId]);
 						} else if (contact.RecordTypeId === RECORD_TYPE_ID.mentor) {
 							// Process Mentor
-							mentorTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, contact.MailingAddress.postalCode, contact.Id, 
+							mentorTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
+								[contact.MailingAddress.latitude + ", " + contact.MailingAddress.longitude], contact.Id, 
 								"Mentor"]);
 						}
 					})
@@ -335,8 +159,7 @@ app.get('/api/relationships', function(request, response) {
 						"newBees": newBeeTable,
 						"mentors": mentorTable
 					}
-
-					// Send result to client (frontend) 
+					// Send result to client
 					response.send(finalResult);
 					return;
 				}
@@ -344,7 +167,6 @@ app.get('/api/relationships', function(request, response) {
 		}
 	});
 });
-
 
 /*
  * Endpoint for creating a relationship between two contacts
@@ -474,15 +296,114 @@ app.post('/api/unmatch', function(request, response) {
 	});	});
 });
 
+/**
+ * The following endpoints are for handling salesforce authentication requests.
+ */
 
-// Serve React site from same endpoint
+// Serve simple message at root directory
+app.get('/auth', function(request, response) {
+	response.status(200).send('You have reached the Match backend!');
+	return;
+});
+
+/**
+ * Login endpoint
+ */
+app.get('/auth/login', function(request, response) {
+	console.log("GOT LOGIN REQUEST");
+	// Redirect to Salesforce login/authorization page
+	response.redirect(oauth2.getAuthorizationUrl({ scope: 'api' }));
+});
+
+/**
+ * Login callback endpoint (only called by Salesforce)
+ */
+app.get('/auth/callback', function(request, response) {
+	console.log("RECEIVED CALLBACK!")
+	if (!request.query.code) {
+		response.status(500).send('Failed to get authorization code from server callback.');
+		return;
+	}
+
+	// Authenticate with OAuth
+	const conn = new jsforce.Connection({
+		oauth2: oauth2,
+		version: process.env.apiVersion
+	});
+	conn.authorize(request.query.code, function(error, userInfo) {
+		if (error) {
+			console.log('Salesforce authorization error: ' + JSON.stringify(error));
+			response.status(500).json(error);
+			return;
+		}
+
+		// Store oauth session data in server (never expose it directly to client)
+		request.session.sfdcAuth = {
+			'instanceUrl': conn.instanceUrl,
+			'accessToken': conn.accessToken
+		};
+		
+		// Redirect to app main page
+		response.redirect(process.env.frontendUrl);
+	});
+});
+
+/**
+ * Logout endpoint
+ */
+app.get('/auth/logout', function(request, response) {
+	const session = getSession(request, response);
+	if (session == null) return;
+
+	// Revoke OAuth token
+	const conn = resumeSalesforceConnection(session);
+	conn.logout(function(error) {
+		if (error) {
+			console.error('Salesforce OAuth revoke error: ' + JSON.stringify(error));
+			response.status(500).json(error);
+			return;
+		}
+
+		// Destroy server-side session
+		session.destroy(function(error) {
+			if (error) {
+				console.error('Salesforce session destruction error: ' + JSON.stringify(error));
+			}
+		});
+
+		// Redirect to app main page
+		return response.redirect(process.env.frontendUrl);
+	});
+});
+
+/**
+ * Endpoint for retrieving currently connected user
+ */
+app.get('/auth/whoami', function(request, response) {	
+
+	console.log("Getting session");
+	const session = getSession(request, response);
+	if (session == null) {
+		console.log("No session found")
+		// console.log(response);
+		return;
+	}
+	console.log("====== Found session =======")
+	// Request session info from Salesforce
+	const conn = resumeSalesforceConnection(session);
+	conn.identity(function(error, res) {
+		response.send(res);
+	});
+});
+
+// Serve React site from same endpoint.
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static("public"));
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
 
-
+// Listen for requests.
 app.listen(app.get('port'), function() {
 	console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
