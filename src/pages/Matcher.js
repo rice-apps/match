@@ -4,10 +4,7 @@ import LeftDataPanel from '../components/data-panel/LeftDataPanel';
 import SplitPane from 'react-split-pane';
 import {loadSalesforceData, postUnmatch, postMatch} from '../util/salesforceInterface';
 
-import { Button, Checkbox } from 'antd';
-
-import { modifySpreadsheetDataSingleCell, getSpreadsheetData, appendSpreadsheetDataBatch } from '../util/gapi';
-import { formatData } from '../util/dataFormatter';
+import {Button, Checkbox, Card } from 'antd';
 
 import { useRecoilState } from 'recoil';
 import { rightDataState, leftDataState, applicationState } from '../store/atoms';
@@ -45,7 +42,6 @@ export default function Matcher() {
 
   //Disable matching variables & function
   var matchingEnabled = rightIdColumn && leftIdColumn && leftMatchColumn;
-  //console.log("matchingEnabled:",rightIdColumn, leftIdColumn, leftMatchColumn)
 
   function setSidebarOpen(open) {
     setAppState({
@@ -53,62 +49,6 @@ export default function Matcher() {
       sidebarOpen: open
     });
   }
-
-  // This basically refreshes the data in memory, see where this is used.
-  function onLeftSpreadsheetLoaded(response) {
-    var values = response.result;
-    if (values.length > 0) {
-      var newDataState = formatData(values, true);
-      // console.log(newDataState)
-      setLeftData(oldLeftData => {
-        let newState = {
-          ...oldLeftData,
-          // Only updating the state and refreshing
-          // NOTE: If you override the old columns, then you get rid of previous settings
-          data: newDataState.data,
-          // Update selected selected rows with new data
-          selectedRows: oldLeftData.selectedRows.map(row =>
-            // Get the updated row from the new state
-            newDataState.data[row.key]
-          ),
-          refreshing: false,
-        }
-        return newState;
-      })
-    } else {
-      alert('No data found.');
-    }
-  }
-
-  /**
-   * Write a match to the left google sheet
-   * @param leftInfo the matching info of the person on left to match (value, rowIndex, columnIndex, entryId)
-   */
-  function writeToLeftGoogleSheet(leftInfo){
-     // Stringify both left and right before writing to Google Sheets
-     let leftValueString = JSON.stringify(leftInfo.value);
- 
-     // Save an empty list [] as a blank cell
-     if (leftValueString === "[]") leftValueString = "";
- 
-     // If the left data is from Google Sheets, write to it
-     if (leftSpreadsheetId) {
- 
-       // Set refreshing to be true
-       setLeftData(leftDataState => {
-         return {
-           ...leftDataState,
-           refreshing: true,
-         }
-       })
-       modifySpreadsheetDataSingleCell(leftSpreadsheetId, leftInfo.columnIndex, leftInfo.rowIndex, leftValueString, () => {
-         console.log("Done writing to left!");
-         // This refreshes the data in this app once the spreadsheet is written to
-         getSpreadsheetData(leftSpreadsheetId, onLeftSpreadsheetLoaded);
-       });
-     }
-  }
-
   /**
    * Get the info about the selected left column that is needed to match/unmatch
    */
@@ -128,7 +68,7 @@ export default function Matcher() {
   function match(row) {
     const leftInfo = getSelectedLeftInfo(row);
     const mentorId = row[rightIdColumn.key];
-    const newbeeId = leftInfo.entryId; 
+    const newbeeId = leftInfo.entryId;
     postMatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
@@ -139,7 +79,7 @@ export default function Matcher() {
   function unmatch(row) {
     const leftInfo = getSelectedLeftInfo(row);
     const mentorId = row[rightIdColumn.key];
-    const newbeeId = leftInfo.entryId; 
+    const newbeeId = leftInfo.entryId;
     postUnmatch(newbeeId, mentorId, setLeftData, setRightData);
   }
 
@@ -153,21 +93,19 @@ export default function Matcher() {
     // If right matches is null, just return null.
     if (rightMatches)
       return rightMatches[0];
-    else
-      return null;
+    return null;
   }
 
    /**
    * Checks who the person on the right is matched to
-   * @param leftRow 
+   * @param leftRow
    */
   function getFirstRightMatchedByLeft(leftRow){
     let leftMatches = leftRow[leftMatchColumn.key];
     // If right matches is null, just return null.
     if (leftMatches)
       return JSON.parse(leftMatches)[0];
-    else
-      return null;
+    return null;
   }
 
   /**
@@ -179,8 +117,7 @@ export default function Matcher() {
     // If right matches is null, just return null.
     if (leftMatches)
       return [leftMatches];
-    else
-      return null;
+    return null;
   }
 
   /**
@@ -191,7 +128,9 @@ export default function Matcher() {
     return leftData
     .filter(row => {
       let leftMatch = row[leftMatchColumn.key];
-      return leftMatch && rightRow[rightIdColumn.key] && leftMatch.includes(rightRow[rightIdColumn.key])
+      return leftMatch &&
+             rightRow[rightIdColumn.key] &&
+             leftMatch.includes(rightRow[rightIdColumn.key]);
     }).map(row => row[leftIdColumn.key]);
   }
 
@@ -202,7 +141,6 @@ export default function Matcher() {
    */
   function rightMatchedToSpecificLeft(rightRow, leftRow) {
     // Read Right Match
-    //console.log("left row", leftRow);
     let rightMatches = getEachRightMatchedByLeft(leftRow);
     let rightId = rightRow[rightIdColumn.key];
     return (rightMatches && leftRow) && (rightMatches.includes(rightId))
@@ -242,35 +180,21 @@ export default function Matcher() {
   }
 
   function logInSalesforce(){
-    console.log("logging into sales force...")
+    console.log("logging into sales force...");
     window.location = '/auth/login';
   }
 
   function loginBody(){
-    return (
-       <div className="Body"> 
-        <div className="slds-modal slds-fade-in-open">
-         <div className="slds-modal__container">
-           <div className="slds-box slds-theme--shade">
-             <p className="slds-text-heading--medium slds-m-bottom--medium">Welcome, please log in with your Salesforce account:</p>
-             <div className="slds-align--absolute-center">
-               <button onClick={logInSalesforce} className="slds-button slds-button--brand">
-                 <svg aria-hidden="true" className="slds-button__icon--stateful slds-button__icon--left">
-                   <use xlinkHref="/assets/icons/utility-sprite/svg/symbols.svg#salesforce1"></use>
-                 </svg>
-                 Log in
-               </button>
-            </div>
-           </div>
-         </div>
-       </div>
-      </div>
-    );
+    return (<div style={{display:"flex", "justify-content":"center"}}>
+        <Card title={"Salesforce Authentication"} className="AboutCard">
+           <Button type={'primary'} block={true} shape={'round'} onClick={logInSalesforce}> Login to Salesforce </Button>
+          </Card>
+    </div>);
   }
 
   function dataBody(){
     //Load data if unloaded.
-    if ((!leftRefreshing && !rightRefreshing) && (leftData.length  == 0 ||rightData.length == 0)) 
+    if ((!leftRefreshing && !rightRefreshing) && (leftData.length  == 0 ||rightData.length == 0))
       loadSalesforceData(setLeftData, setRightData);
 
     //Return visual component.
@@ -308,7 +232,6 @@ export default function Matcher() {
   }
 
   function checkIfLoggedIn(){
-    const that = this;
     fetch('/auth/whoami', {
             method: 'get',
             headers: {
@@ -346,12 +269,10 @@ export default function Matcher() {
             <b>     </b>
             <Button type={'primary'} onClick={() => setSidebarOpen(true)}> Sorts & Filters </Button>
             <b> </b>
-            <Button href={route + '/pods'}> See Pods </Button>
-            <b> </b>
             <Button href={route + '/settings'}> Settings</Button>
             <b> </b>
-            {route.includes("hivesforheroes") ? 
-              <Checkbox style={{ marginLeft: '50px' }} defaultChecked={shouldSortLeft} onChange = {(e) => 
+            {route.includes("hivesforheroes") ?
+              <Checkbox style={{ marginLeft: '50px' }} defaultChecked={shouldSortLeft} onChange = {(e) =>
                 // Set refreshing to be true
                   setLeftData(leftDataState => {
                   return {

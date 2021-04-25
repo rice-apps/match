@@ -20,8 +20,6 @@ export default function Settings() {
         <span>
         <b> </b>
         <Button type={'primary'} href={'/' + route}> Back to Matching </Button>
-        <b> </b>
-        <Button href={'/' + route+'/pods'}>See Pods</Button>
         </span>
       </div>
       <div className="Main">

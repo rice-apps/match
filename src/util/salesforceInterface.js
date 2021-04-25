@@ -4,7 +4,7 @@ import {formatData} from './dataFormatter';
 /**
  * Match request wrapper.
  * Calls a method that handles the real logic.
- * 
+ *
  * @param {string} newbeeID the newbee to match
  * @param {string} mentorID the mentor to match
  * @param {function} setNewbees the newbee set state function
@@ -15,7 +15,7 @@ export function postMatch(newbeeID, mentorID, setNewbees, setMentors) {
 }
 
 /**
- * Unmatch request wrapper. 
+ * Unmatch request wrapper.
  * Calls a method that handles the real logic.
  *
  * @param {string} newbeeID the newbee to unmatch
@@ -33,7 +33,7 @@ export function postUnmatch(newbeeID, mentorID, setNewbees, setMentors){
  *  - If successeful, update local state accordingly to keep them synced
  *  - If backend rejects request (for dsyncronizaiton for instance) we refresh data
  *      and alerts user.
- * 
+ *
  * @param {boolean} isMatching true if we are matching, false if we are unmatching.
  * @param {string} newbeeID the newbee to unmatch/match
  * @param {string} mentorID the mentor to unmatch/match
@@ -68,7 +68,7 @@ function handleMatchUnmatch(isMatching, newbeeID, mentorID, setNewbees, setMento
                 alert(errmsg);
                 //Refresh local data (and set refreshing to false).
                 loadSalesforceData(setNewbees, setMentors);
-            } 
+            }
         })
         .catch(error => console.log('FETCH ERROR:', error)); //to catch the errors if any.
 
@@ -77,9 +77,9 @@ function handleMatchUnmatch(isMatching, newbeeID, mentorID, setNewbees, setMento
 
 /** GET DATA **/
 /**
- * Populates newbee and mentor data (left and right) 
+ * Populates newbee and mentor data (left and right)
  * using setNewbees and setMentors
- * 
+ *
  * @param {Function} setNewbees setState function for newbees
  * @param {Function} setMentors setState function for mentors
  */
@@ -91,7 +91,7 @@ export function loadSalesforceData(setNewbees, setMentors){
 
 /**
  * Make API request to /contacts and hand data off to onLoaded callback function.
- * 
+ *
  * @param {Function} setNewbees setState function for newbees
  * @param {Function} setMentors setState function for mentors
  */
@@ -104,13 +104,13 @@ function getSalesforceData(setNewbees,setMentors) {
 
 /**
  * Format the API response for each key and return data.
- * 
+ *
  * @param {Object} response the object recieved from the API request
  * @param {Function} setNewbees setState function for newbees
  * @param {Function} setMentors setState function for mentors
  */
 function onSalesforceLoaded(response, setNewbees, setMentors) {
-    if (!postData(response.newBees,setNewbees,true)) 
+    if (!postData(response.newBees,setNewbees,true))
         alert("No newBee data!");
     if (!postData(response.mentors,setMentors,false))
         alert("No mentor data!");
@@ -118,7 +118,7 @@ function onSalesforceLoaded(response, setNewbees, setMentors) {
 
 /**
  * Takes in data, formats it, and sets it using the passed setState function.
- * 
+ *
  * @param {*} data The array of arrays storing the data (first row is column names)
  * @param {*} setFunction The set state function to use
  * @param {*} allowManualSort Whether or not to allowManualSort (true if left side)
@@ -138,20 +138,22 @@ function postData(data, setFunction, allowManualSort){
         newDataState.idColumn = getColumn(columns, 'salesforce_id');
         //Name
         newDataState.nameColumn = getColumn(columns, 'name');
+        //Speciy coordainte column
+        newDataState.coordColumn = getColumn(columns, 'coordinate');
         //console.log("captured columns", newDataState.emailColumn, newDataState.matchColumn);
         //Set the data state.
         setFunction(setData(newDataState));
         //Indicate success.
         return true;
-    } 
+    }
     //Indicate failure.
     return false;
 }
 
 /**
  * Sets the local newbee column's id to the speicifed newMentorID
- * @param {*} newbeeID 
- * @param {*} newMentorID 
+ * @param {*} newbeeID
+ * @param {*} newMentorID
  */
 function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
     setNewbees(oldDataState => {
@@ -163,14 +165,14 @@ function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
         console.log("State started as",newDataState);
         //Find column to mutate.
         newDataState.data.forEach(row => {
-            if (row[idCol] === newbeeID) 
+            if (row[idCol] === newbeeID)
                 //Mutate said column to newMentorID
                 row[mentorCol] = newMentorID;
         });
         // Update the selected row (ASSUMES ONLY ONE NEWBEE CAN BE PICKED)
         if (newDataState.selectedRows)
             newDataState.selectedRows[0][mentorCol] = newMentorID;
-    
+
         console.log("State finished as",newDataState);
         return newDataState;
     });
@@ -178,9 +180,9 @@ function setMentorOfNewbee(newbeeID,newMentorID,setNewbees) {
 
 /**
  * Returns the entry with a specified key value.
- * 
+ *
  * @param {Array} columns
- * @param {string} keyValue 
+ * @param {string} keyValue
  * @return {Object} column with specified key
  */
 function getColumn(columns, keyValue) {
@@ -191,18 +193,17 @@ function getColumn(columns, keyValue) {
     if(col < 0)
         return null;
     return columns[col];
-
 }
 
-/** 
- * SetState Lambda Generators 
+/**
+ * SetState Lambda Generators
  **/
 
 /**
  * Returns a lmabs that will set the refresh value to whatever
  * specified.
- * 
- * @param {boolean} refreshValue 
+ *
+ * @param {boolean} refreshValue
  */
 function setRefreshing(refreshValue){
     return oldDataState => {
@@ -216,8 +217,8 @@ function setRefreshing(refreshValue){
 /**
  * Returns a lambda that can be passed to a setstate function
  * to update the call. Also set's refreshing flag to false.
- * 
- * @param {*} newDataState 
+ *
+ * @param {*} newDataState
  */
 function setData(newDataState){
     return oldDataState => {
