@@ -55,7 +55,7 @@ function commaSeparatedToList(str) {
   return [];
 }
 
-function parseCoordinate(str) {  
+export function parseCoordinate(str) {  
     return commaSeparatedToList(str).map(s => parseFloat(s));
 }
 
@@ -310,11 +310,11 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
 
   const zipCodeRule = zipCodeSortIndex > -1 ? sorts[zipCodeSortIndex] : filters[zipCodeFilterIndex];
  
-  const leftCoords = leftRow[zipCodeRule.with.value][0];
+  const leftCoords = leftRow.coordinate[0];
   return filtered_and_sorted.map(row => {
-    const rightCoords = row[zipCodeRule.by][0]
+    const rightCoords = row.coordinate[0];
     let distance = coordinatesToDistance(parseCoordinate(leftCoords), parseCoordinate(rightCoords));
-    console.log(leftCoords, "+", rightCoords, " -> ", distance);
+    console.log("Aprox", leftRow, row, " -> ", distance);
     //let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
     if (distance != null) {
       distance = distance.toFixed(2) // round distance
