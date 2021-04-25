@@ -27,8 +27,9 @@ export default function ControlPanel() {
     // Only set the default sorts once
     if (!didSetDefault) {
       console.log("Applying default rules");
-      applyDefaultRules();
-      didSetDefault = true;
+      if (applyDefaultRules() != -1) {
+        didSetDefault = true;
+      }
     }
   }, [leftColumns]);
 
@@ -163,12 +164,12 @@ export default function ControlPanel() {
 
   const applyDefaultRules = () => {
     let defaultSettings = [];
-    if (route === "hivesforheroes") {
+    if (route === "hivesforheroes" && leftColumns && rightColumns) {
       // Search for a "Zip Code" column
       const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
       if (idxLeft === -1 || idxRight === -1) {
-        return;
+        return -1;
       }
       defaultSettings = [{
         // DISTANCE SORT
@@ -180,24 +181,11 @@ export default function ControlPanel() {
           value: leftColumns[idxLeft].key,
         },
         by: rightColumns[idxRight].key,
-      }
-    ]; 
-      
+      }]; 
+      setRules(defaultSettings);
     } else {
-        let time = rightColumns[10].key;
-        let weeklyHours = rightColumns[16].key;
-        let special_acc = rightColumns[17].key;
-        let subject = rightColumns[19].key;
-
-        defaultSettings = [
-          createSortDefaultSetting(time, "evening", "contains"),
-          createSortDefaultSetting(weeklyHours, "5", "geq"),
-          createSortDefaultSetting(special_acc, "ADHD, Dyslexia", "overlap"),
-          createSortDefaultSetting(subject, "Algebra", "contains")
-        ];
-        
+      return -1;
     }
-    setRules(defaultSettings);
   };
 
   return (
