@@ -166,24 +166,23 @@ const byLEQ = (value) => (a, b) => {
 };
 
 const byDistance = (value) => (a, b) => {
-  console.log('Comparing', value, 'with', a, 'and', b); //Does this print!?
-  let vCoord = parseCoordinate(value);  
-  let aCoord = parseCoordinate(a);
-  let bCoord = parseCoordinate(b);
-  // if ([lat0, lon0, lat1, lon1, lat2, lon2].contains(null)) {
-  //   console.log("contains null :(");
-  //   return -1;
-  // }
+  //console.log('Comparing', value[0], 'with', a[0], 'and', b[0]); 
+  /* Parse coordinates */
+  //a b and value are wrapped in an array
+  let vCoord = parseCoordinate(value[0]);  
+  let aCoord = parseCoordinate(a[0]);
+  let bCoord = parseCoordinate(b[0]);
 
+  /* Compute distance */
   let dist2a = coordinatesToDistance(vCoord, aCoord);
   let dist2b = coordinatesToDistance(vCoord, bCoord);
 
   if (dist2a === dist2b)
     return 0;
-  // if (dist2a === null)
-  //   return 1;
-  // if (dist2b === null)
-  //   return -1;
+  if (dist2a === null)
+    return 1;
+  if (dist2b === null)
+    return -1;
   if (dist2a < dist2b)
     return -1;
   return 1;
