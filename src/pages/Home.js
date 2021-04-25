@@ -26,13 +26,9 @@ export default function Home() {
           <Card title={"Let's match!"} className="AboutCard">
            Enough reading, let's get matching! Click your organizations button below or general if we haven't tailored our software to you.
            <p> </p>
-           <Button type={'primary'} block={true} shape={'round'} href='/covidsitters'>Match for Covidsitters</Button>
-           <p> </p>
            <Button type={'primary'} block={true} shape={'round'} href='/ccd'>Match for Rice CCD</Button>
            <p> </p>
            <Button type={'primary'} block={true} shape={'round'} href='/hivesforheroes'>Match for Hives For Heroes</Button>
-           <p> </p>
-           {/* <Button type={'primary'} block={true} disabled={true} shape={'round'} href='/general'>General (Coming Soon!)</Button> */}
           </Card>
           <p></p>
         </div>

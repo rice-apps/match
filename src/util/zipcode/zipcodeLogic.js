@@ -15,11 +15,10 @@ const data = require("./data.json");
 export function zipcodesToDistance(zipcode1,zipcode2){
     let coord1 = data[sanitizeZip(zipcode1)]
     let coord2 = data[sanitizeZip(zipcode2)]
-    if (coord1 && coord2){
+    if (coord1 && coord2)
         return coordinatesToDistance(coord1, coord2);
-    } else {
+    else 
         return null
-    }
 }
 
 /**
@@ -31,7 +30,7 @@ export function zipcodesToDistance(zipcode1,zipcode2){
  * @param coordinates, an array[Longitude{float},Lattitude(float)]
  * @return distance (float) in miles
  */
-function coordinatesToDistance(coordinate1,coordinate2){
+export function coordinatesToDistance(coordinate1,coordinate2){
     // TODO: Implement
     let lat1, lon1;
     [lon1, lat1] = coordinate1;

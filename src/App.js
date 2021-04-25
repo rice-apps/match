@@ -4,7 +4,6 @@ import Matcher from './pages/Matcher';
 import Assigner from './pages/Assigner';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
-import Pods from './pages/Pods';
 import Privacy from './pages/Privacy';
 import Header from './components/header/Header';
 import { Switch, Route } from "react-router-dom";
@@ -45,10 +44,6 @@ function App() {
             <Route path="/help" component={Help} />
             <Route path="/privacy" component={Privacy} />
             <Route path="/ccd" component={Assigner}/>
-            <Route path="/covidsitters/pods" component={Pods}/>
-            <Route path="/covidsitters/settings" component={Settings}/>
-            <Route path="/covidsitters" component={Matcher}/>
-            <Route path="/hivesforheroes/pods" component={Pods}/>
             <Route path="/hivesforheroes/settings" component={Settings}/>
             <Route path="/hivesforheroes" component={Matcher}/>
             <Route path="/" component={Home} />

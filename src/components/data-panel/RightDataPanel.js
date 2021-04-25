@@ -1,5 +1,4 @@
 import React from 'react';
-import Loader from '../loader/SheetsLoader';
 import Table from '../table/Table';
 import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { applyRules, isAnyEnabledDistanceRule } from '../../util/rules';
@@ -32,7 +31,7 @@ export default function RightDataPanel(props) {
   // Here's where the sorting/filtering happens!!
   // Note selectedLeftRows[0]. Should only ever have one in the list anyways
   // as the left panel is "radio" select type.
-  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn, 
+  const sortedData = applyRules(rules, data, selectedLeftRows[0], leftEmailColumn, leftMatchColumn,
                                 rightEmailColumn, props.rightMatchedToSpecificLeft, props.rightMatchedToAnyLeft,
                                 route.includes("hivesforheroes"));
 
@@ -91,14 +90,6 @@ export default function RightDataPanel(props) {
 
   return (
     <div className="DataPanel">
-      <h5>Mentors</h5>
-
-      {/* Loader to accept csv input */}
-      {data.length === 0 && <Loader
-        onUpload={setRightData}
-        allowManualSort={false}
-      />}
-
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
       <Table

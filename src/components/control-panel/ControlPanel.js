@@ -67,8 +67,10 @@ export default function ControlPanel() {
   const handleOpChange = (value, i) => {
     // update with by: zip code column, and value: zip code column
     if (value === "distance") {
-      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      // const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      // const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxLeft = leftColumns.findIndex(element => element.key === ("coordinate"));
+      const idxRight = rightColumns.findIndex(element => element.key === ("coordinate"));
       if (idxLeft !== -1 && idxRight !== -1) {
         const newRules = replaceItemAtIndex(rules, i, {
           ...rules[i],
@@ -156,7 +158,7 @@ export default function ControlPanel() {
       by,
       operator: operator,
       with: {
-        type, 
+        type,
         value,
       },
     };
@@ -166,8 +168,8 @@ export default function ControlPanel() {
     let defaultSettings = [];
     if (route === "hivesforheroes" && leftColumns && rightColumns) {
       // Search for a "Zip Code" column
-      const idxLeft = leftColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
-      const idxRight = rightColumns.findIndex(element => element.key.includes("zip") && element.key.includes("code"));
+      const idxLeft = leftColumns.findIndex(element => element.key === "coordinate");
+      const idxRight = rightColumns.findIndex(element => element.key === "coordinate");
       if (idxLeft === -1 || idxRight === -1) {
         return -1;
       }
@@ -181,7 +183,7 @@ export default function ControlPanel() {
           value: leftColumns[idxLeft].key,
         },
         by: rightColumns[idxRight].key,
-      }]; 
+      }];
       setRules(defaultSettings);
     } else {
       return -1;
