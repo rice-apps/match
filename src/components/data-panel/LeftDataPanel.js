@@ -4,6 +4,8 @@ import { FormattedCard } from "../formatted-card/FormattedCard.js";
 import { useRecoilState } from 'recoil';
 import { leftDataState, rightDataState } from '../../store/atoms';
 import {coordinatesToDistance} from '../../util/zipcode/zipcodeLogic.js';
+import { isCompositeComponent } from 'react-dom/test-utils';
+import { parseCoordinate } from '../../util/rules.js'
 
 export default function LeftDataPanel(props) {
   const [{ data, columns, selectedRows, matchColumn, nameColumn, shouldSortLeft}, setLeftData] = useRecoilState(leftDataState);
@@ -41,15 +43,12 @@ export default function LeftDataPanel(props) {
    * @param rightrow the row from the right side of the second person
    */
   function distanceBetween2Rows(leftrow, rightrow) {
-    const coordinateleft = leftrow.coordinate;
-    const coordinateright = rightrow.coordinate;
-
-    if (coordinateleft !== null && coordinateright !== null) {
-
-        return coordinatesToDistance(coordinateleft, coordinateright);
-    }
-
-          return Number.MAX_VALUE;
+    const coordinateleft = leftrow.coordinate[0];
+    const coordinateright = rightrow.coordinate[0];
+    
+    if (coordinateleft !== null && coordinateright !== null)
+        return coordinatesToDistance(parseCoordinate(coordinateleft), parseCoordinate(coordinateright));
+    return Number.MAX_VALUE;
   }
 
   /**
@@ -60,7 +59,7 @@ export default function LeftDataPanel(props) {
     return Math.min.apply(null, 
       rightdata.map((rightrow) => {
         let dist = distanceBetween2Rows(leftrow, rightrow);
-        return dist ? dist : Number.MAX_VALUE
+        return dist;
       }) 
     );
   }

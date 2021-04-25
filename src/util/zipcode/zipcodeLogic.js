@@ -36,6 +36,7 @@ export function coordinatesToDistance(coordinate1,coordinate2){
     [lon1, lat1] = coordinate1;
     let lat2, lon2;
     [lon2, lat2] = coordinate2;
+    console.log("COORDS:", coordinate1, coordinate2);
     let R = 6371; // Radius of the earth in km
     let dLat = deg2rad(lat2-lat1);  // deg2rad below
     let dLon = deg2rad(lon2-lon1); 
