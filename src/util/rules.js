@@ -311,12 +311,14 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
 
   const zipCodeRule = zipCodeSortIndex > -1 ? sorts[zipCodeSortIndex] : filters[zipCodeFilterIndex];
  
-  const leftZip = leftRow[zipCodeRule.with.value];
+  const leftCoords = leftRow[zipCodeRule.with.value][0];
   return filtered_and_sorted.map(row => {
-    let zipDistance = coordinatesToDistance(parseCoordinate(leftZip), parseCoordinate(row[zipCodeRule.by]));
+    const rightCoords = row[zipCodeRule.by][0]
+    let distance = coordinatesToDistance(parseCoordinate(leftCoords), parseCoordinate(rightCoords));
+    console.log(leftCoords, "+", rightCoords, " -> ", distance);
     //let zipDistance = zipcodesToDistance(leftZip, row[zipCodeRule.by]);
-    if (zipDistance != null) {
-      zipDistance = zipDistance.toFixed(2) // round distance
+    if (distance != null) {
+      distance = distance.toFixed(2) // round distance
     } else {
       // Zip Code distance couldn't be calculated (invalid zip)
       return {
@@ -326,19 +328,19 @@ function showDistanceData(filtered_and_sorted, sorts, filters, leftRow) {
     }
 
     // Add lower bound
-    if (zipDistance < 5) {
-      zipDistance = "< 5";
-    } else if (zipDistance > 150) {
+    if (distance < 5) {
+      distance = "< 5";
+    } else if (distance > 150) {
       // Upper bound
-      zipDistance = "> 150";
+      distance = "> 150";
     }
 
     // Add suffix
-    zipDistance = zipDistance + " mi";
+    distance = distance + " mi";
 
     return {
       ...row,
-      __estimated_distance__: zipDistance,
+      __estimated_distance__: distance,
     }
   });
 }
