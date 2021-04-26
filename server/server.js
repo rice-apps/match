@@ -140,20 +140,27 @@ app.get('/api/leftRightData', function(request, response) {
 
 					// Fill out the result table
 					allContacts.forEach(contact => {
-						let latitude = contact.MailingAddress && contact.MailingAddress.latitude || "N/A";
-						let longitude = contact.MailingAddress && contact.MailingAddress.longitude || "N/A";
-						let state = contact.MailingAddress && contact.MailingAddress.state || "N/A";
-						let city  = contact.MailingAddress && contact.MailingAddress.city  || "N/A";
-						let city_state = city + ", " + state;
+						// Set the default values of (lat, lon) and (city, state)
+						let [lat_lon, city_state] = [null, "N/A, N/A"];
+						// Check if we know the mailing address
+						if (contact.MailingAddress) {
+							let latitude = contact.MailingAddress.latitude;
+							let longitude = contact.MailingAddress.longitude;
+							let state = contact.MailingAddress.state || "N/A";
+							let city  = contact.MailingAddress.city  || "N/A";
+
+							if (latitude && longitude) lat_lon = latitude + ", " + longitude
+							city_state = city + ", " + state;
+						}
 						if (contact.RecordTypeId === RECORD_TYPE_ID.newBee) {
 							// Process NewBee
 							newBeeTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
-								[latitude + ", " + longitude], contact.Id, 
+								[lat_lon], contact.Id, 
 								"NewBee", contact.mentorId]);
 						} else if (contact.RecordTypeId === RECORD_TYPE_ID.mentor) {
 							// Process Mentor
 							mentorTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
-								[latitude + ", " + longitude], contact.Id, 
+								[lat_lon], contact.Id, 
 								"Mentor"]);
 						}
 					})
