@@ -13,7 +13,7 @@ const bodyParser = require('body-parser');
 // are updated on the salesforce side.
 const RECORD_TYPE_ID = {
 	newBee: "0121U0000003rkiQAA",
-	mentor: "0121U0000003rknQAA", // Emphasis on the "n" !!!
+	mentor: "0121U0000003rknQAA", // Emphasis on the "n" !!!	         
 }
 
 const CONTACT_QUERY = "SELECT Id, CreatedDate, Email, Name, RecordTypeId, MailingAddress FROM Contact";
@@ -140,18 +140,20 @@ app.get('/api/leftRightData', function(request, response) {
 
 					// Fill out the result table
 					allContacts.forEach(contact => {
-						let state = contact.MailingAddress.state || "N/A";
-						let city  = contact.MailingAddress.city  || "N/A";
+						let latitude = contact.MailingAddress && contact.MailingAddress.latitude || "N/A";
+						let longitude = contact.MailingAddress && contact.MailingAddress.longitude || "N/A";
+						let state = contact.MailingAddress && contact.MailingAddress.state || "N/A";
+						let city  = contact.MailingAddress && contact.MailingAddress.city  || "N/A";
 						let city_state = city + ", " + state;
 						if (contact.RecordTypeId === RECORD_TYPE_ID.newBee) {
 							// Process NewBee
 							newBeeTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
-								[contact.MailingAddress.latitude + ", " + contact.MailingAddress.longitude], contact.Id, 
+								[latitude + ", " + longitude], contact.Id, 
 								"NewBee", contact.mentorId]);
 						} else if (contact.RecordTypeId === RECORD_TYPE_ID.mentor) {
 							// Process Mentor
 							mentorTable.push([contact.CreatedDate.substring(0, 10), contact.Email, contact.Name, city_state,
-								[contact.MailingAddress.latitude + ", " + contact.MailingAddress.longitude], contact.Id, 
+								[latitude + ", " + longitude], contact.Id, 
 								"Mentor"]);
 						}
 					})
