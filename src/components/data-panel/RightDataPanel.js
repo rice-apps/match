@@ -90,6 +90,7 @@ export default function RightDataPanel(props) {
 
   return (
     <div className="DataPanel">
+      <h5>Mentors</h5>
       {/* The actual table for this panel. Note that it's "checkbox" selection type.
           This means you can select multiple rows from this table. */}
       <Table
