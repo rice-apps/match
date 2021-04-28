@@ -6,9 +6,11 @@ import "./Header.css"
 
 import { useRecoilState } from 'recoil';
 import { applicationState } from '../../store/atoms';
+import { useLocation } from 'react-router-dom';
 
 export default function Header() {
     const [{ user }, setAppState] = useRecoilState(applicationState);
+    const route = useLocation().pathname.split("/")[1];
 
     function authenticationCallback(user) {
         // Logged out
@@ -62,16 +64,18 @@ export default function Header() {
                     <Nav.Link href="/privacy">Privacy</Nav.Link>
                     <Nav.Link href="/help">Help</Nav.Link>
                 </Nav>
-
-                <Navbar.Text>
-                    {user ? "Signed in as: " + user.firstName : ""}
-                </Navbar.Text> &nbsp;
-                <Button onClick={handleClearClick} size='small'>Refresh</Button> &nbsp;
-                {user ?
-                    <div className="AuthenticationSection">
-                         <Button onClick={handleSignoutClick} size='small'>Sign Out</Button> &nbsp;
-                    </div> :
-                    <Button onClick={handleAuthClick} size='small'>Sign In</Button>}
+                {route !== "hivesforheroes" &&
+                <div>
+                    <Navbar.Text>
+                        {user ? "Signed in as: " + user.firstName : ""}
+                    </Navbar.Text> &nbsp;
+                    <Button onClick={handleClearClick} size='small'>Refresh</Button> &nbsp;
+                    {user ?
+                        <div className="AuthenticationSection">
+                            <Button onClick={handleSignoutClick} size='small'>Sign Out</Button> &nbsp;
+                        </div> :
+                        <Button onClick={handleAuthClick} size='small'>Sign In</Button>}
+                </div>}
             </Navbar.Collapse>
         </Navbar>        
     );
