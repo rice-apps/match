@@ -64,17 +64,17 @@ export default function Header() {
                     <Nav.Link href="/privacy">Privacy</Nav.Link>
                     <Nav.Link href="/help">Help</Nav.Link>
                 </Nav>
+                <Navbar.Text>
+                    {user ? "Signed in as: " + user.firstName : ""}
+                </Navbar.Text> &nbsp;
+                <Button onClick={handleClearClick} size='small'>Refresh</Button> &nbsp;
                 {route !== "hivesforheroes" &&
                 <div>
-                    <Navbar.Text>
-                        {user ? "Signed in as: " + user.firstName : ""}
-                    </Navbar.Text> &nbsp;
-                    <Button onClick={handleClearClick} size='small'>Refresh</Button> &nbsp;
-                    {user ?
-                        <div className="AuthenticationSection">
-                            <Button onClick={handleSignoutClick} size='small'>Sign Out</Button> &nbsp;
-                        </div> :
-                        <Button onClick={handleAuthClick} size='small'>Sign In</Button>}
+                {user ?
+                    <div className="AuthenticationSection">
+                        <Button onClick={handleSignoutClick} size='small'>Sign Out</Button> &nbsp;
+                    </div> :
+                    <Button onClick={handleAuthClick} size='small'>Sign In</Button>}
                 </div>}
             </Navbar.Collapse>
         </Navbar>        
