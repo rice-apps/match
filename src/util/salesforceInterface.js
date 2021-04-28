@@ -48,7 +48,7 @@ function handleMatchUnmatch(isMatching, newbeeID, mentorID, setNewbees, setMento
     setNewbees(setRefreshing(true));
     setMentors(setRefreshing(true));
     //Make API request.
-    const URL = `/${cmd}?newbee=${newbeeID}&mentor=${mentorID}`;
+    const URL = `/api/${cmd}?newbee=${newbeeID}&mentor=${mentorID}`;
     fetch(URL, { method: 'POST'})
         .then(response => {
             const status = response.status;
