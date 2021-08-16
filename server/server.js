@@ -212,7 +212,7 @@ app.post('/api/match', function(request, response) {
 
 	// Check Passed! Make the match!
 	}).then((err) => {
-		if (err) return val;
+		if (err) return;
 
 		let new_relationship = {
 			"npe4__Contact__c": newbeeID, // ID of the first contact
@@ -244,25 +244,17 @@ app.post('/api/unmatch', function(request, response) {
 
 	const conn = resumeSalesforceConnection(session);
 
-	conn.sobject("npe4__Relationship__c")
+	conn.sobject('npe4__Relationship__c')
 		.find({npe4__Contact__c: mentorID, npe4__RelatedContact__c: newbeeID})
-		.execute(function(err, records) {
+		.destroy(function(err, rets) {
 			if (err) { return console.error(err); }
-			if (records.length === 0){
-				response.status(406).send('No match found between given NewBee and Mentor!')
-				return 1;
-			}
-			let relationshipIDs = records.map(records => records.Id);
-			
-			// Multiple records deletion
-			conn.sobject("npe4__Relationship__c").del(relationshipIDs, function(err, rets) {
-				if (err) { return console.error(err); }
-				rets.forEach((ret) => {
-					if (ret.success) console.log("Deleted Successfully : " + ret.id);
-				})
-				response.status(200).send('Succesfully unmatched! IDs: ' + relationshipIDs);
-				return 0;
-			});
+
+			rets.forEach((ret) => {
+				if (ret.success) console.log('Deleted Successfully : ' + ret.id);
+			})
+
+			response.status(200).send('Succesfully unmatched!');
+			return 0;
 		});
 });
 
