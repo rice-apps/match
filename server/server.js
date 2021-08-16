@@ -31,7 +31,7 @@ const oauth2 = new jsforce.OAuth2({
 	redirectUri: process.env.callbackUrl
 });
 
-console.log("REDIRECT: ", process.env.callbackUrl);
+console.log("Callback URL: ", process.env.callbackUrl);
 
 // Setup HTTP server
 const app = express();
@@ -80,9 +80,9 @@ function resumeSalesforceConnection(session) {
 }
 
 
-/**
- * The following endpoints are for handling api requests.
- */
+/**********************************************************
+ * The following endpoints are for handling api requests. *
+ **********************************************************/
 
 /**
  * Endpoint for retrieving all left and right data from salesforce
@@ -199,31 +199,8 @@ app.post('/api/match', function(request, response) {
 
 	const conn = resumeSalesforceConnection(session);
 
-	// - Verify: Newbee ID belongs to a newbee contact
-	conn.sobject("Contact")
-	.find({Id: newbeeID, RecordTypeId: RECORD_TYPE_ID.newBee})
-	.execute(function(err, records) {
-			if (err) { return console.error(err); }
-			if (records.length === 0) { 
-				response.status(406).send("Newbee ID doesn't belong to an existing Newbee"); 
-				return 1;
-			}
-	// - Verify: Mentor ID belongs to a mentor contact
-	}).then((err) => {
-		if (err) return err;
-		conn.sobject("Contact")
-		.find({Id: mentorID, RecordTypeId: RECORD_TYPE_ID.mentor})
-		.execute(function(err, records) {
-				if (err) { return console.error(err); }
-				if (records.length === 0){
-					response.status(406).send("Mentor ID doesn't belong to an existing Mentor");
-					return 1;
-				} 
 	// - Verify: Newbee can only be matched to one Mentor (so it can't already be matched to any)
-	}).then((err) => {
-		if (err) return err;
-		
-		conn.sobject("npe4__Relationship__c")
+	conn.sobject("npe4__Relationship__c")
 		.find({npe4__Contact__c: newbeeID })
 		.execute(function(err, records) {
 			if (err) { return console.error(err); }
@@ -232,7 +209,8 @@ app.post('/api/match', function(request, response) {
 				response.status(406).send('Newbee already matched'); 
 				return 1;
 			}
-	// Checks Passed! Make the match!
+
+	// Check Passed! Make the match!
 	}).then((err) => {
 		if (err) return val;
 
@@ -249,7 +227,7 @@ app.post('/api/match', function(request, response) {
 			response.status(201).send('Succesfully matched! New record ID: ' + ret.id);
 			return 0;
 		});
-	});});});
+	});
 });
 
 /*
@@ -266,55 +244,32 @@ app.post('/api/unmatch', function(request, response) {
 
 	const conn = resumeSalesforceConnection(session);
 
-	// Check that the IDs belong to the correct contact types
-	// - Verify: Newbee ID belongs to a newbee contact
-	conn.sobject("Contact")
-		.find({Id: newbeeID, RecordTypeId: RECORD_TYPE_ID.newBee})
-		.execute(function(err, records) {
-			if (err) { return console.error(err); }
-			if (records.length === 0) { 
-				response.status(406).send("Newbee ID doesn't belong to an existing Newbee"); 
-				return 1;
-			}
-	}).then((err) => {
-		if (err) return err;
-		// - Verify: Mentor ID belongs to a mentor contact
-		conn.sobject("Contact")
-		.find({Id: mentorID, RecordTypeId: RECORD_TYPE_ID.mentor})
+	conn.sobject("npe4__Relationship__c")
+		.find({npe4__Contact__c: mentorID, npe4__RelatedContact__c: newbeeID})
 		.execute(function(err, records) {
 			if (err) { return console.error(err); }
 			if (records.length === 0){
-				response.status(406).send("Mentor ID doesn't belong to an existing Mentor");
+				response.status(406).send('No match found between given NewBee and Mentor!')
 				return 1;
-			} 
-	}).then((err) => {
-		if (err) return err;
-		conn.sobject("npe4__Relationship__c")
-	  		.find({npe4__Contact__c: mentorID, npe4__RelatedContact__c: newbeeID})
-	  		.execute(function(err, records) {
+			}
+			let relationshipIDs = records.map(records => records.Id);
+			
+			// Multiple records deletion
+			conn.sobject("npe4__Relationship__c").del(relationshipIDs, function(err, rets) {
 				if (err) { return console.error(err); }
-				if (records.length === 0){
-					response.status(406).send('No match found between given NewBee and Mentor!')
-					return 1;
-				}
-				let relationshipIDs = records.map(records => records.Id);
-				
-				// Multiple records deletion
-				conn.sobject("npe4__Relationship__c").del(relationshipIDs, function(err, rets) {
-					if (err) { return console.error(err); }
-					rets.forEach((ret) => {
-						if (ret.success) console.log("Deleted Successfully : " + ret.id);
-					})
-					response.status(200).send('Succesfully unmatched! IDs: ' + relationshipIDs);
-					return 0;
-				});
+				rets.forEach((ret) => {
+					if (ret.success) console.log("Deleted Successfully : " + ret.id);
+				})
+				response.status(200).send('Succesfully unmatched! IDs: ' + relationshipIDs);
+				return 0;
 			});
-	});	});
+		});
 });
 
-/**
- * The following endpoints are for handling salesforce authentication requests.
- */
+
+/********************************************************************************
+ * The following endpoints are for handling salesforce authentication requests. *
+ ********************************************************************************/
 
 // Serve simple message at root directory
 app.get('/auth', function(request, response) {
