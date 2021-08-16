@@ -1,3 +1,10 @@
+/*
+ * This file defines an Express.js server to:
+ *  - handle Salesforce authentication
+ *  - fetch Contacts from Salesforce
+ *  - match/unmatch Salesforce contacts
+ */
+
 // Load .env configuration file
 require('dotenv').config();
 
@@ -15,9 +22,6 @@ const RECORD_TYPE_ID = {
 	newBee: "0121U0000003rkiQAA",
 	mentor: "0121U0000003rknQAA", // Emphasis on the "n" !!!	         
 }
-
-const CONTACT_QUERY = "SELECT Id, CreatedDate, Email, Name, RecordTypeId, MailingAddress FROM Contact";
-const RELATIONSHIP_QUERY = "SELECT npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c FROM npe4__Relationship__c";
 
 // Instantiate Salesforce client with .env configuration
 const oauth2 = new jsforce.OAuth2({
@@ -103,8 +107,10 @@ app.get('/api/leftRightData', function(request, response) {
 	if (session == null) {
 		return;
 	}
+
 	const conn = resumeSalesforceConnection(session);
-	conn.query(CONTACT_QUERY, function(error, result) {
+	const contact_query = "SELECT Id, CreatedDate, Email, Name, RecordTypeId, MailingAddress FROM Contact";
+	conn.query(contact_query, function(error, result) {
 		if (error) {
 			console.error('Salesforce data API error: ' + JSON.stringify(error));
 			response.status(500).json(error);
@@ -115,7 +121,8 @@ app.get('/api/leftRightData', function(request, response) {
 			let allContacts = result.records.sort((contactA, contactB) => contactA.CreatedDate > contactB.CreatedDate ? 1 : -1);
 		
 			// Query Relationships
-			conn.query(RELATIONSHIP_QUERY, function(error, result) {
+			const relationship_query = "SELECT npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c FROM npe4__Relationship__c";
+			conn.query(relationship_query, function(error, result) {
 				if (error) {
 					console.error('Salesforce data API error: ' + JSON.stringify(error));
 					response.status(500).json(error);
