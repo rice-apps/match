@@ -220,14 +220,14 @@ app.post('/api/match', function(request, response) {
 			"npe4__RelatedContact__c": mentorID, // ID of the second contact
 			"npe4__Type__c": "Mentor" // second contact is the mentor of the first contact
 		}
-		relationship_promise = conn.sobject("npe4__Relationship__c").create(new_relationship)
+		relationshipPromise = conn.sobject("npe4__Relationship__c").create(new_relationship)
 
 		// Update the newbee/mentor contacts to reflect that they are matched
-		newbee_promise = conn.sobject("Contact").find({Id: newbeeID}).update({Matched__c: true})
-		mentor_promise = conn.sobject("Contact").find({Id: mentorID}).update({Matched__c: true})
+		newbeePromise = conn.sobject("Contact").find({Id: newbeeID}).update({Matched__c: true})
+		mentorPromise = conn.sobject("Contact").find({Id: mentorID}).update({Matched__c: true})
 
 		// Wait for the three requests to finish
-		Promise.all([relationship_promise, newbee_promise, mentor_promise]).then((values) => {
+		Promise.all([relationshipPromise, newbeePromise, mentorPromise]).then((values) => {
 			var [relationshipReturn, newbeeReturn, mentorReturn] = values
 			newbeeReturn = newbeeReturn[0]
 			mentorReturn = mentorReturn[0]
@@ -260,18 +260,31 @@ app.post('/api/unmatch', function(request, response) {
 
 	const conn = resumeSalesforceConnection(session);
 
+	// Delete the relationship object between the mentor and mentee
 	conn.sobject('npe4__Relationship__c')
 		.find({npe4__Contact__c: mentorID, npe4__RelatedContact__c: newbeeID})
-		.destroy(function(err, rets) {
-			if (err) { return console.error(err); }
+		.destroy()
 
-			rets.forEach((ret) => {
-				if (ret.success) console.log('Deleted Successfully : ' + ret.id);
-			})
+	// Update the newbee/mentor contacts to reflect that they are un-matched
+	newbeePromise = conn.sobject("Contact").find({Id: newbeeID}).update({Matched__c: false})
+	mentorPromise = conn.sobject("Contact").find({Id: mentorID}).update({Matched__c: false})
 
-			response.status(200).send('Succesfully unmatched!');
-			return 0;
-		});
+	// Wait for the contact-update requests to finish
+	Promise.all([newbeePromise, mentorPromise]).then((values) => {
+		var [newbeeReturn, mentorReturn] = values
+		newbeeReturn = newbeeReturn[0]
+		mentorReturn = mentorReturn[0]
+		if (!newbeeReturn.success || !mentorReturn.success) {
+			console.log(newbeeReturn.errors, mentorReturn.errors);
+			response.status(406).send('Error updating Salesforce');
+			return
+		}
+
+		console.log("Successfully updated matched field for newbee ID: " + newbeeReturn.id);
+		console.log("Successfully updated matched field for mentor ID: " + mentorReturn.id);
+
+		response.status(201).send('Succesfully unmatched!');
+	});
 });
 
 
