@@ -116,7 +116,7 @@ app.get('/api/leftRightData', function(request, response) {
 			response.status(500).json(error);
 			return;
 		} else {
-			console.log(result.records);
+			// console.log(result.records);
 			// Response worked, sort the contacts based on their created date
 			let allContacts = result.records.sort((contactA, contactB) => contactA.CreatedDate > contactB.CreatedDate ? 1 : -1);
 		
@@ -214,18 +214,34 @@ app.post('/api/match', function(request, response) {
 	}).then((err) => {
 		if (err) return;
 
+		// Create a new relationship object between the mentor and mentee
 		let new_relationship = {
 			"npe4__Contact__c": newbeeID, // ID of the first contact
 			"npe4__RelatedContact__c": mentorID, // ID of the second contact
 			"npe4__Type__c": "Mentor" // second contact is the mentor of the first contact
-		
 		}
-		
-		conn.sobject("npe4__Relationship__c").create(new_relationship, function(err, ret) {
-			if (err || !ret.success) { return console.error(err, ret); }
-			console.log("Created record id : " + ret.id);
-			response.status(201).send('Succesfully matched! New record ID: ' + ret.id);
-			return 0;
+		relationship_promise = conn.sobject("npe4__Relationship__c").create(new_relationship)
+
+		// Update the newbee/mentor contacts to reflect that they are matched
+		newbee_promise = conn.sobject("Contact").find({Id: newbeeID}).update({Matched__c: true})
+		mentor_promise = conn.sobject("Contact").find({Id: mentorID}).update({Matched__c: true})
+
+		// Wait for the three requests to finish
+		Promise.all([relationship_promise, newbee_promise, mentor_promise]).then((values) => {
+			var [relationshipReturn, newbeeReturn, mentorReturn] = values
+			newbeeReturn = newbeeReturn[0]
+			mentorReturn = mentorReturn[0]
+			if (!relationshipReturn.success || !newbeeReturn.success || !mentorReturn.success) {
+				console.log(relationshipReturn.errors, newbeeReturn.errors, mentorReturn.errors);
+				response.status(406).send('Error updating Salesforce');
+				return
+			}
+
+			console.log("Successfully created relationship with ID: " + relationshipReturn.id);
+			console.log("Successfully updated matched field for newbee ID: " + newbeeReturn.id);
+			console.log("Successfully updated matched field for mentor ID: " + mentorReturn.id);
+
+			response.status(201).send('Succesfully matched! New record ID: ' + relationshipReturn.id);
 		});
 	});
 });
